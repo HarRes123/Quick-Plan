@@ -32,11 +32,18 @@
                                 </connections>
                             </barButtonItem>
                         </leftBarButtonItems>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="aMc-rz-PUX">
-                            <connections>
-                                <action selector="signIn:" destination="BYZ-38-t0r" id="XCM-un-nHJ"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="aMc-rz-PUX">
+                                <connections>
+                                    <action selector="signIn:" destination="BYZ-38-t0r" id="XCM-un-nHJ"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Assignments" id="gsa-Wi-Yr4">
+                                <connections>
+                                    <action selector="getAssignments:" destination="BYZ-38-t0r" id="pLV-7T-kpb"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
