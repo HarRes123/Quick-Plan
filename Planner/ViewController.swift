@@ -16,6 +16,9 @@ class ViewController: UIViewController, GIDSignInDelegate {
     var classIds = [String]()
     var classNames = [String]()
     
+    let date = Date()
+    var calendar = Calendar.current
+    
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
 
             GIDSignIn.sharedInstance().delegate=self
@@ -72,14 +75,35 @@ class ViewController: UIViewController, GIDSignInDelegate {
         }
         
         var outputText = ""
+      
+        let currentMonth = calendar.component(.month, from: date)
+        let currentDay = calendar.component(.day, from: date)
+        let currentYear = calendar.component(.year, from: date)
         
         for assignment in assignments {
-            outputText += "\(assignment.title ?? "No title")\n"
+            
+            let dueMonth = assignment.dueDate?.month as? Int
+            let dueDay = assignment.dueDate?.day as? Int
+            let dueYear = assignment.dueDate?.year as? Int
+            
+            
+            outputText += "Title: \(assignment.title ?? "No title")\nDue Date: \(dueMonth ?? 0)/\(dueDay ?? 0)/\(dueYear ?? 0)\n"
+            
+            if dueYear ?? 100 >= currentYear {
+                if dueMonth ?? 100 >= currentMonth {
+                    if dueDay ?? 100 >= currentDay {
+                        
+                        print(assignment.title ?? "no title")
+                        //Append these assignments to an array --> this is what the user will be able to see
+                        
+                    }
+                }
+            }
+                
         }
+     
           print(outputText)
     }
-
-    
 
     @objc func obtainClassIds(ticket: GTLRServiceTicket,
                                  finishedWithObject result : GTLRClassroom_ListCoursesResponse,
@@ -100,9 +124,9 @@ class ViewController: UIViewController, GIDSignInDelegate {
             outputText += "\(course.name ?? "") (\(course.identifier!))\n"
             classIds.append(course.identifier!)
             classNames.append(course.name!)
+        
         }
         print(outputText)
-        print(classIds)
     }
 
   override func viewDidLoad() {
@@ -111,6 +135,7 @@ class ViewController: UIViewController, GIDSignInDelegate {
     GIDSignIn.sharedInstance()?.presentingViewController = self
     GIDSignIn.sharedInstance().scopes = scopes
     service.authorizer = myAuth
+    calendar.timeZone = TimeZone.current
     
   }
   
@@ -151,5 +176,3 @@ class ViewController: UIViewController, GIDSignInDelegate {
     }
     
 }
-
-
