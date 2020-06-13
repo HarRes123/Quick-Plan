@@ -13,11 +13,16 @@ class ViewController: UIViewController, GIDSignInDelegate {
     
     var myAuth: GTMFetcherAuthorizationProtocol? = nil
     private let service = GTLRClassroomService()
-    var classIds = [String]()
-    var classNames = [String]()
+    
+    var assignmentsPerCourse = [Array<String>]()
+    var assignmentIndex = 0
+    
+    var classIDAndName = [String:String]()
     
     let date = Date()
     var calendar = Calendar.current
+    
+    @IBOutlet weak var textViewTest: UITextView!
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
 
@@ -35,7 +40,7 @@ class ViewController: UIViewController, GIDSignInDelegate {
     func fetchCourses() {
 
         let query = GTLRClassroomQuery_CoursesList.query()
-        query.pageSize = 30
+        query.pageSize = 100
         query.executionParameters.shouldFetchNextPages = true
         service.executeQuery(query,
                              delegate: self,
@@ -43,24 +48,29 @@ class ViewController: UIViewController, GIDSignInDelegate {
 
     }
     
+    
     func fetchAssignments() {
         
-        for classID in 0...classIds.endIndex-1 {
+        assignmentsPerCourse = Array(repeating: [], count:classIDAndName.count)
         
-            if classIds != [] {
-                let query = GTLRClassroomQuery_CoursesCourseWorkList.query(withCourseId: classIds[classID])
-                query.pageSize = 30
+        for (key, _) in classIDAndName {
+            if classIDAndName != [:] {
+               // let intClassID = Int(classIDAndName[key] ?? "0")
+                let query = GTLRClassroomQuery_CoursesCourseWorkList.query(withCourseId: key)
+                query.pageSize = 100
                 query.executionParameters.shouldFetchNextPages = true
+                
                 service.executeQuery(query,
                                      delegate: self,
                                      didFinish: #selector(obtainClasses))
+                
             } else {
                 print("Obtain classes first")
             }
         }
         
     }
-    
+        
     @objc func obtainClasses(ticket: GTLRServiceTicket,
                                  finishedWithObject result : GTLRClassroom_ListCourseWorkResponse,
                                  error : NSError?) {
@@ -68,11 +78,12 @@ class ViewController: UIViewController, GIDSignInDelegate {
             print(error.localizedDescription)
             return
         }
-        
+
         guard let assignments = result.courseWork, !assignments.isEmpty else {
             print("No assignments.")
             return
         }
+        
         
         var outputText = ""
       
@@ -80,30 +91,46 @@ class ViewController: UIViewController, GIDSignInDelegate {
         let currentDay = calendar.component(.day, from: date)
         let currentYear = calendar.component(.year, from: date)
         
-        for assignment in assignments {
-            
-            let dueMonth = assignment.dueDate?.month as? Int
-            let dueDay = assignment.dueDate?.day as? Int
-            let dueYear = assignment.dueDate?.year as? Int
-            
-            
-            outputText += "Title: \(assignment.title ?? "No title")\nDue Date: \(dueMonth ?? 0)/\(dueDay ?? 0)/\(dueYear ?? 0)\n"
-            
-            if dueYear ?? 100 >= currentYear {
-                if dueMonth ?? 100 >= currentMonth {
-                    if dueDay ?? 100 >= currentDay {
-                        
-                        print(assignment.title ?? "no title")
-                        //Append these assignments to an array --> this is what the user will be able to see
-                        
-                    }
-                }
-            }
+        
+        //  for classCount in 0...classNames.count - 1 {
+         
+            for assignment in assignments {
                 
+                let dueMonth = assignment.dueDate?.month as? Int
+                let dueDay = assignment.dueDate?.day as? Int
+                let dueYear = assignment.dueDate?.year as? Int
+                
+                outputText += "Title: \(assignment.title ?? "No title")\nDue Date: \(dueMonth ?? 0)/\(dueDay ?? 0)/\(dueYear ?? 0)\n"
+                
+                if assignmentsPerCourse[assignmentIndex].count == 0 {
+                    assignmentsPerCourse[assignmentIndex].append(classIDAndName[assignment.courseId ?? "0"] ?? "No name")
+                }
+                
+
+                assignmentsPerCourse[assignmentIndex].append(assignment.title ?? "No title")
+             
+                
+                
+                if dueYear ?? 100 >= currentYear {
+                    if dueMonth ?? 100 >= currentMonth {
+                        if dueDay ?? 100 >= currentDay {
+                            
+                          //  print(assignment.title ?? "no title")
+                            //Append these assignments to an array --> this is what the user will be able to see
+                            
+                        }
+                    }
+                    //       }
+                
+                    
+            }
+            //    print(assignmentsPerCourse)
+           // break
         }
-     
-          print(outputText)
+        assignmentIndex += 1
+        //print(outputText)
     }
+
 
     @objc func obtainClassIds(ticket: GTLRServiceTicket,
                                  finishedWithObject result : GTLRClassroom_ListCoursesResponse,
@@ -122,11 +149,11 @@ class ViewController: UIViewController, GIDSignInDelegate {
 
         for course in courses {
             outputText += "\(course.name ?? "") (\(course.identifier!))\n"
-            classIds.append(course.identifier!)
-            classNames.append(course.name!)
+            classIDAndName.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
         
         }
-        print(outputText)
+    //    print(outputText)
+        textViewTest.text = outputText
     }
 
   override func viewDidLoad() {
@@ -140,6 +167,11 @@ class ViewController: UIViewController, GIDSignInDelegate {
   }
   
     @IBAction func signOut(_ sender: Any) {
+        
+        assignmentsPerCourse = [Array<String>]()
+        assignmentIndex = 0
+        classIDAndName = [String:String]()
+        
         GIDSignIn.sharedInstance().signOut()
         GIDSignIn.sharedInstance().disconnect()
         service.authorizer = myAuth
@@ -175,4 +207,52 @@ class ViewController: UIViewController, GIDSignInDelegate {
         
     }
     
+    @IBAction func getAssignmentsPerCourse(_ sender: Any) {
+        assignmentIndex = 0
+        textViewTest.text = ""
+        for i in 0...assignmentsPerCourse.count - 1 {
+            textViewTest.text += "\(assignmentsPerCourse[i].first ?? "no name"): \(assignmentsPerCourse[i].arrayWithoutFirstElement())\n\n"
+
+        }
+        
+    }
+    
+    @IBOutlet weak var toolbarParent: UIView!
+    @IBOutlet weak var toolbar: UIToolbar!
+    
+    private func addToolbar(_ toolbar: UIToolbar, toView view: UIView) {
+        toolbar.frame = CGRect(x: 0,
+                               y: 0,
+                               width: view.frame.size.width,
+                               height: 0)
+        toolbar.sizeToFit() // This sets the standard height for the toolbar.
+
+        // Create a view to contain the toolbar:
+        let toolbarParent = UIView()
+        toolbarParent.frame = CGRect(x: 0,
+                                     y: view.frame.size.height - toolbar.frame.size.height,
+                                     width: toolbar.frame.size.width,
+                                     height: toolbar.frame.size.height)
+
+        // Adjust the position and height of the toolbar's parent view to account for safe area:
+        if #available(iOS 11, *) {
+            toolbarParent.frame.origin.y -= view.safeAreaInsets.bottom
+            toolbarParent.frame.size.height += view.safeAreaInsets.bottom
+        }
+
+        toolbarParent.addSubview(toolbar)
+        view.addSubview(toolbarParent)
+    }
+}
+
+
+extension Array {
+    func arrayWithoutFirstElement() -> Array {
+        if count != 0 { // Check if Array is empty to prevent crash
+            var newArray = Array(self)
+            newArray.removeFirst()
+            return newArray
+        }
+        return []
+    }
 }

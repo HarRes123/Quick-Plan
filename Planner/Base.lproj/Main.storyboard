@@ -15,40 +15,72 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="bOH-Oy-aRy">
+                                <rect key="frame" x="0.0" y="132" width="414" height="764"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d81-fI-pD6">
+                                <rect key="frame" x="0.0" y="88" width="414" height="44"/>
+                                <items>
+                                    <barButtonItem title="Classes" id="gZ2-wo-hz8">
+                                        <connections>
+                                            <action selector="getClasses:" destination="BYZ-38-t0r" id="J1b-Q3-kfI"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="aOU-95-BuW"/>
+                                    <barButtonItem title="Get Assignments" id="gsa-Wi-Yr4">
+                                        <connections>
+                                            <action selector="getAssignments:" destination="BYZ-38-t0r" id="pLV-7T-kpb"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="Se0-zM-4wF"/>
+                                    <barButtonItem title="Show Assignments" id="tDz-yr-rTc">
+                                        <connections>
+                                            <action selector="getAssignmentsPerCourse:" destination="BYZ-38-t0r" id="Hze-I9-gR6"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="bOH-Oy-aRy" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="4Pa-Re-pmO"/>
+                            <constraint firstAttribute="bottom" secondItem="bOH-Oy-aRy" secondAttribute="bottom" id="Alf-b8-ImE"/>
+                            <constraint firstItem="d81-fI-pD6" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Swi-mC-OL7"/>
+                            <constraint firstItem="bOH-Oy-aRy" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Yp0-Ic-iXY"/>
+                            <constraint firstItem="d81-fI-pD6" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="mey-Ns-dgG"/>
+                            <constraint firstItem="d81-fI-pD6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="p61-rO-WxO"/>
+                            <constraint firstItem="bOH-Oy-aRy" firstAttribute="top" secondItem="d81-fI-pD6" secondAttribute="bottom" id="qWT-hF-l6O"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" title="Planner" id="wxJ-xu-l5p">
                         <barButtonItem key="backBarButtonItem" title="Back" id="Dea-tY-uCL"/>
-                        <leftBarButtonItems>
-                            <barButtonItem systemItem="stop" id="J6G-PA-1Q2">
-                                <connections>
-                                    <action selector="signOut:" destination="BYZ-38-t0r" id="j0t-xx-xgu"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Classes" id="gZ2-wo-hz8">
-                                <connections>
-                                    <action selector="getClasses:" destination="BYZ-38-t0r" id="J1b-Q3-kfI"/>
-                                </connections>
-                            </barButtonItem>
-                        </leftBarButtonItems>
-                        <rightBarButtonItems>
-                            <barButtonItem systemItem="add" id="aMc-rz-PUX">
-                                <connections>
-                                    <action selector="signIn:" destination="BYZ-38-t0r" id="XCM-un-nHJ"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Assignments" id="gsa-Wi-Yr4">
-                                <connections>
-                                    <action selector="getAssignments:" destination="BYZ-38-t0r" id="pLV-7T-kpb"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="J6G-PA-1Q2">
+                            <connections>
+                                <action selector="signOut:" destination="BYZ-38-t0r" id="qee-3U-maN"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="aMc-rz-PUX">
+                            <connections>
+                                <action selector="signIn:" destination="BYZ-38-t0r" id="XCM-un-nHJ"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="textViewTest" destination="bOH-Oy-aRy" id="wnL-Q4-ozW"/>
+                        <outlet property="toolbar" destination="d81-fI-pD6" id="P8e-Y0-QEy"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1010" y="138"/>
+            <point key="canvasLocation" x="1008.6956521739131" y="137.94642857142856"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="G76-5l-18z">
