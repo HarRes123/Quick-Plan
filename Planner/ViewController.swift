@@ -31,7 +31,7 @@ class ViewController: UIViewController, GIDSignInDelegate {
             myAuth = user.authentication.fetcherAuthorizer()
     }
     
-    private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID, "https://www.googleapis.com/auth/classroom.student-submissions.students.readonly", "https://www.googleapis.com/auth/classroom.courses.readonly", "https://www.googleapis.com/auth/classroom.rosters.readonly", "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly", "https://www.googleapis.com/auth/classroom.coursework.me"]
+    private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID,kGTLRAuthScopeClassroomStudentSubmissionsStudentsReadonly, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomRostersReadonly, kGTLRAuthScopeClassroomCourseworkMe]
 
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
         myAuth = nil
@@ -91,7 +91,6 @@ class ViewController: UIViewController, GIDSignInDelegate {
         let currentDay = calendar.component(.day, from: date)
         let currentYear = calendar.component(.year, from: date)
         
-        
         //  for classCount in 0...classNames.count - 1 {
          
             for assignment in assignments {
@@ -105,12 +104,9 @@ class ViewController: UIViewController, GIDSignInDelegate {
                 if assignmentsPerCourse[assignmentIndex].count == 0 {
                     assignmentsPerCourse[assignmentIndex].append(classIDAndName[assignment.courseId ?? "0"] ?? "No name")
                 }
-                
 
                 assignmentsPerCourse[assignmentIndex].append(assignment.title ?? "No title")
-             
-                
-                
+
                 if dueYear ?? 100 >= currentYear {
                     if dueMonth ?? 100 >= currentMonth {
                         if dueDay ?? 100 >= currentDay {
@@ -150,7 +146,6 @@ class ViewController: UIViewController, GIDSignInDelegate {
         for course in courses {
             outputText += "\(course.name ?? "") (\(course.identifier!))\n"
             classIDAndName.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
-        
         }
     //    print(outputText)
         textViewTest.text = outputText
@@ -217,9 +212,6 @@ class ViewController: UIViewController, GIDSignInDelegate {
         
     }
     
-    @IBOutlet weak var toolbarParent: UIView!
-    @IBOutlet weak var toolbar: UIToolbar!
-    
     private func addToolbar(_ toolbar: UIToolbar, toView view: UIView) {
         toolbar.frame = CGRect(x: 0,
                                y: 0,
@@ -244,7 +236,6 @@ class ViewController: UIViewController, GIDSignInDelegate {
         view.addSubview(toolbarParent)
     }
 }
-
 
 extension Array {
     func arrayWithoutFirstElement() -> Array {
