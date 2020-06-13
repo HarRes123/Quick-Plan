@@ -22,24 +22,23 @@ class ViewController: UIViewController, GIDSignInDelegate {
     
     let date = Date()
     var calendar = Calendar.current
-    
+
+
     private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID,kGTLRAuthScopeClassroomStudentSubmissionsStudentsReadonly, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomRostersReadonly, kGTLRAuthScopeClassroomCourseworkMe]
     
     @IBOutlet weak var textViewTest: UITextView!
     
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-
-            GIDSignIn.sharedInstance().delegate = self
-            GIDSignIn.sharedInstance().scopes = scopes
-            myAuth = user.authentication.fetcherAuthorizer()
-    }
-
-
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {}
+    
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
         myAuth = nil
     }
+
  
     func fetchCourses() {
+        
+        let fullName = UserDefaults.standard.string(forKey: "fullName") ?? "Planner"
+        self.navigationItem.title = fullName
 
         let query = GTLRClassroomQuery_CoursesList.query()
         query.pageSize = 100
@@ -102,8 +101,10 @@ class ViewController: UIViewController, GIDSignInDelegate {
                 
                 //outputText += "Title: \(assignment.title ?? "No title")\nDue Date: \(dueMonth ?? 0)/\(dueDay ?? 0)/\(dueYear ?? 0)\n"
                 
-                if assignmentsPerCourse[assignmentIndex].count == 0 {
-                    assignmentsPerCourse[assignmentIndex].append(classIDAndName[assignment.courseId ?? "0"] ?? "No name")
+                if assignmentsPerCourse.count != 0 {
+                    if assignmentsPerCourse[assignmentIndex].count == 0 {
+                        assignmentsPerCourse[assignmentIndex].append(classIDAndName[assignment.courseId ?? "0"] ?? "No name")
+                    }
                 }
 
                 assignmentsPerCourse[assignmentIndex].append(assignment.title ?? "No title")
@@ -170,6 +171,10 @@ class ViewController: UIViewController, GIDSignInDelegate {
         assignmentIndex = 0
         classIDAndName = [String:String]()
         classNameAndAssignments = [String: Array<String>]()
+        textViewTest.text = ""
+        
+        UserDefaults.standard.removeObject(forKey: "fullName")
+        self.navigationItem.title = "Planner"
         
         GIDSignIn.sharedInstance().signOut()
         GIDSignIn.sharedInstance().disconnect()
