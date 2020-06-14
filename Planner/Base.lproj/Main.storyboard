@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="H0Y-Ph-fkY">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vJG-to-3DG">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -9,89 +9,92 @@
     </dependencies>
     <scenes>
         <!--Planner-->
-        <scene sceneID="tne-QT-ifu">
+        <scene sceneID="eL2-OI-7o7">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Planner" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                <viewController id="zcv-In-QdX" customClass="ViewController" customModule="Planner" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="gHu-cg-eaM">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="bOH-Oy-aRy">
-                                <rect key="frame" x="0.0" y="132" width="414" height="764"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L7L-J6-6b1" customClass="DayView" customModule="CalendarKit">
+                                <rect key="frame" x="0.0" y="88" width="414" height="424"/>
+                                <color key="backgroundColor" systemColor="systemGray6Color" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="F8w-Ao-1S0">
+                                <rect key="frame" x="0.0" y="512" width="414" height="384"/>
+                                <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="384" id="gBG-76-IJ6"/>
+                                </constraints>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d81-fI-pD6">
-                                <rect key="frame" x="0.0" y="88" width="414" height="44"/>
-                                <items>
-                                    <barButtonItem title="Fetch" id="gZ2-wo-hz8">
-                                        <connections>
-                                            <action selector="getInfo:" destination="BYZ-38-t0r" id="hQB-Jv-enb"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="7Tu-6c-3aa"/>
-                                    <barButtonItem title="Show" id="tDz-yr-rTc">
-                                        <connections>
-                                            <action selector="showInfo:" destination="BYZ-38-t0r" id="iQb-zY-iig"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="bOH-Oy-aRy" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="4Pa-Re-pmO"/>
-                            <constraint firstAttribute="bottom" secondItem="bOH-Oy-aRy" secondAttribute="bottom" id="Alf-b8-ImE"/>
-                            <constraint firstItem="d81-fI-pD6" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Swi-mC-OL7"/>
-                            <constraint firstItem="bOH-Oy-aRy" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Yp0-Ic-iXY"/>
-                            <constraint firstItem="d81-fI-pD6" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="mey-Ns-dgG"/>
-                            <constraint firstItem="d81-fI-pD6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="p61-rO-WxO"/>
-                            <constraint firstItem="bOH-Oy-aRy" firstAttribute="top" secondItem="d81-fI-pD6" secondAttribute="bottom" id="qWT-hF-l6O"/>
+                            <constraint firstItem="F8w-Ao-1S0" firstAttribute="trailing" secondItem="OSv-cR-nIE" secondAttribute="trailing" id="Lxm-t4-1l7"/>
+                            <constraint firstItem="L7L-J6-6b1" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" id="PWO-z3-E1Z"/>
+                            <constraint firstAttribute="bottom" secondItem="F8w-Ao-1S0" secondAttribute="bottom" id="QIz-sW-VCf"/>
+                            <constraint firstItem="L7L-J6-6b1" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" id="cYb-g5-dfv"/>
+                            <constraint firstItem="F8w-Ao-1S0" firstAttribute="top" secondItem="L7L-J6-6b1" secondAttribute="bottom" id="owc-lB-ehL"/>
+                            <constraint firstItem="L7L-J6-6b1" firstAttribute="trailing" secondItem="OSv-cR-nIE" secondAttribute="trailing" id="p87-MU-4od"/>
+                            <constraint firstItem="F8w-Ao-1S0" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" id="pp0-lB-Z24"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <viewLayoutGuide key="safeArea" id="OSv-cR-nIE"/>
                     </view>
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Planner" id="wxJ-xu-l5p">
-                        <barButtonItem key="backBarButtonItem" title="Back" id="Dea-tY-uCL"/>
-                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="J6G-PA-1Q2">
-                            <connections>
-                                <action selector="signOut:" destination="BYZ-38-t0r" id="qee-3U-maN"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="aMc-rz-PUX">
-                            <connections>
-                                <action selector="signIn:" destination="BYZ-38-t0r" id="XCM-un-nHJ"/>
-                            </connections>
-                        </barButtonItem>
+                    <navigationItem key="navigationItem" title="Planner" id="eCj-Fl-F42">
+                        <leftBarButtonItems>
+                            <barButtonItem systemItem="stop" id="J6G-PA-1Q2">
+                                <connections>
+                                    <action selector="signOut:" destination="zcv-In-QdX" id="GOL-7S-W2a"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Fetch" id="gZ2-wo-hz8">
+                                <connections>
+                                    <action selector="getInfo:" destination="zcv-In-QdX" id="HpA-j0-qvk"/>
+                                </connections>
+                            </barButtonItem>
+                        </leftBarButtonItems>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="aMc-rz-PUX">
+                                <connections>
+                                    <action selector="signIn:" destination="zcv-In-QdX" id="YW8-Gl-LeQ"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Show" id="tDz-yr-rTc">
+                                <connections>
+                                    <action selector="showInfo:" destination="zcv-In-QdX" id="6FK-gG-LJX"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="textViewTest" destination="bOH-Oy-aRy" id="wnL-Q4-ozW"/>
+                        <outlet property="dayView" destination="L7L-J6-6b1" id="C4G-MX-2Pz"/>
+                        <outlet property="textViewTest" destination="F8w-Ao-1S0" id="Mjv-wi-4mh"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Oen-GF-wRZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1008.6956521739131" y="137.94642857142856"/>
+            <point key="canvasLocation" x="2282.608695652174" y="-224.33035714285714"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="G76-5l-18z">
+        <scene sceneID="BvR-78-2Wz">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="H0Y-Ph-fkY" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="vJG-to-3DG" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="558-Lb-Tai">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="7ew-dX-QtP">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="5gH-Ri-VZa"/>
+                        <segue destination="zcv-In-QdX" kind="relationship" relationship="rootViewController" id="JJL-Hg-PBI"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Y5P-uf-D54" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7DQ-KK-I8j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="137.68115942028987" y="137.94642857142856"/>
+            <point key="canvasLocation" x="1372.4637681159422" y="-224.33035714285714"/>
         </scene>
     </scenes>
 </document>

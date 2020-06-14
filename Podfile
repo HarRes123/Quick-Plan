@@ -4,6 +4,8 @@ platform :ios, '11.0'
 target 'Planner' do
     pod 'GoogleAPIClientForREST/Classroom'
     pod 'GoogleSignIn'
+    pod 'CalendarKit'
+
 
   # Pods for Planner
 

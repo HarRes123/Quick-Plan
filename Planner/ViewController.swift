@@ -8,8 +8,48 @@
 
 import UIKit
 import GoogleSignIn
+import CalendarKit
 
-class ViewController: UIViewController, GIDSignInDelegate {
+class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate {
+    
+    func dayViewDidSelectEventView(_ eventView: EventView) {
+        return
+    }
+    
+    func dayViewDidLongPressEventView(_ eventView: EventView) {
+        return
+    }
+    
+    func dayView(dayView: DayView, didTapTimelineAt date: Date) {
+        let format = DateFormatter()
+        format.timeZone = .current
+        format.dateFormat = "MMM d, yyyy; h:mm a"
+        let dateString = format.string(from: date)
+        
+        print(dateString)
+        textViewTest.text = "Selected Date: \(dateString)"
+    }
+    
+    func dayView(dayView: DayView, didLongPressTimelineAt date: Date) {
+        return
+    }
+    
+    func dayViewDidBeginDragging(dayView: DayView) {
+        return
+    }
+    
+    func dayView(dayView: DayView, willMoveTo date: Date) {
+        return
+    }
+    
+    func dayView(dayView: DayView, didMoveTo date: Date) {
+        return
+    }
+    
+    func dayView(dayView: DayView, didUpdate event: EventDescriptor) {
+        return
+    }
+    
     
     var myAuth: GTMFetcherAuthorizationProtocol? = nil
     private let service = GTLRClassroomService()
@@ -23,7 +63,8 @@ class ViewController: UIViewController, GIDSignInDelegate {
     let date = Date()
     var calendar = Calendar.current
 
-
+    @IBOutlet weak var dayView: DayView!
+    
     private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID,kGTLRAuthScopeClassroomStudentSubmissionsStudentsReadonly, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomRostersReadonly, kGTLRAuthScopeClassroomCourseworkMe]
     
     @IBOutlet weak var textViewTest: UITextView!
@@ -33,6 +74,7 @@ class ViewController: UIViewController, GIDSignInDelegate {
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
         myAuth = nil
     }
+    
 
  
     func fetchCourses() {
@@ -81,12 +123,12 @@ class ViewController: UIViewController, GIDSignInDelegate {
             print(error.localizedDescription)
             return
         }
-
+        
         guard let assignments = result.courseWork, !assignments.isEmpty else {
             print("No assignments.")
             return
         }
-        
+                
 //        let currentMonth = calendar.component(.month, from: date)
 //        let currentDay = calendar.component(.day, from: date)
 //        let currentYear = calendar.component(.year, from: date)
@@ -100,15 +142,12 @@ class ViewController: UIViewController, GIDSignInDelegate {
 //                let dueYear = assignment.dueDate?.year as? Int
                 
                 //outputText += "Title: \(assignment.title ?? "No title")\nDue Date: \(dueMonth ?? 0)/\(dueDay ?? 0)/\(dueYear ?? 0)\n"
-                
                 if assignmentsPerCourse.count != 0 {
                     if assignmentsPerCourse[assignmentIndex].count == 0 {
                         assignmentsPerCourse[assignmentIndex].append(classIDAndName[assignment.courseId ?? "0"] ?? "No name")
                     }
                 }
-
                 assignmentsPerCourse[assignmentIndex].append(assignment.title ?? "No title")
-
 //                if dueYear ?? 100 >= currentYear {
 //                    if dueMonth ?? 100 >= currentMonth {
 //                        if dueDay ?? 100 >= currentDay {
@@ -160,8 +199,8 @@ class ViewController: UIViewController, GIDSignInDelegate {
 
     GIDSignIn.sharedInstance()?.presentingViewController = self
     GIDSignIn.sharedInstance().scopes = scopes
+    dayView.delegate = self
     service.authorizer = myAuth
-    calendar.timeZone = TimeZone.current
     
   }
   
@@ -203,7 +242,9 @@ class ViewController: UIViewController, GIDSignInDelegate {
         textViewTest.text = ""
         if assignmentsPerCourse.count != 0 {
             for i in 0...assignmentsPerCourse.count - 1 {
-                classNameAndAssignments.updateValue(assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: assignmentsPerCourse[i].first ?? "no name")
+                if assignmentsPerCourse[i].first != nil {
+                    classNameAndAssignments.updateValue(assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: assignmentsPerCourse[i].first ?? "no name")
+                }
     
             }
             for (key, value) in classNameAndAssignments {

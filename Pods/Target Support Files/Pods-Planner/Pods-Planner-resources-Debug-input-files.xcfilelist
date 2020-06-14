@@ -1,2 +1,4 @@
 ${PODS_ROOT}/Target Support Files/Pods-Planner/Pods-Planner-resources.sh
+${PODS_CONFIGURATION_BUILD_DIR}/CalendarKit/CalendarKit.bundle
+${PODS_ROOT}/DateToolsSwift/DateToolsSwift/DateTools/DateTools.bundle
 ${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle

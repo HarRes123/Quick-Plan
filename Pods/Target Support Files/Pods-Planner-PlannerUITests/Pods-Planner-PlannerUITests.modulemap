@@ -1,0 +1,6 @@
+module Pods_Planner_PlannerUITests {
+  umbrella header "Pods-Planner-PlannerUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
