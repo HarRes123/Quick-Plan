@@ -17,21 +17,33 @@
                 <rect key="frame" x="0.0" y="0.0" width="154" height="748"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Class Title" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="5" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="MWg-nl-I7u">
-                        <rect key="frame" x="12" y="22" width="130" height="55"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Class Title" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="MWg-nl-I7u">
+                        <rect key="frame" x="12" y="42" width="130" height="55"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="55" id="vkf-51-K9Q"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Assignments" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="100" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="XyK-D2-nGD">
-                        <rect key="frame" x="12" y="92" width="130" height="586"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Assignments" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="XyK-D2-nGD">
+                        <rect key="frame" x="12" y="124" width="130" height="67"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="67" id="wp7-eQ-IXz"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="XyK-D2-nGD" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-4" id="7j1-M2-gAv"/>
+                    <constraint firstItem="XyK-D2-nGD" firstAttribute="leading" secondItem="MWg-nl-I7u" secondAttribute="leading" id="BSD-LP-8r0"/>
+                    <constraint firstItem="XyK-D2-nGD" firstAttribute="trailing" secondItem="MWg-nl-I7u" secondAttribute="trailing" id="KPQ-VG-zZU"/>
+                    <constraint firstItem="XyK-D2-nGD" firstAttribute="top" secondItem="MWg-nl-I7u" secondAttribute="bottom" constant="27" id="myM-LT-ojV"/>
+                    <constraint firstItem="XyK-D2-nGD" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="124" id="oEm-dB-hNM"/>
+                    <constraint firstItem="XyK-D2-nGD" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="qeJ-wl-tBS"/>
+                </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>

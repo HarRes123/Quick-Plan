@@ -17,8 +17,9 @@ class AssignmentTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-
         
+        classTitle.numberOfLines = 0
+        classAssignments.numberOfLines = 0
 
       //  updateLabelFrame()
 

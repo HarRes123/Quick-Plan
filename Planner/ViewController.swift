@@ -31,6 +31,10 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     
     lazy var refreshController = UIRefreshControl()
     
+    private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID,kGTLRAuthScopeClassroomStudentSubmissionsStudentsReadonly, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomRostersReadonly, kGTLRAuthScopeClassroomCourseworkMe]
+    
+    @IBOutlet weak var textViewTest: UITextView!
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if classNameAndAssignments.count > 0 {
             return classNameAndAssignments.count
@@ -86,27 +90,46 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
         
         
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         return showAllClassInfo(tableView, cellForRowAt: indexPath)
         
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 300
+    func calculateHeight(inString:String) -> CGFloat {
+        
+        let messageString = inString
+        let attributes : [NSAttributedString.Key : Any] = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 17)]
+
+        let attributedString : NSAttributedString = NSAttributedString(string: messageString, attributes: attributes)
+
+        let rect : CGRect = attributedString.boundingRect(with: CGSize(width: 130, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, context: nil)
+
+        let requredSize:CGRect = rect
+        return requredSize.height
     }
     
-    private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID,kGTLRAuthScopeClassroomStudentSubmissionsStudentsReadonly, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomRostersReadonly, kGTLRAuthScopeClassroomCourseworkMe]
-    
-    @IBOutlet weak var textViewTest: UITextView!
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+         let classes: Array<String> = Array<String>(classNameAndAssignments.keys)
+            if classNameAndAssignments.count > 0 {
+                  let assignments = classNameAndAssignments[classes[indexPath.row]]?.joined(separator: "; ") ?? ""
+                  let className = classes[indexPath.row]
+                  let heightOfRow = self.calculateHeight(inString: assignments + className)
+
+                return (heightOfRow * 1.25)
+            } else {
+                  return 250
+        }
+      }
+
+
     
     override func viewDidLoad() {
       super.viewDidLoad()
         
         configureRefreshControl()
-        
-        assignmentTableView.estimatedRowHeight = 200
-        assignmentTableView.rowHeight = UITableView.automaticDimension
 
         GIDSignIn.sharedInstance()?.presentingViewController = self
         GIDSignIn.sharedInstance().scopes = scopes
