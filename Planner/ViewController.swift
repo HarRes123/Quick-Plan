@@ -12,45 +12,6 @@ import CalendarKit
 
 class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate {
     
-    func dayViewDidSelectEventView(_ eventView: EventView) {
-        return
-    }
-    
-    func dayViewDidLongPressEventView(_ eventView: EventView) {
-        return
-    }
-    
-    func dayView(dayView: DayView, didTapTimelineAt date: Date) {
-        let format = DateFormatter()
-        format.timeZone = .current
-        format.dateFormat = "MMM d, yyyy; h:mm a"
-        let dateString = format.string(from: date)
-        
-        print(dateString)
-        textViewTest.text = "Selected Date: \(dateString)"
-    }
-    
-    func dayView(dayView: DayView, didLongPressTimelineAt date: Date) {
-        return
-    }
-    
-    func dayViewDidBeginDragging(dayView: DayView) {
-        return
-    }
-    
-    func dayView(dayView: DayView, willMoveTo date: Date) {
-        return
-    }
-    
-    func dayView(dayView: DayView, didMoveTo date: Date) {
-        return
-    }
-    
-    func dayView(dayView: DayView, didUpdate event: EventDescriptor) {
-        return
-    }
-    
-    
     var myAuth: GTMFetcherAuthorizationProtocol? = nil
     private let service = GTLRClassroomService()
     
@@ -69,14 +30,36 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate {
     
     @IBOutlet weak var textViewTest: UITextView!
     
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {}
-    
-    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
-        myAuth = nil
+    override func viewDidLoad() {
+      super.viewDidLoad()
+
+      GIDSignIn.sharedInstance()?.presentingViewController = self
+      GIDSignIn.sharedInstance().scopes = scopes
+      dayView.delegate = self
+      service.authorizer = myAuth
+      
     }
     
-
- 
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {return}
+    
+    func dayViewDidSelectEventView(_ eventView: EventView) {return}
+    func dayViewDidLongPressEventView(_ eventView: EventView) {return}
+    func dayView(dayView: DayView, didLongPressTimelineAt date: Date) {return}
+    func dayViewDidBeginDragging(dayView: DayView) {return}
+    func dayView(dayView: DayView, willMoveTo date: Date) {return}
+    func dayView(dayView: DayView, didMoveTo date: Date) {return}
+    func dayView(dayView: DayView, didUpdate event: EventDescriptor) {return}
+    
+    func dayView(dayView: DayView, didTapTimelineAt date: Date) {
+        let format = DateFormatter()
+        format.timeZone = .current
+        format.dateFormat = "MMM d, yyyy; h:mm a"
+        let dateString = format.string(from: date)
+        
+        print(dateString)
+        textViewTest.text = "Selected Date: \(dateString)"
+    }
+    
     func fetchCourses() {
         
         let fullName = UserDefaults.standard.string(forKey: "fullName") ?? "Planner"
@@ -194,15 +177,6 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate {
         fetchAssignments()
     }
 
-  override func viewDidLoad() {
-    super.viewDidLoad()
-
-    GIDSignIn.sharedInstance()?.presentingViewController = self
-    GIDSignIn.sharedInstance().scopes = scopes
-    dayView.delegate = self
-    service.authorizer = myAuth
-    
-  }
   
     @IBAction func signOut(_ sender: Any) {
         
@@ -219,6 +193,7 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate {
         GIDSignIn.sharedInstance().disconnect()
         service.authorizer = myAuth
     }
+    
     @IBAction func signIn(_ sender: Any) {
         GIDSignIn.sharedInstance().signIn()
         service.authorizer = myAuth
@@ -245,7 +220,6 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate {
                 if assignmentsPerCourse[i].first != nil {
                     classNameAndAssignments.updateValue(assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: assignmentsPerCourse[i].first ?? "no name")
                 }
-    
             }
             for (key, value) in classNameAndAssignments {
                 textViewTest.text += "\(key):\n\(value)\n\n"
