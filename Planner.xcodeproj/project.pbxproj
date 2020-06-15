@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		620ABAF6249726B500730D80 /* AssignmentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620ABAF4249726B500730D80 /* AssignmentTableViewCell.swift */; };
+		620ABAF7249726B500730D80 /* AssignmentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620ABAF5249726B500730D80 /* AssignmentTableViewCell.xib */; };
 		6235D9D72494B32400D81324 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6235D9D62494B32400D81324 /* Extensions.swift */; };
 		624BABFD24908E790050EA6F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BABFC24908E790050EA6F /* AppDelegate.swift */; };
 		624BABFF24908E790050EA6F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BABFE24908E790050EA6F /* SceneDelegate.swift */; };
@@ -42,6 +44,8 @@
 		2950B3B3B06E8EA0B26CE3A9 /* Pods-Planner-PlannerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Planner-PlannerUITests.release.xcconfig"; path = "Target Support Files/Pods-Planner-PlannerUITests/Pods-Planner-PlannerUITests.release.xcconfig"; sourceTree = "<group>"; };
 		3E1F3F7E20DEA72DD265A194 /* libPods-Planner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Planner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		55876FC994EED796FCC51024 /* Pods-Planner-PlannerUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Planner-PlannerUITests.debug.xcconfig"; path = "Target Support Files/Pods-Planner-PlannerUITests/Pods-Planner-PlannerUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		620ABAF4249726B500730D80 /* AssignmentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentTableViewCell.swift; sourceTree = "<group>"; };
+		620ABAF5249726B500730D80 /* AssignmentTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AssignmentTableViewCell.xib; sourceTree = "<group>"; };
 		6235D9D62494B32400D81324 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		624BABF924908E790050EA6F /* Planner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Planner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		624BABFC24908E790050EA6F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -125,6 +129,8 @@
 				624BAC0024908E790050EA6F /* ViewController.swift */,
 				6235D9D62494B32400D81324 /* Extensions.swift */,
 				624BAC0224908E790050EA6F /* Main.storyboard */,
+				620ABAF4249726B500730D80 /* AssignmentTableViewCell.swift */,
+				620ABAF5249726B500730D80 /* AssignmentTableViewCell.xib */,
 				624BAC0524908E7B0050EA6F /* Assets.xcassets */,
 				624BAC0724908E7B0050EA6F /* LaunchScreen.storyboard */,
 				624BAC0A24908E7C0050EA6F /* Info.plist */,
@@ -283,6 +289,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				620ABAF7249726B500730D80 /* AssignmentTableViewCell.xib in Resources */,
 				624BAC0924908E7C0050EA6F /* LaunchScreen.storyboard in Resources */,
 				624BAC0624908E7B0050EA6F /* Assets.xcassets in Resources */,
 				624BAC0424908E790050EA6F /* Main.storyboard in Resources */,
@@ -415,6 +422,7 @@
 			files = (
 				624BAC0124908E790050EA6F /* ViewController.swift in Sources */,
 				624BABFD24908E790050EA6F /* AppDelegate.swift in Sources */,
+				620ABAF6249726B500730D80 /* AssignmentTableViewCell.swift in Sources */,
 				624BABFF24908E790050EA6F /* SceneDelegate.swift in Sources */,
 				6235D9D72494B32400D81324 /* Extensions.swift in Sources */,
 			);

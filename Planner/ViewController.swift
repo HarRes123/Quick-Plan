@@ -10,7 +10,8 @@ import UIKit
 import GoogleSignIn
 import CalendarKit
 
-class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate {
+class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITableViewDelegate, UITableViewDataSource {
+  
     
     var myAuth: GTMFetcherAuthorizationProtocol? = nil
     private let service = GTLRClassroomService()
@@ -26,18 +27,112 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate {
 
     @IBOutlet weak var dayView: DayView!
     
+    @IBOutlet weak var assignmentTableView: UITableView!
+    
+    lazy var refreshController = UIRefreshControl()
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if classNameAndAssignments.count > 0 {
+            return classNameAndAssignments.count
+        } else {
+            
+            return 1
+        }
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func scrollViewWillBeginDragging(cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("test")
+        return showAllClassInfo(assignmentTableView, cellForRowAt: indexPath)
+        
+    }
+    
+
+    func showAllClassInfo (_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "assignmentCell", for: indexPath) as! AssignmentTableViewCell
+        
+ 
+        let classes: Array<String> = Array<String>(classNameAndAssignments.keys)
+       // let assignments: Array<Array<String>> = Array<Array<String>>(classNameAndAssignments.values)
+        
+        
+        
+        if classNameAndAssignments.count > 0 {
+
+            if cell.classAssignments.text == "Assignments" {
+                cell.classAssignments.text = ""
+            } else {
+                cell.classTitle.text = classes[indexPath.row]
+                let assignments = classNameAndAssignments[classes[indexPath.row]]?.joined(separator: "; ") // "1-2-3"
+                cell.classAssignments.text = assignments
+//                for assignment in 0...classNameAndAssignments[classes[indexPath.row]]!.count-1 {
+//
+//                    cell.classAssignments.text! += classNameAndAssignments[classes[indexPath.row]]?[assignment] ?? "No assignment"
+//
+//                }
+            }
+                
+        } else {
+            cell.classTitle.text = "Classes"
+            cell.classAssignments.text = "Assignments"
+            
+        }
+
+        return cell
+        
+        
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        return showAllClassInfo(tableView, cellForRowAt: indexPath)
+        
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 300
+    }
+    
     private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID,kGTLRAuthScopeClassroomStudentSubmissionsStudentsReadonly, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomRostersReadonly, kGTLRAuthScopeClassroomCourseworkMe]
     
     @IBOutlet weak var textViewTest: UITextView!
     
     override func viewDidLoad() {
       super.viewDidLoad()
+        
+        configureRefreshControl()
+        
+        assignmentTableView.estimatedRowHeight = 200
+        assignmentTableView.rowHeight = UITableView.automaticDimension
 
-      GIDSignIn.sharedInstance()?.presentingViewController = self
-      GIDSignIn.sharedInstance().scopes = scopes
-      dayView.delegate = self
-      service.authorizer = myAuth
+        GIDSignIn.sharedInstance()?.presentingViewController = self
+        GIDSignIn.sharedInstance().scopes = scopes
+        dayView.delegate = self
+        assignmentTableView.delegate = self
+        assignmentTableView.dataSource = self
+      //  self.assignmentTableView.register(AssignmentTableViewCell.self, forCellReuseIdentifier: "assignmentCell")
+        let nib = UINib.init(nibName: "AssignmentTableViewCell", bundle: nil)
+        self.assignmentTableView.register(nib, forCellReuseIdentifier: "assignmentCell")
+        service.authorizer = myAuth
       
+    }
+    
+    func configureRefreshControl () {
+        self.assignmentTableView.refreshControl = UIRefreshControl()
+        self.assignmentTableView.refreshControl?.addTarget(self, action:
+            #selector(handleRefreshControl), for: .valueChanged)
+    }
+    
+    @objc func handleRefreshControl() {
+        
+        self.assignmentTableView.reloadData()
+
+        DispatchQueue.main.async {
+            self.assignmentTableView.refreshControl?.endRefreshing()
+        }
     }
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {return}
@@ -97,6 +192,7 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate {
             }
         }
         textViewTest.text = "Information fetched"
+        self.assignmentTableView.reloadData()
     }
         
     @objc func obtainClasses(ticket: GTLRServiceTicket,
@@ -192,6 +288,8 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate {
         GIDSignIn.sharedInstance().signOut()
         GIDSignIn.sharedInstance().disconnect()
         service.authorizer = myAuth
+        
+        self.assignmentTableView.reloadData()
     }
     
     @IBAction func signIn(_ sender: Any) {
@@ -212,6 +310,7 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate {
         
     }
     
+    
     @IBAction func showInfo(_ sender: Any) {
         assignmentIndex = 0
         textViewTest.text = ""
@@ -223,10 +322,14 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate {
             }
             for (key, value) in classNameAndAssignments {
                 textViewTest.text += "\(key):\n\(value)\n\n"
+                assignmentTableView.reloadData()
             }
+            
         } else {
             textViewTest.text = "Unable to show info"
         }
+        
+        
     }
     
         
