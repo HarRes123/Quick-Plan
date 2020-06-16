@@ -24,7 +24,7 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     
     let date = Date()
     var calendar = Calendar.current
-    
+
     @IBOutlet weak var dayView: DayView!
     
     @IBOutlet weak var assignmentTableView: UITableView!
@@ -36,41 +36,22 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     @IBOutlet weak var textViewTest: UITextView!
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        let classes: Array<String> = Array<String>(classNameAndAssignments.keys)
         if classNameAndAssignments.count > 0 {
-            return classNameAndAssignments[classes[section]]?.count ?? 1
+            return classNameAndAssignments.count
         } else {
+            
             return 1
         }
-
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        var numberOfSections = Int()
-        if classNameAndAssignments.count > 0 {
-            numberOfSections = classNameAndAssignments.count
-        } else {
-            numberOfSections = 1
-        }
-        return numberOfSections
+        return 1
     }
     
     func scrollViewWillBeginDragging(cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("test")
         return showAllClassInfo(assignmentTableView, cellForRowAt: indexPath)
         
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let classes: Array<String> = Array<String>(classNameAndAssignments.keys)
-           if classNameAndAssignments.count > 0 {
-            return classes[section]
-            
-           } else {
-            
-            return "Class"
-        }
     }
     
 
@@ -83,45 +64,31 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
        // let assignments: Array<Array<String>> = Array<Array<String>>(classNameAndAssignments.values)
         
         
+        
         if classNameAndAssignments.count > 0 {
 
             if cell.classAssignments.text == "Assignments" {
                 cell.classAssignments.text = ""
             } else {
-               // cell.classTitle.text = classes[indexPath.row]
-//                let assignments = classNameAndAssignments[classes[indexPath.row]]?.joined(separator: "; ") // "1-2-3"
-  //              cell.classAssignments.text = assignments//
-                if indexPath.row < classNameAndAssignments[classes[indexPath.section]]!.count {
-                    let cellText = classNameAndAssignments[classes[indexPath.section]]?[indexPath.row]
-                    cell.classAssignments.text = cellText
-    //                    for assignment in 0...classNameAndAssignments[classes[indexPath.section]]!.count-1 {
-    //    //
-    //                        cell.classAssignments.text! += classNameAndAssignments[classes[indexPath.section]]?[assignment] ?? "No assignment"
-                }
+                cell.classTitle.text = classes[indexPath.row]
+                let assignments = classNameAndAssignments[classes[indexPath.row]]?.joined(separator: "; ") // "1-2-3"
+                cell.classAssignments.text = assignments
+//                for assignment in 0...classNameAndAssignments[classes[indexPath.row]]!.count-1 {
 //
-//                    }
+//                    cell.classAssignments.text! += classNameAndAssignments[classes[indexPath.row]]?[assignment] ?? "No assignment"
+//
+//                }
             }
-            
                 
         } else {
-            cell.classAssignments.text = "Assignment"
+            cell.classTitle.text = "Classes"
+            cell.classAssignments.text = "Assignments"
             
         }
-        
-        
 
         return cell
         
         
-    }
-    
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        if classNameAndAssignments.count > 0 {
-            return classNameAndAssignments.count
-        } else {
-            
-            return 1
-        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -129,15 +96,36 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
         return showAllClassInfo(tableView, cellForRowAt: indexPath)
         
     }
+    
+    func calculateHeight(inString:String) -> CGFloat {
+        
+        let messageString = inString
+        let attributes : [NSAttributedString.Key : Any] = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 17)]
 
+        let attributedString : NSAttributedString = NSAttributedString(string: messageString, attributes: attributes)
+
+        let rect : CGRect = attributedString.boundingRect(with: CGSize(width: 130, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, context: nil)
+
+        let requredSize:CGRect = rect
+        return requredSize.height
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-       return 250
+         let classes: Array<String> = Array<String>(classNameAndAssignments.keys)
+            if classNameAndAssignments.count > 0 {
+                  let assignments = classNameAndAssignments[classes[indexPath.row]]?.joined(separator: "; ") ?? ""
+                  let className = classes[indexPath.row]
+                  let heightOfRow = self.calculateHeight(inString: assignments + className)
+
+                return (heightOfRow * 1.25)
+            } else {
+                  return 250
+        }
       }
+
+
     
-
-
     override func viewDidLoad() {
       super.viewDidLoad()
         
@@ -148,10 +136,6 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
         dayView.delegate = self
         assignmentTableView.delegate = self
         assignmentTableView.dataSource = self
-        
-        assignmentTableView.sectionHeaderHeight = UITableView.automaticDimension
-        assignmentTableView.estimatedSectionHeaderHeight = 100
-        
       //  self.assignmentTableView.register(AssignmentTableViewCell.self, forCellReuseIdentifier: "assignmentCell")
         let nib = UINib.init(nibName: "AssignmentTableViewCell", bundle: nil)
         self.assignmentTableView.register(nib, forCellReuseIdentifier: "assignmentCell")
@@ -206,15 +190,6 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
                              delegate: self,
                              didFinish: #selector(obtainClassIds(ticket:finishedWithObject:error:)))
 
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let indexPath = tableView.indexPathForSelectedRow
-
-        let currentCell = tableView.cellForRow(at: indexPath!)! as! AssignmentTableViewCell
-
-        print(currentCell.classAssignments.text ?? "No title")
     }
     
     
@@ -379,4 +354,33 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
         
         
     }
+    
+        
+    
+    
+//    private func addToolbar(_ toolbar: UIToolbar, toView view: UIView) {
+//        toolbar.frame = CGRect(x: 0,
+//                               y: 0,
+//                               width: view.frame.size.width,
+//                               height: 0)
+//        toolbar.sizeToFit() // This sets the standard height for the toolbar.
+//
+//        // Create a view to contain the toolbar:
+//        let toolbarParent = UIView()
+//        toolbarParent.frame = CGRect(x: 0,
+//                                     y: view.frame.size.height - toolbar.frame.size.height,
+//                                     width: toolbar.frame.size.width,
+//                                     height: toolbar.frame.size.height)
+//
+//        // Adjust the position and height of the toolbar's parent view to account for safe area:
+//        if #available(iOS 11, *) {
+//            toolbarParent.frame.origin.y -= view.safeAreaInsets.bottom
+//            toolbarParent.frame.size.height += view.safeAreaInsets.bottom
+//        }
+//
+//
+//        toolbarParent.addSubview(toolbar)
+//        view.addSubview(toolbarParent)
+//    }
+    
 }
