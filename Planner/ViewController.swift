@@ -133,7 +133,7 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-       return 250
+       return 175
       }
     
 
@@ -214,7 +214,7 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
 
         let currentCell = tableView.cellForRow(at: indexPath!)! as! AssignmentTableViewCell
 
-        print(currentCell.classAssignments.text ?? "No title")
+        textViewTest.text = currentCell.classAssignments.text ?? "No title"
     }
     
     

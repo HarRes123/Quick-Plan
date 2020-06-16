@@ -19,8 +19,6 @@
 		624BAC0924908E7C0050EA6F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 624BAC0724908E7B0050EA6F /* LaunchScreen.storyboard */; };
 		624BAC1424908E7C0050EA6F /* PlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BAC1324908E7C0050EA6F /* PlannerTests.swift */; };
 		624BAC1F24908E7C0050EA6F /* PlannerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BAC1E24908E7C0050EA6F /* PlannerUITests.swift */; };
-		85F4DA535D2B594932E7F5CB /* libPods-Planner-PlannerUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5B330DDDA35E164852449E /* libPods-Planner-PlannerUITests.a */; };
-		C9B3010FCB25B09D36CAA9CB /* libPods-PlannerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F5962F075C8AD4E22BF77A6 /* libPods-PlannerTests.a */; };
 		DC395BFDF6961047F89050CD /* libPods-Planner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E1F3F7E20DEA72DD265A194 /* libPods-Planner.a */; };
 /* End PBXBuildFile section */
 
@@ -65,8 +63,6 @@
 		624BAC2024908E7C0050EA6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		625414A02490A45C00AA7908 /* Planner-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Planner-Bridging-Header.h"; sourceTree = "<group>"; };
 		632B8D664A9206503C8834DA /* Pods-PlannerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlannerTests.release.xcconfig"; path = "Target Support Files/Pods-PlannerTests/Pods-PlannerTests.release.xcconfig"; sourceTree = "<group>"; };
-		8F5962F075C8AD4E22BF77A6 /* libPods-PlannerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PlannerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AE5B330DDDA35E164852449E /* libPods-Planner-PlannerUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Planner-PlannerUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7CC4F2584060ECF9180E505 /* Pods-Planner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Planner.release.xcconfig"; path = "Target Support Files/Pods-Planner/Pods-Planner.release.xcconfig"; sourceTree = "<group>"; };
 		BB0B754AE293445E03D54F5A /* Pods-Planner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Planner.debug.xcconfig"; path = "Target Support Files/Pods-Planner/Pods-Planner.debug.xcconfig"; sourceTree = "<group>"; };
 		E659B549A9BCCBF9E3CC19F1 /* Pods-PlannerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlannerTests.debug.xcconfig"; path = "Target Support Files/Pods-PlannerTests/Pods-PlannerTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -85,7 +81,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9B3010FCB25B09D36CAA9CB /* libPods-PlannerTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,7 +88,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85F4DA535D2B594932E7F5CB /* libPods-Planner-PlannerUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,8 +157,6 @@
 			isa = PBXGroup;
 			children = (
 				3E1F3F7E20DEA72DD265A194 /* libPods-Planner.a */,
-				AE5B330DDDA35E164852449E /* libPods-Planner-PlannerUITests.a */,
-				8F5962F075C8AD4E22BF77A6 /* libPods-PlannerTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
