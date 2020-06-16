@@ -22,6 +22,9 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     var classIDAndName = [String : String]()
     var classNameAndAssignments = [String : Array<String>]()
     
+    var classes = Array<String>()
+    var arrayHeader = [Int]()
+    
     let date = Date()
     var calendar = Calendar.current
     
@@ -35,13 +38,15 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     
     @IBOutlet weak var textViewTest: UITextView!
     
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        let classes: Array<String> = Array<String>(classNameAndAssignments.keys)
+        classes = Array<String>(classNameAndAssignments.keys)
         if classNameAndAssignments.count > 0 {
-            return classNameAndAssignments[classes[section]]?.count ?? 1
+            //return classNameAndAssignments[classes[section]]?.count ?? 1
+            return (self.arrayHeader[section] == 0) ? 0 : classNameAndAssignments[classes[section]]?.count ?? 1
         } else {
-            return 1
+            return 0
         }
 
     }
@@ -62,14 +67,35 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
         
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let classes: Array<String> = Array<String>(classNameAndAssignments.keys)
-           if classNameAndAssignments.count > 0 {
-            return classes[section]
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        classes = Array<String>(classNameAndAssignments.keys)
+        let button = UIButton(type: .custom)
+        if classNameAndAssignments.count > 0 {
+            button.setTitle("\n" + classes[section] + "\n", for: .normal)
             
-           } else {
-            
-            return "Class"
+        } else {
+            button.setTitle("\nClass\n", for: .normal)
+        }
+        
+      
+        button.setTitleColor(.darkGray, for: .normal)
+        button.setTitleColor(.lightGray, for: .selected)
+        button.titleLabel?.lineBreakMode = .byWordWrapping
+        button.titleLabel?.textAlignment = .center
+
+        button.tag = section // Assign section tag to this button
+        button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
+       
+//        return button
+        return button
+    }
+    
+    @objc func tapSection(sender: UIButton) {
+        if classNameAndAssignments.count > 0 {
+            self.arrayHeader[sender.tag] = (self.arrayHeader[sender.tag] == 0) ? 1 : 0
+            self.assignmentTableView.reloadSections([sender.tag], with: .fade)
         }
     }
     
@@ -77,9 +103,8 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     func showAllClassInfo (_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "assignmentCell", for: indexPath) as! AssignmentTableViewCell
-        
  
-        let classes: Array<String> = Array<String>(classNameAndAssignments.keys)
+        classes = Array<String>(classNameAndAssignments.keys)
        // let assignments: Array<Array<String>> = Array<Array<String>>(classNameAndAssignments.values)
         
         
@@ -115,15 +140,6 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
         
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        if classNameAndAssignments.count > 0 {
-            return classNameAndAssignments.count
-        } else {
-            
-            return 1
-        }
-    }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         return showAllClassInfo(tableView, cellForRowAt: indexPath)
@@ -134,9 +150,8 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
        return 250
-      }
+    }
     
-
 
     override func viewDidLoad() {
       super.viewDidLoad()
@@ -214,7 +229,7 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
 
         let currentCell = tableView.cellForRow(at: indexPath!)! as! AssignmentTableViewCell
 
-        print(currentCell.classAssignments.text ?? "No title")
+        textViewTest.text = currentCell.classAssignments.text ?? "No title"
     }
     
     
@@ -318,7 +333,14 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
         }
     //    print(outputText)
         textViewTest.text = outputText
+        arrayHeader = Array(repeating: 0, count:classIDAndName.count)
+        assignmentIndex = 0
         fetchAssignments()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
+        return 100
     }
 
   
@@ -362,6 +384,7 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     @IBAction func showInfo(_ sender: Any) {
         assignmentIndex = 0
         textViewTest.text = ""
+        
         if assignmentsPerCourse.count != 0 {
             for i in 0...assignmentsPerCourse.count - 1 {
                 if assignmentsPerCourse[i].first != nil {
