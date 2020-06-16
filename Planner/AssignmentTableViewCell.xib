@@ -17,9 +17,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="119" height="248"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" editable="NO" text="Assignment" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="1Ne-pT-0i1">
+                    <textView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="Assignment" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="1Ne-pT-0i1">
                         <rect key="frame" x="9" y="5" width="101" height="238"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -30,6 +29,10 @@
                     <constraint firstAttribute="bottom" secondItem="1Ne-pT-0i1" secondAttribute="bottom" constant="5" id="Qxd-b8-zub"/>
                     <constraint firstAttribute="trailing" secondItem="1Ne-pT-0i1" secondAttribute="trailing" constant="9" id="R6Z-l9-YVe"/>
                     <constraint firstItem="1Ne-pT-0i1" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="SAw-9h-p4N"/>
+                    <constraint firstAttribute="trailing" secondItem="1Ne-pT-0i1" secondAttribute="trailing" constant="9" id="UaG-mr-Pg0"/>
+                    <constraint firstAttribute="bottom" secondItem="1Ne-pT-0i1" secondAttribute="bottom" constant="5" id="h3I-9H-fwb"/>
+                    <constraint firstItem="1Ne-pT-0i1" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="uJd-tS-A87"/>
+                    <constraint firstItem="1Ne-pT-0i1" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="9" id="uLe-AZ-qcS"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>

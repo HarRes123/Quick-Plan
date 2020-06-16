@@ -147,10 +147,9 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     }
 
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-       return 250
-    }
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 200
+//    }
     
 
     override func viewDidLoad() {
@@ -163,6 +162,10 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
         dayView.delegate = self
         assignmentTableView.delegate = self
         assignmentTableView.dataSource = self
+        
+        assignmentTableView.estimatedRowHeight = 250.0 // Replace with your actual estimation
+        // Automatic dimensions to tell the table view to use dynamic height
+        assignmentTableView.rowHeight = UITableView.automaticDimension
         
         assignmentTableView.sectionHeaderHeight = UITableView.automaticDimension
         assignmentTableView.estimatedSectionHeaderHeight = 100
