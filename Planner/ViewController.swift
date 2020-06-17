@@ -8,10 +8,9 @@
 
 import UIKit
 import GoogleSignIn
-import CalendarKit
+import MobileCoreServices
 
-class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITableViewDelegate, UITableViewDataSource {
-  
+class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate  {
     
     var myAuth: GTMFetcherAuthorizationProtocol? = nil
     private let service = GTLRClassroomService()
@@ -25,11 +24,12 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     var classes = Array<String>()
     var arrayHeader = [Int]()
     
+    var calendarItems = [String]()
+    
     let date = Date()
     var calendar = Calendar.current
-    
-    @IBOutlet weak var dayView: DayView!
-    
+                
+    @IBOutlet weak var calendarTableView: UITableView!
     @IBOutlet weak var assignmentTableView: UITableView!
     
     lazy var refreshController = UIRefreshControl()
@@ -38,27 +38,91 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     
     @IBOutlet weak var textViewTest: UITextView!
     
+    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        
+        // if the table view in question is the left table view then read from leftItems, otherwise read from rightItems
+        let string = tableView == assignmentTableView ? classNameAndAssignments[classes[indexPath.section]]?[indexPath.row] : calendarItems[indexPath.row]
+        
+        // Attempt to convert the string to a Data object so it can be passed around using drag and drop
+        guard let data = string?.data(using: .utf8) else { return [] }
+        
+        // Place that data inside an NSItemProvider, marking it as containing a plain text string so other apps know what to do with it
+        let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypePlainText as String)
+        
+        // place that item provider inside a UIDragItem so that it can be used for drag and drop by UIKit
+        return [UIDragItem(itemProvider: itemProvider)]
+    }
+    
+    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+        let destinationIndexPath: IndexPath
+        
+        if let indexPath = coordinator.destinationIndexPath {
+            destinationIndexPath = indexPath
+        } else {
+            let section = tableView.numberOfSections - 1
+            let row = tableView.numberOfRows(inSection: section)
+            destinationIndexPath = IndexPath(row: row, section: section)
+        }
+        
+        // attempt to load strings from the drop coordinator
+        coordinator.session.loadObjects(ofClass: NSString.self) { items in
+            // convert the item provider array to a string array or bail out
+            guard let strings = items as? [String] else { return }
+            
+            // create an empty array to track rows we've copied
+            var indexPaths = [IndexPath]()
+            
+            // loop over all the strings we received
+            for (index, string) in strings.enumerated() {
+                // create an index path for this new row, moving it down depending on how many we've already inserted
+                let indexPath = IndexPath(row: destinationIndexPath.row + index, section: destinationIndexPath.section)
+    
+                self.calendarItems.insert(string, at: indexPath.row)
+                indexPaths.append(indexPath)
+                tableView.insertRows(at: indexPaths, with: .automatic)
+                
+                
+                // keep track of this new row
+                //indexPaths.append(indexPath)
+            }
+            
+            // insert them all into the table view at once
+//            tableView.insertRows(at: indexPaths, with: .automatic)
+        }
+    }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        classes = Array<String>(classNameAndAssignments.keys)
-        if classNameAndAssignments.count > 0 {
-            //return classNameAndAssignments[classes[section]]?.count ?? 1
-            return (self.arrayHeader[section] == 0) ? 0 : classNameAndAssignments[classes[section]]?.count ?? 1
+        if tableView == assignmentTableView {
+        
+            classes = Array<String>(classNameAndAssignments.keys)
+            if classNameAndAssignments.count > 0 {
+                //return classNameAndAssignments[classes[section]]?.count ?? 1
+                return (self.arrayHeader[section] == 0) ? 0 : classNameAndAssignments[classes[section]]?.count ?? 1
+            } else {
+                return 0
+            }
         } else {
-            return 0
+            return calendarItems.count
         }
 
     }
     
+    
     func numberOfSections(in tableView: UITableView) -> Int {
-        var numberOfSections = Int()
-        if classNameAndAssignments.count > 0 {
-            numberOfSections = classNameAndAssignments.count
+        
+        if tableView == assignmentTableView {
+            var numberOfSections = Int()
+            if classNameAndAssignments.count > 0 {
+                numberOfSections = classNameAndAssignments.count
+            } else {
+                numberOfSections = 1
+            }
+            return numberOfSections
         } else {
-            numberOfSections = 1
+            return 1
         }
-        return numberOfSections
     }
     
     func scrollViewWillBeginDragging(cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -70,26 +134,31 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        classes = Array<String>(classNameAndAssignments.keys)
-        let button = UIButton(type: .custom)
-        if classNameAndAssignments.count > 0 {
-            button.setTitle("\n" + classes[section] + "\n", for: .normal)
-            
-        } else {
-            button.setTitle("\nClass\n", for: .normal)
-        }
+        if tableView == assignmentTableView {
         
-      
-        button.setTitleColor(.darkGray, for: .normal)
-        button.setTitleColor(.lightGray, for: .selected)
-        button.titleLabel?.lineBreakMode = .byWordWrapping
-        button.titleLabel?.textAlignment = .center
+            classes = Array<String>(classNameAndAssignments.keys)
+            let button = UIButton(type: .custom)
+            if classNameAndAssignments.count > 0 {
+                button.setTitle("\n" + classes[section] + "\n", for: .normal)
+                
+            } else {
+                button.setTitle("\nClass\n", for: .normal)
+            }
+            
+          
+            button.setTitleColor(.darkGray, for: .normal)
+            button.setTitleColor(.lightGray, for: .selected)
+            button.titleLabel?.lineBreakMode = .byWordWrapping
+            button.titleLabel?.textAlignment = .center
 
-        button.tag = section // Assign section tag to this button
-        button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
-       
-//        return button
-        return button
+            button.tag = section // Assign section tag to this button
+            button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
+           
+    //        return button
+            return button
+        } else {
+            return nil
+        }
     }
     
     @objc func tapSection(sender: UIButton) {
@@ -99,9 +168,20 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
         }
     }
     
+    func tableView( _ tableView : UITableView,  titleForHeaderInSection section: Int)->String? {
+        
+        if tableView == calendarTableView {
+            return "Calendar"
+        } else {
+            return nil
+        }
+        
+    }
+    
 
     func showAllClassInfo (_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+    
+    
         let cell = tableView.dequeueReusableCell(withIdentifier: "assignmentCell", for: indexPath) as! AssignmentTableViewCell
  
         classes = Array<String>(classNameAndAssignments.keys)
@@ -136,13 +216,20 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
         
 
         return cell
-        
-        
     }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        return showAllClassInfo(tableView, cellForRowAt: indexPath)
+        if tableView == assignmentTableView {
+            return showAllClassInfo(tableView, cellForRowAt: indexPath)
+        } else {
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: "calendarCell", for: indexPath) as! CalendarTableViewCell
+            cell.calendarEventText.text = calendarItems[indexPath.row]
+            return cell
+            
+        }
         
     }
 
@@ -151,7 +238,7 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
 //        return 200
 //    }
     
-
+  
     override func viewDidLoad() {
       super.viewDidLoad()
         
@@ -159,20 +246,33 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
 
         GIDSignIn.sharedInstance()?.presentingViewController = self
         GIDSignIn.sharedInstance().scopes = scopes
-        dayView.delegate = self
+        
         assignmentTableView.delegate = self
         assignmentTableView.dataSource = self
+        
+        calendarTableView.delegate = self
+        calendarTableView.dataSource = self
         
         assignmentTableView.estimatedRowHeight = 250.0 // Replace with your actual estimation
         // Automatic dimensions to tell the table view to use dynamic height
         assignmentTableView.rowHeight = UITableView.automaticDimension
         
-        assignmentTableView.sectionHeaderHeight = UITableView.automaticDimension
-        assignmentTableView.estimatedSectionHeaderHeight = 100
+        calendarTableView.estimatedRowHeight = 250.0 // Replace with your actual estimation
+        // Automatic dimensions to tell the table view to use dynamic height
+        calendarTableView.rowHeight = UITableView.automaticDimension
+
+        assignmentTableView.dragDelegate = self
+        calendarTableView.dropDelegate = self
+        assignmentTableView.dragInteractionEnabled = true
+        calendarTableView.dragInteractionEnabled = true
         
       //  self.assignmentTableView.register(AssignmentTableViewCell.self, forCellReuseIdentifier: "assignmentCell")
-        let nib = UINib.init(nibName: "AssignmentTableViewCell", bundle: nil)
-        self.assignmentTableView.register(nib, forCellReuseIdentifier: "assignmentCell")
+        let nibClassroom = UINib.init(nibName: "AssignmentTableViewCell", bundle: nil)
+        self.assignmentTableView.register(nibClassroom, forCellReuseIdentifier: "assignmentCell")
+        
+        let nibCalendar = UINib.init(nibName: "CalendarTableViewCell", bundle: nil)
+        self.calendarTableView.register(nibCalendar, forCellReuseIdentifier: "calendarCell")
+        
         service.authorizer = myAuth
       
     }
@@ -194,23 +294,16 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {return}
     
-    func dayViewDidSelectEventView(_ eventView: EventView) {return}
-    func dayViewDidLongPressEventView(_ eventView: EventView) {return}
-    func dayView(dayView: DayView, didLongPressTimelineAt date: Date) {return}
-    func dayViewDidBeginDragging(dayView: DayView) {return}
-    func dayView(dayView: DayView, willMoveTo date: Date) {return}
-    func dayView(dayView: DayView, didMoveTo date: Date) {return}
-    func dayView(dayView: DayView, didUpdate event: EventDescriptor) {return}
+//    func dayView(dayView: DayView, didTapTimelineAt date: Date) {
+//        let format = DateFormatter()
+//        format.timeZone = .current
+//        format.dateFormat = "MMM d, yyyy; h:mm a"
+//        let dateString = format.string(from: date)
+//
+//        print(dateString)
+//        textViewTest.text = "Selected Date: \(dateString)"
+//    }
     
-    func dayView(dayView: DayView, didTapTimelineAt date: Date) {
-        let format = DateFormatter()
-        format.timeZone = .current
-        format.dateFormat = "MMM d, yyyy; h:mm a"
-        let dateString = format.string(from: date)
-        
-        print(dateString)
-        textViewTest.text = "Selected Date: \(dateString)"
-    }
     
     func fetchCourses() {
         
@@ -228,11 +321,14 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let indexPath = tableView.indexPathForSelectedRow
+        if tableView == assignmentTableView {
+        
+            let indexPath = tableView.indexPathForSelectedRow
 
-        let currentCell = tableView.cellForRow(at: indexPath!)! as! AssignmentTableViewCell
+            let currentCell = tableView.cellForRow(at: indexPath!)! as! AssignmentTableViewCell
 
-        textViewTest.text = currentCell.classAssignments.text ?? "No title"
+            textViewTest.text = currentCell.classAssignments.text ?? "No title"
+        }
     }
     
     
@@ -343,7 +439,12 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        return 100
+        if tableView == assignmentTableView {
+        
+            return 100
+        } else {
+            return 50
+        }
     }
 
   
@@ -383,7 +484,6 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
         
     }
     
-    
     @IBAction func showInfo(_ sender: Any) {
         assignmentIndex = 0
         textViewTest.text = ""
@@ -394,15 +494,10 @@ class ViewController: UIViewController, GIDSignInDelegate, DayViewDelegate, UITa
                     classNameAndAssignments.updateValue(assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: assignmentsPerCourse[i].first ?? "no name")
                 }
             }
-            for (key, value) in classNameAndAssignments {
-                textViewTest.text += "\(key):\n\(value)\n\n"
-                assignmentTableView.reloadData()
-            }
-            
         } else {
             textViewTest.text = "Unable to show info"
         }
         
-        
+        assignmentTableView.reloadData()
     }
 }

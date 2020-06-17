@@ -19,8 +19,8 @@ extension Array {
     }
 }
 
-extension AssignmentTableViewCell: UITextViewDelegate {
-    func textViewDidChange(_ textView: UITextView) {
+extension UITableViewCell: UITextViewDelegate {
+    public func textViewDidChange(_ textView: UITextView) {
 
         let size = textView.bounds.size
         let newSize = textView.sizeThatFits(CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude))
