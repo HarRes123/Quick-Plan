@@ -17,9 +17,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Hlr-ja-OiJ">
-                                <rect key="frame" x="0.0" y="88" width="137" height="725"/>
+                                <rect key="frame" x="0.0" y="88" width="137" height="808"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="137" id="ofQ-Oy-TQZ"/>
+                                    <constraint firstAttribute="width" constant="137" id="GtD-dU-Be7"/>
                                 </constraints>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="assignmentCell" id="cP5-iY-NZ1" customClass="AssignmentTableViewCell" customModule="Planner" customModuleProvider="target">
@@ -37,7 +37,7 @@
                                 </connections>
                             </tableView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="50" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="CKD-gs-1pZ">
-                                <rect key="frame" x="145" y="88" width="269" height="725"/>
+                                <rect key="frame" x="145" y="88" width="269" height="808"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="calendarCell" id="5Ig-Vz-FBa" customClass="CalendarTableViewCell" customModule="Planner" customModuleProvider="target">
@@ -54,29 +54,16 @@
                                     <outlet property="delegate" destination="zcv-In-QdX" id="BmR-Sg-eBL"/>
                                 </connections>
                             </tableView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="F8w-Ao-1S0">
-                                <rect key="frame" x="0.0" y="821" width="414" height="75"/>
-                                <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="75" id="ihe-Z6-wQ6"/>
-                                </constraints>
-                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="F8w-Ao-1S0" firstAttribute="centerX" secondItem="gHu-cg-eaM" secondAttribute="centerX" id="2lr-sA-vXz"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="bottom" secondItem="CKD-gs-1pZ" secondAttribute="bottom" id="7vk-LU-7rt"/>
-                            <constraint firstItem="CKD-gs-1pZ" firstAttribute="leading" secondItem="Hlr-ja-OiJ" secondAttribute="trailing" constant="8" id="CfV-5i-aim"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="leading" secondItem="F8w-Ao-1S0" secondAttribute="leading" id="Czh-PM-xUr"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="CKD-gs-1pZ" secondAttribute="top" id="M1T-GC-kxH"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" id="W7q-Wf-RIW"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" id="bRh-oX-Ff6"/>
-                            <constraint firstItem="F8w-Ao-1S0" firstAttribute="top" secondItem="Hlr-ja-OiJ" secondAttribute="bottom" constant="8" id="h4f-Jl-fZx"/>
-                            <constraint firstItem="CKD-gs-1pZ" firstAttribute="trailing" secondItem="F8w-Ao-1S0" secondAttribute="trailing" id="hV0-tZ-2ee"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="F8w-Ao-1S0" secondAttribute="bottom" constant="-34" id="vWa-Ly-I1T"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="CKD-gs-1pZ" secondAttribute="top" id="3wh-Eu-lcp"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" id="58e-a6-tYi"/>
+                            <constraint firstItem="CKD-gs-1pZ" firstAttribute="trailing" secondItem="OSv-cR-nIE" secondAttribute="trailing" id="DS4-cI-EPi"/>
+                            <constraint firstItem="CKD-gs-1pZ" firstAttribute="leading" secondItem="Hlr-ja-OiJ" secondAttribute="trailing" constant="8" id="Kek-Zi-LI9"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" id="c8b-bp-tbp"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="Hlr-ja-OiJ" secondAttribute="bottom" constant="-34" id="hXK-MS-upH"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="bottom" secondItem="CKD-gs-1pZ" secondAttribute="bottom" id="xhq-Mn-0bf"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="OSv-cR-nIE"/>
                     </view>
@@ -109,7 +96,6 @@
                     <connections>
                         <outlet property="assignmentTableView" destination="Hlr-ja-OiJ" id="OYZ-Bq-LMN"/>
                         <outlet property="calendarTableView" destination="CKD-gs-1pZ" id="acB-3U-zKS"/>
-                        <outlet property="textViewTest" destination="F8w-Ao-1S0" id="Mjv-wi-4mh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oen-GF-wRZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -35,9 +35,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     lazy var refreshController = UIRefreshControl()
     
     private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID,kGTLRAuthScopeClassroomStudentSubmissionsStudentsReadonly, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomRostersReadonly, kGTLRAuthScopeClassroomCourseworkMe]
-    
-    @IBOutlet weak var textViewTest: UITextView!
-    
+        
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
         // if the table view in question is the left table view then read from leftItems, otherwise read from rightItems
@@ -87,6 +85,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
             
             // insert them all into the table view at once
+            
 //            tableView.insertRows(at: indexPaths, with: .automatic)
         }
     }
@@ -172,6 +171,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         if tableView == calendarTableView {
             return "Calendar"
+
         } else {
             return nil
         }
@@ -214,8 +214,20 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
         
         
+        
+        
 
         return cell
+    }
+    
+    func checkTimeIsValid(from string: String) -> Bool {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm a"
+        if (dateFormatter.date(from: string) != nil) {
+            return true
+        }else{
+            return false
+        }
     }
     
     
@@ -227,6 +239,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "calendarCell", for: indexPath) as! CalendarTableViewCell
             cell.calendarEventText.text = calendarItems[indexPath.row]
+
+            if checkTimeIsValid(from: cell.calendarEventText.text) {
+                
+                cell.backgroundColor = .random
+                cell.isUserInteractionEnabled = false
+            } else {
+                cell.backgroundColor = .white
+                cell.isUserInteractionEnabled = true
+            }
+            
             return cell
             
         }
@@ -238,9 +260,43 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 //        return 200
 //    }
     
-  
+  func timeConversion12(time24: String) -> String {
+      let dateAsString = time24
+      let df = DateFormatter()
+      df.dateFormat = "HH:mm"
+
+      let date = df.date(from: dateAsString)
+      df.dateFormat = "hh:mm a"
+
+      let time12 = df.string(from: date!)
+      print(time12)
+      return time12
+  }
     override func viewDidLoad() {
       super.viewDidLoad()
+        
+        
+        let lastTime: Double = 23
+        var currentTime: Double = 0
+        let incrementMinutes: Double = 30 // increment by 15 minutes
+        
+        calendarItems.append("12:00 AM")
+
+        while currentTime <= lastTime {
+            currentTime += (incrementMinutes/60)
+                
+
+            let hours = Int(floor(currentTime))
+            let minutes = Int(currentTime.truncatingRemainder(dividingBy: 1)*60)
+            
+            if minutes == 0 {
+                let time24 = "\(hours):00"
+                calendarItems.append(timeConversion12(time24: time24))
+            } else {
+                let time24 = "\(hours):\(minutes)"
+                calendarItems.append(timeConversion12(time24: time24))
+            }
+        }
         
         configureRefreshControl()
 
@@ -323,11 +379,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         if tableView == assignmentTableView {
         
-            let indexPath = tableView.indexPathForSelectedRow
+//            let indexPath = tableView.indexPathForSelectedRow
+//
+//            let currentCell = tableView.cellForRow(at: indexPath!)! as! AssignmentTableViewCell
 
-            let currentCell = tableView.cellForRow(at: indexPath!)! as! AssignmentTableViewCell
-
-            textViewTest.text = currentCell.classAssignments.text ?? "No title"
         }
     }
     
@@ -353,7 +408,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 break
             }
         }
-        textViewTest.text = "Information fetched"
+        
+        let alert = UIAlertController(title: "Information Fetched", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true)
         self.assignmentTableView.reloadData()
     }
         
@@ -431,7 +489,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             classIDAndName.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
         }
     //    print(outputText)
-        textViewTest.text = outputText
         arrayHeader = Array(repeating: 0, count:classIDAndName.count)
         assignmentIndex = 0
         fetchAssignments()
@@ -454,7 +511,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         assignmentIndex = 0
         classIDAndName = [String:String]()
         classNameAndAssignments = [String: Array<String>]()
-        textViewTest.text = ""
         
         UserDefaults.standard.removeObject(forKey: "fullName")
         self.navigationItem.title = "Planner"
@@ -486,7 +542,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     @IBAction func showInfo(_ sender: Any) {
         assignmentIndex = 0
-        textViewTest.text = ""
         
         if assignmentsPerCourse.count != 0 {
             for i in 0...assignmentsPerCourse.count - 1 {
@@ -495,7 +550,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 }
             }
         } else {
-            textViewTest.text = "Unable to show info"
+            let alert = UIAlertController(title: "Unable to Show Info", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true)
         }
         
         assignmentTableView.reloadData()
