@@ -137,7 +137,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         return showAllClassInfo(assignmentTableView, cellForRowAt: indexPath)
         
     }
-    
+        
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
@@ -318,7 +318,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
             if checkTimeIsValid(from: cell.calendarEventText.text) {
                 
-                cell.backgroundColor = .random
+                cell.backgroundColor = .yellow
                 cell.isUserInteractionEnabled = false
             } else {
                 cell.backgroundColor = .white
@@ -461,6 +461,40 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                              didFinish: #selector(obtainClassIds(ticket:finishedWithObject:error:)))
 
     }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+
+        let deleteAction = UITableViewRowAction(style: .default, title: "Delete", handler: { (action, indexPath) in
+            print("Delete tapped")
+            self.calendarItems.remove(at: indexPath.row)
+            //         self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                     tableView.deleteRows(at: [indexPath], with: .automatic)
+        })
+        deleteAction.backgroundColor = UIColor.red
+
+        return [deleteAction]
+    }
+    
+    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+        
+        let defaults = UserDefaults.standard
+        defaults.set(self.calendarItems, forKey: self.getViewedDate())
+        self.assignmentTableView.reloadData()
+    }
+    
+
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if tableView == calendarTableView {
+            if checkTimeIsValid(from: calendarItems[indexPath.row]) {
+                return false
+            } else {
+                return true
+            }
+        }
+        return false
+    }
+
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -608,7 +642,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         classIDAndName = [String:String]()
         classNameAndAssignments = [String: Array<String>]()
         
-        resetDefaults()
+       // resetDefaults()
         self.navigationItem.title = "Planner"
         
         GIDSignIn.sharedInstance().signOut()
