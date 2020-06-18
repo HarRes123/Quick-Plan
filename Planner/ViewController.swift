@@ -53,6 +53,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         return [UIDragItem(itemProvider: itemProvider)]
     }
     
+    func isKeyPresentInUserDefaults(key: String) -> Bool {
+        return UserDefaults.standard.object(forKey: key) != nil
+    }
+    
     func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
         let destinationIndexPath: IndexPath
         
@@ -87,6 +91,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
             
             // insert them all into the table view at once
+            let defaults = UserDefaults.standard
+            defaults.set(self.calendarItems, forKey: self.getViewedDate())
             
 //            tableView.insertRows(at: indexPaths, with: .automatic)
         }
@@ -160,11 +166,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         } else {
            // return nil
             if section == 0 {
-                
-                let date = Date()
-                let formatter = DateFormatter()
-                formatter.dateFormat = "MMM dd, yyyy"
-                let currentDate = formatter.string(from: date.getDate(dayDifference: daysFromToday))
+            
+                let currentDate = getViewedDate()
                 
                 let view = UIView(frame: .zero)
                 view.backgroundColor = .white
@@ -199,9 +202,20 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
     }
     
+    func getViewedDate() -> String {
+        
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM dd, yyyy"
+        return formatter.string(from: date.getDate(dayDifference: daysFromToday))
+        
+        
+    }
+    
     @objc func backDay(sender: UIButton) {
         
         daysFromToday -= 1
+        setUpCalendar()
         calendarTableView.reloadData()
         
     }
@@ -209,6 +223,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     @objc func aheadDay(sender: UIButton) {
         
         daysFromToday += 1
+        setUpCalendar()
         calendarTableView.reloadData()
         
     }
@@ -333,31 +348,42 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
       print(time12)
       return time12
   }
+    
+    func setUpCalendar() {
+        
+        if isKeyPresentInUserDefaults(key: getViewedDate()) {
+            let defaults = UserDefaults.standard
+            calendarItems = defaults.stringArray(forKey: getViewedDate()) ?? [String]()
+        } else {
+        
+            let lastTime: Double = 23
+            var currentTime: Double = 0
+            let incrementMinutes: Double = 30 // increment by 15 minutes
+            calendarItems = []
+            calendarItems.append("12:00 AM")
+
+            while currentTime <= lastTime {
+                currentTime += (incrementMinutes/60)
+                    
+
+                let hours = Int(floor(currentTime))
+                let minutes = Int(currentTime.truncatingRemainder(dividingBy: 1)*60)
+                
+                if minutes == 0 {
+                    let time24 = "\(hours):00"
+                    calendarItems.append(timeConversion12(time24: time24))
+                } else {
+                    let time24 = "\(hours):\(minutes)"
+                    calendarItems.append(timeConversion12(time24: time24))
+                }
+            }
+        }
+    }
+    
     override func viewDidLoad() {
       super.viewDidLoad()
         
-        
-        let lastTime: Double = 23
-        var currentTime: Double = 0
-        let incrementMinutes: Double = 30 // increment by 15 minutes
-        
-        calendarItems.append("12:00 AM")
-
-        while currentTime <= lastTime {
-            currentTime += (incrementMinutes/60)
-                
-
-            let hours = Int(floor(currentTime))
-            let minutes = Int(currentTime.truncatingRemainder(dividingBy: 1)*60)
-            
-            if minutes == 0 {
-                let time24 = "\(hours):00"
-                calendarItems.append(timeConversion12(time24: time24))
-            } else {
-                let time24 = "\(hours):\(minutes)"
-                calendarItems.append(timeConversion12(time24: time24))
-            }
-        }
+        setUpCalendar()
         
         configureRefreshControl()
 
@@ -564,7 +590,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             return 50
         }
     }
-
+    
+    func resetDefaults() {
+        let defaults = UserDefaults.standard
+        let dictionary = defaults.dictionaryRepresentation()
+        dictionary.keys.forEach { key in
+            defaults.removeObject(forKey: key)
+        }
+        setUpCalendar()
+        self.calendarTableView.reloadData()
+    }
   
     @IBAction func signOut(_ sender: Any) {
         
@@ -573,13 +608,14 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         classIDAndName = [String:String]()
         classNameAndAssignments = [String: Array<String>]()
         
-        UserDefaults.standard.removeObject(forKey: "fullName")
+        resetDefaults()
         self.navigationItem.title = "Planner"
         
         GIDSignIn.sharedInstance().signOut()
         GIDSignIn.sharedInstance().disconnect()
         service.authorizer = myAuth
         
+
         self.assignmentTableView.reloadData()
     }
     
