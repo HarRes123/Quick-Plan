@@ -61,3 +61,17 @@ extension UIColor {
                        alpha: 1.0)
     }
 }
+
+extension Date
+{
+    var startOfDay: Date
+    {
+        return Calendar.current.startOfDay(for: self)
+    }
+
+    func getDate(dayDifference: Int) -> Date {
+        var components = DateComponents()
+        components.day = dayDifference
+        return Calendar.current.date(byAdding: components, to:startOfDay)!
+    }
+}

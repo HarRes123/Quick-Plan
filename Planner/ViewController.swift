@@ -26,6 +26,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     var calendarItems = [String]()
     
+    var daysFromToday = 0
+    
     let date = Date()
     var calendar = Calendar.current
                 
@@ -156,8 +158,59 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     //        return button
             return button
         } else {
-            return nil
+           // return nil
+            if section == 0 {
+                
+                let date = Date()
+                let formatter = DateFormatter()
+                formatter.dateFormat = "MMM dd, yyyy"
+                let currentDate = formatter.string(from: date.getDate(dayDifference: daysFromToday))
+                
+                let view = UIView(frame: .zero)
+                view.backgroundColor = .white
+                let labelWidth = 110
+                let labelX = Int(tableView.frame.size.width)/2
+                let label = UILabel(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 40))
+                let leftButton = UIButton(type: .custom)
+                let rightButton = UIButton(type: .custom)
+                leftButton.frame = CGRect(x: labelX - 15 - 90, y: 5, width: 30, height: 40)
+                rightButton.frame = CGRect(x: labelX - 15 + 90  , y: 5, width: 30, height: 40)
+                label.text = currentDate
+                label.textAlignment = .center
+                leftButton.setTitle("<", for: .normal)
+                leftButton.setTitleColor(.black, for: .normal)
+                leftButton.setTitleColor(.gray, for: .selected)
+                rightButton.setTitle(">", for: .normal)
+                rightButton.setTitleColor(.gray, for: .selected)
+                rightButton.setTitleColor(.black, for: .normal)
+                
+                leftButton.addTarget(self, action: #selector(backDay(sender:)), for: .touchUpInside)
+                rightButton.addTarget(self, action: #selector(aheadDay(sender:)), for: .touchUpInside)
+                
+                view.sizeToFit()
+                view.addSubview(label)
+                view.addSubview(leftButton)
+                view.addSubview(rightButton)
+                return view
+            } else {
+                return nil
+            }
+            
         }
+    }
+    
+    @objc func backDay(sender: UIButton) {
+        
+        daysFromToday -= 1
+        calendarTableView.reloadData()
+        
+    }
+    
+    @objc func aheadDay(sender: UIButton) {
+        
+        daysFromToday += 1
+        calendarTableView.reloadData()
+        
     }
     
     @objc func tapSection(sender: UIButton) {
@@ -238,7 +291,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         } else {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "calendarCell", for: indexPath) as! CalendarTableViewCell
-            cell.calendarEventText.text = calendarItems[indexPath.row]
+            var fixedTime = ""
+            
+            if calendarItems[indexPath.row].first == "0" {
+                fixedTime = String(calendarItems[indexPath.row].dropFirst())
+            } else {
+                fixedTime = calendarItems[indexPath.row]
+            }
+            
+            cell.calendarEventText.text = fixedTime
 
             if checkTimeIsValid(from: cell.calendarEventText.text) {
                 
