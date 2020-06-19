@@ -170,7 +170,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 let currentDate = getViewedDate()
                 
                 let view = UIView(frame: .zero)
-                view.backgroundColor = tableView.backgroundColor
+                view.backgroundColor = UIColor(hexFromString: "E8E8E8") //tableView.backgroundColor
                 let labelWidth = 110
                 let labelX = Int(tableView.frame.size.width)/2
                 let label = UILabel(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 40))
@@ -254,7 +254,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
  
         classes = Array<String>(classNameAndAssignments.keys)
        // let assignments: Array<Array<String>> = Array<Array<String>>(classNameAndAssignments.values)
-        cell.backgroundColor = calendarTableView.backgroundColor
+        cell.backgroundColor = UIColor(hexFromString: "5FD7EC")
         
         if classNameAndAssignments.count > 0 {
 
@@ -321,7 +321,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 cell.backgroundColor = UIColor(hexFromString: "f5bc49")
                 cell.isUserInteractionEnabled = false
             } else {
-                cell.backgroundColor = calendarTableView.backgroundColor
+                cell.backgroundColor = UIColor(hexFromString: "5FD7EC")
                 cell.isUserInteractionEnabled = true
             }
             
@@ -390,13 +390,14 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         GIDSignIn.sharedInstance()?.presentingViewController = self
         GIDSignIn.sharedInstance().scopes = scopes
         
+        
         assignmentTableView.delegate = self
         assignmentTableView.dataSource = self
         
         calendarTableView.delegate = self
         calendarTableView.dataSource = self
         
-        calendarTableView.backgroundColor = UIColor(hexFromString: "5fd7ec")
+        calendarTableView.backgroundColor = UIColor(hexFromString: "E8E8E8")
         assignmentTableView.backgroundColor = UIColor(hexFromString: "3e6bd2", alpha: 0.8)
         
         assignmentTableView.estimatedRowHeight = 250.0 // Replace with your actual estimation
