@@ -18,6 +18,7 @@
 		624BAC0924908E7C0050EA6F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 624BAC0724908E7B0050EA6F /* LaunchScreen.storyboard */; };
 		624BAC1424908E7C0050EA6F /* PlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BAC1324908E7C0050EA6F /* PlannerTests.swift */; };
 		624BAC1F24908E7C0050EA6F /* PlannerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BAC1E24908E7C0050EA6F /* PlannerUITests.swift */; };
+		6280AC85249C751000F66107 /* iPhone X 01.png in Resources */ = {isa = PBXBuildFile; fileRef = 6280AC84249C751000F66107 /* iPhone X 01.png */; };
 		62D84CE9249985D50011BD6F /* CalendarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D84CE7249985D50011BD6F /* CalendarTableViewCell.swift */; };
 		62D84CEA249985D50011BD6F /* CalendarTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 62D84CE8249985D50011BD6F /* CalendarTableViewCell.xib */; };
 		85F4DA535D2B594932E7F5CB /* libPods-Planner-PlannerUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5B330DDDA35E164852449E /* libPods-Planner-PlannerUITests.a */; };
@@ -64,6 +65,7 @@
 		624BAC1E24908E7C0050EA6F /* PlannerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlannerUITests.swift; sourceTree = "<group>"; };
 		624BAC2024908E7C0050EA6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		625414A02490A45C00AA7908 /* Planner-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Planner-Bridging-Header.h"; sourceTree = "<group>"; };
+		6280AC84249C751000F66107 /* iPhone X 01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iPhone X 01.png"; sourceTree = "<group>"; };
 		62D84CE7249985D50011BD6F /* CalendarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTableViewCell.swift; sourceTree = "<group>"; };
 		62D84CE8249985D50011BD6F /* CalendarTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CalendarTableViewCell.xib; sourceTree = "<group>"; };
 		632B8D664A9206503C8834DA /* Pods-PlannerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlannerTests.release.xcconfig"; path = "Target Support Files/Pods-PlannerTests/Pods-PlannerTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				624BAC0524908E7B0050EA6F /* Assets.xcassets */,
 				624BAC0724908E7B0050EA6F /* LaunchScreen.storyboard */,
 				624BAC0A24908E7C0050EA6F /* Info.plist */,
+				6280AC84249C751000F66107 /* iPhone X 01.png */,
 			);
 			path = Planner;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 				624BAC0924908E7C0050EA6F /* LaunchScreen.storyboard in Resources */,
 				62D84CEA249985D50011BD6F /* CalendarTableViewCell.xib in Resources */,
 				624BAC0624908E7B0050EA6F /* Assets.xcassets in Resources */,
+				6280AC85249C751000F66107 /* iPhone X 01.png in Resources */,
 				624BAC0424908E790050EA6F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -608,6 +612,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.01;
 				DEVELOPMENT_TEAM = 5JJZ9DST9Z;
 				INFOPLIST_FILE = Planner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -620,7 +625,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Planner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -631,6 +636,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.01;
 				DEVELOPMENT_TEAM = 5JJZ9DST9Z;
 				INFOPLIST_FILE = Planner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -642,7 +648,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Planner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

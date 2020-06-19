@@ -153,8 +153,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
             
           
-            button.setTitleColor(.darkGray, for: .normal)
-            button.setTitleColor(.lightGray, for: .selected)
+            button.setTitleColor(.black, for: .normal)
+            button.setTitleColor(.gray, for: .selected)
             button.titleLabel?.lineBreakMode = .byWordWrapping
             button.titleLabel?.textAlignment = .center
 
@@ -170,7 +170,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 let currentDate = getViewedDate()
                 
                 let view = UIView(frame: .zero)
-                view.backgroundColor = .white
+                view.backgroundColor = tableView.backgroundColor
                 let labelWidth = 110
                 let labelX = Int(tableView.frame.size.width)/2
                 let label = UILabel(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 40))
@@ -254,7 +254,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
  
         classes = Array<String>(classNameAndAssignments.keys)
        // let assignments: Array<Array<String>> = Array<Array<String>>(classNameAndAssignments.values)
-        
+        cell.backgroundColor = calendarTableView.backgroundColor
         
         if classNameAndAssignments.count > 0 {
 
@@ -318,10 +318,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
             if checkTimeIsValid(from: cell.calendarEventText.text) {
                 
-                cell.backgroundColor = .yellow
+                cell.backgroundColor = UIColor(hexFromString: "f5bc49")
                 cell.isUserInteractionEnabled = false
             } else {
-                cell.backgroundColor = .white
+                cell.backgroundColor = calendarTableView.backgroundColor
                 cell.isUserInteractionEnabled = true
             }
             
@@ -395,6 +395,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         calendarTableView.delegate = self
         calendarTableView.dataSource = self
+        
+        calendarTableView.backgroundColor = UIColor(hexFromString: "5fd7ec")
+        assignmentTableView.backgroundColor = UIColor(hexFromString: "3e6bd2", alpha: 0.8)
         
         assignmentTableView.estimatedRowHeight = 250.0 // Replace with your actual estimation
         // Automatic dimensions to tell the table view to use dynamic height
