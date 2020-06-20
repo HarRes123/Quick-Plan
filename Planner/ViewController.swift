@@ -176,8 +176,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 let label = UILabel(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 40))
                 let leftButton = UIButton(type: .custom)
                 let rightButton = UIButton(type: .custom)
-                leftButton.frame = CGRect(x: labelX - 15 - 90, y: 5, width: 30, height: 40)
-                rightButton.frame = CGRect(x: labelX - 15 + 90  , y: 5, width: 30, height: 40)
+                leftButton.frame = CGRect(x: labelX - 15 - 75, y: 5, width: 30, height: 40)
+                rightButton.frame = CGRect(x: labelX - 15 + 75  , y: 5, width: 30, height: 40)
                 label.text = currentDate
                 label.textAlignment = .center
                 leftButton.setTitle("<", for: .normal)
@@ -254,7 +254,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
  
         classes = Array<String>(classNameAndAssignments.keys)
        // let assignments: Array<Array<String>> = Array<Array<String>>(classNameAndAssignments.values)
-        cell.backgroundColor = UIColor(hexFromString: "5FD7EC")
+        cell.backgroundColor = .white
         
         if classNameAndAssignments.count > 0 {
 
@@ -321,7 +321,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 cell.backgroundColor = UIColor(hexFromString: "f5bc49")
                 cell.isUserInteractionEnabled = false
             } else {
-                cell.backgroundColor = UIColor(hexFromString: "5FD7EC")
+                cell.backgroundColor = .white
                 cell.isUserInteractionEnabled = true
             }
             
@@ -398,7 +398,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         calendarTableView.dataSource = self
         
         calendarTableView.backgroundColor = UIColor(hexFromString: "E8E8E8")
-        assignmentTableView.backgroundColor = UIColor(hexFromString: "3e6bd2", alpha: 0.8)
+        assignmentTableView.backgroundColor = UIColor(hexFromString: "5FD7EC")
         
         assignmentTableView.estimatedRowHeight = 250.0 // Replace with your actual estimation
         // Automatic dimensions to tell the table view to use dynamic height
@@ -421,7 +421,36 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         self.calendarTableView.register(nibCalendar, forCellReuseIdentifier: "calendarCell")
         
         service.authorizer = myAuth
-      
+        
+        setUpUI(view: assignmentTableView)
+        setUpUI(view: calendarTableView)
+        
+        self.view.backgroundColor = UIColor(hexFromString: "9eb5e8")
+        self.navigationController?.navigationBar.layer.shadowColor = UIColor.darkGray.cgColor
+        self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 8)
+        self.navigationController?.navigationBar.layer.shadowRadius = 2
+        self.navigationController?.navigationBar.layer.shadowOpacity = 1.0
+        self.navigationController?.navigationBar.layer.masksToBounds = false
+
+    }
+    
+    func setUpUI(view: UIView) {
+        
+        let containerView:UIView = UIView(frame: view.frame)
+        containerView.backgroundColor = UIColor.clear
+        containerView.layer.shadowColor = UIColor.darkGray.cgColor
+        containerView.layer.shadowOffset = CGSize(width: -6, height: 6)
+        containerView.layer.shadowOpacity = 1.0
+        containerView.layer.shadowRadius = 2
+        
+        view.layer.borderColor = UIColor.darkGray.cgColor
+        view.layer.borderWidth = 3
+
+        view.layer.cornerRadius = 15
+        view.layer.masksToBounds = true
+        self.view.addSubview(containerView)
+        containerView.addSubview(view)
+        
     }
     
     func configureRefreshControl () {
