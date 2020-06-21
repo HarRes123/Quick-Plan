@@ -17,10 +17,19 @@ class SignInViewController: UIViewController, FUIAuthDelegate {
             super.viewDidLoad()
             
             logInOutlet.layer.cornerRadius = 8
-
+            logInOutlet.backgroundColor = UIColor(hexFromString: "9eb5e8")
+            logInOutlet.tintColor = .darkGray
+            logInOutlet.layer.shadowColor = UIColor.darkGray.cgColor
+            logInOutlet.layer.shadowOffset = CGSize(width: -3, height: 3)
+            logInOutlet.layer.shadowOpacity = 1.0
+            logInOutlet.layer.shadowRadius = 1.5
+            logInOutlet.layer.borderColor = UIColor.darkGray.cgColor
+            logInOutlet.layer.borderWidth = 2
+            
         }
         
-        @IBAction func loginTapped(_ sender: Any) {
+        @IBAction func loginTapped(_ sender: UIButton) {
+            
             
             let authUI = FUIAuth.defaultAuthUI()
                 

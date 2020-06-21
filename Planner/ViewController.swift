@@ -146,21 +146,31 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
             classes = Array<String>(classNameAndAssignments.keys)
             let button = UIButton(type: .custom)
-            if classNameAndAssignments.count > 0 {
-                button.setTitle("\n" + classes[section] + "\n", for: .normal)
-                
-            } else {
-                button.setTitle("\nClass\n", for: .normal)
-            }
             
-          
             button.setTitleColor(.black, for: .normal)
             button.setTitleColor(.gray, for: .selected)
             button.titleLabel?.lineBreakMode = .byWordWrapping
             button.titleLabel?.textAlignment = .center
 
-            button.tag = section // Assign section tag to this button
-            button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
+            button.tag = section
+            
+            if classNameAndAssignments.count > 0 {
+                button.setTitle("\n" + classes[section] + "\n", for: .normal)
+                button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
+              //  button.removeTarget(self, action: #selector(tapImport(sender:)), for: .touchUpInside)
+                
+            } else {
+                button.setTitle("Import Classes", for: .normal)
+                button.addTarget(self, action: #selector(tapImport(sender:)), for: .touchUpInside)
+              //  button.removeTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
+            }
+            
+          
+            button.setTitleColor(.black, for: .normal)
+            button.setTitleColor(.lightGray, for: .selected)
+            button.titleLabel?.lineBreakMode = .byWordWrapping
+            button.titleLabel?.textAlignment = .center
+
            
     //        return button
             return button
@@ -221,6 +231,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         daysFromToday -= 1
         setUpCalendar()
         calendarTableView.reloadData()
+        assignmentTableView.reloadData()
         
     }
     
@@ -229,7 +240,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         daysFromToday += 1
         setUpCalendar()
         calendarTableView.reloadData()
+        assignmentTableView.reloadData()
         
+    }
+    
+    @objc func tapImport(sender: UIButton) {
+         GIDSignIn.sharedInstance().signIn()
+         service.authorizer = myAuth
     }
     
     @objc func tapSection(sender: UIButton) {
@@ -279,6 +296,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 //                    }
             }
             
+            if calendarItems.contains(cell.classAssignments.text) {
+                
+                cell.classAssignments.textColor = .lightGray
+            } else {
+                cell.classAssignments.textColor = .black
+            }
+                        
                 
         } else {
             cell.classAssignments.text = "Assignment"
@@ -705,11 +729,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
        self.present(alert, animated: true)
         
     
-    }
-    
-    @IBAction func signIn(_ sender: Any) {
-        GIDSignIn.sharedInstance().signIn()
-        service.authorizer = myAuth
     }
     
     @IBAction func getInfo(_ sender: Any) {

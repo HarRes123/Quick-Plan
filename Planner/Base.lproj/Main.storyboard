@@ -69,31 +69,23 @@
                         <viewLayoutGuide key="safeArea" id="OSv-cR-nIE"/>
                     </view>
                     <navigationItem key="navigationItem" title="Planner" id="eCj-Fl-F42">
-                        <leftBarButtonItems>
-                            <barButtonItem title="Sign Out" image="logout" id="J6G-PA-1Q2">
+                        <barButtonItem key="leftBarButtonItem" title="Sign Out" image="logout" id="J6G-PA-1Q2">
+                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="signOut:" destination="zcv-In-QdX" id="GOL-7S-W2a"/>
+                            </connections>
+                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Show" image="show" id="tDz-yr-rTc">
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
-                                    <action selector="signOut:" destination="zcv-In-QdX" id="GOL-7S-W2a"/>
+                                    <action selector="showInfo:" destination="zcv-In-QdX" id="6FK-gG-LJX"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="Fetch" image="fetch" id="gZ2-wo-hz8">
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <action selector="getInfo:" destination="zcv-In-QdX" id="HpA-j0-qvk"/>
-                                </connections>
-                            </barButtonItem>
-                        </leftBarButtonItems>
-                        <rightBarButtonItems>
-                            <barButtonItem title="Sign In" image="login" id="aMc-rz-PUX">
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <connections>
-                                    <action selector="signIn:" destination="zcv-In-QdX" id="YW8-Gl-LeQ"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Show" image="show" id="tDz-yr-rTc">
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <connections>
-                                    <action selector="showInfo:" destination="zcv-In-QdX" id="6FK-gG-LJX"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -117,25 +109,26 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="app_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="xDb-H3-Jhn">
-                                <rect key="frame" x="87" y="130" width="240" height="240"/>
+                                <rect key="frame" x="0.0" y="130" width="414" height="235.5"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vKl-YD-PrK">
-                                <rect key="frame" x="136" y="433" width="142" height="30"/>
+                                <rect key="frame" x="136" y="428.5" width="142" height="39"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <state key="normal" title="Sign In"/>
                                 <connections>
-                                    <action selector="loginTapped:" destination="BA2-jE-DmS" eventType="touchUpInside" id="qap-zJ-4lq"/>
+                                    <action selector="loginTapped:" destination="BA2-jE-DmS" eventType="touchUpInside" id="ZHT-Kn-2t4"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="vKl-YD-PrK" firstAttribute="centerY" secondItem="Vz6-gH-F8O" secondAttribute="centerY" id="4fm-6J-AL9"/>
-                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="leading" secondItem="y5B-ki-s5Y" secondAttribute="leading" constant="87" id="8eU-6i-Zy2"/>
-                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="centerX" secondItem="Vz6-gH-F8O" secondAttribute="centerX" id="Aic-qO-3HB"/>
-                            <constraint firstItem="vKl-YD-PrK" firstAttribute="top" secondItem="xDb-H3-Jhn" secondAttribute="bottom" constant="63" id="M37-p4-EQd"/>
-                            <constraint firstItem="vKl-YD-PrK" firstAttribute="leading" secondItem="y5B-ki-s5Y" secondAttribute="leading" constant="136" id="q0V-mP-cLT"/>
-                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="centerX" secondItem="vKl-YD-PrK" secondAttribute="centerX" id="unU-bI-wd0"/>
-                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="top" secondItem="y5B-ki-s5Y" secondAttribute="top" constant="86" id="yVo-Hv-BVD"/>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="top" secondItem="y5B-ki-s5Y" secondAttribute="top" constant="86" id="8hu-4u-fjb"/>
+                            <constraint firstItem="vKl-YD-PrK" firstAttribute="leading" secondItem="y5B-ki-s5Y" secondAttribute="leading" constant="136" id="SSQ-KI-FQQ"/>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="leading" secondItem="y5B-ki-s5Y" secondAttribute="leading" id="T3S-2S-jQF"/>
+                            <constraint firstItem="vKl-YD-PrK" firstAttribute="top" secondItem="xDb-H3-Jhn" secondAttribute="bottom" constant="63" id="fHZ-YR-GFd"/>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="centerX" secondItem="vKl-YD-PrK" secondAttribute="centerX" id="h1f-hw-8zB"/>
+                            <constraint firstItem="vKl-YD-PrK" firstAttribute="centerY" secondItem="Vz6-gH-F8O" secondAttribute="centerY" id="nkY-7d-r8C"/>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="centerX" secondItem="Vz6-gH-F8O" secondAttribute="centerX" id="ybB-QE-Xa1"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="y5B-ki-s5Y"/>
                     </view>
@@ -171,7 +164,6 @@
     <resources>
         <image name="app_logo.png" width="626" height="626"/>
         <image name="fetch" width="30" height="30"/>
-        <image name="login" width="30" height="30"/>
         <image name="logout" width="30" height="30"/>
         <image name="show" width="30" height="30"/>
     </resources>
