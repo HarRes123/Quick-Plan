@@ -94,11 +94,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             // insert them all into the table view at once
             let defaults = UserDefaults.standard
             defaults.set(self.calendarItems, forKey: self.getViewedDate())
+            self.assignmentTableView.reloadData()
             
 //            tableView.insertRows(at: indexPaths, with: .automatic)
         }
     }
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -138,9 +138,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         return showAllClassInfo(assignmentTableView, cellForRowAt: indexPath)
         
     }
-        
     
+    var classButtonTitle = "Import Classes"
+   
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
         
         if tableView == assignmentTableView {
         
@@ -153,16 +155,28 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             button.titleLabel?.textAlignment = .center
 
             button.tag = section
+            print("test")
             
             if classNameAndAssignments.count > 0 {
-                button.setTitle("\n" + classes[section] + "\n", for: .normal)
+                if section == 0 {
+                    button.setTitle("\n\n" + classes[section] + "\n", for: .normal)
+                } else {
+                    button.setTitle("\n" + classes[section] + "\n", for: .normal)
+                }
                 button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
+
               //  button.removeTarget(self, action: #selector(tapImport(sender:)), for: .touchUpInside)
                 
             } else {
-                button.setTitle("Import Classes", for: .normal)
+                
+                
                 button.addTarget(self, action: #selector(tapImport(sender:)), for: .touchUpInside)
+                button.setTitle(classButtonTitle, for: .normal)
+
+               
               //  button.removeTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
+                
+                              
             }
             
           
@@ -170,7 +184,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             button.setTitleColor(.lightGray, for: .selected)
             button.titleLabel?.lineBreakMode = .byWordWrapping
             button.titleLabel?.textAlignment = .center
-
+             //assignmentTableView.reloadData()
            
     //        return button
             return button
@@ -243,9 +257,33 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         assignmentTableView.reloadData()
         
     }
+
     
     @objc func tapImport(sender: UIButton) {
-         GIDSignIn.sharedInstance().signIn()
+
+        
+        if GIDSignIn.sharedInstance()?.currentUser == nil {
+            if sender.title(for: .normal) == "Show Classes" {
+                print("yes")
+                let alert = UIAlertController(title: "Unable to Show Classes", message: "Please sign in", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Sign In", style: .default, handler: { action in
+                    //run your function here
+                    GIDSignIn.sharedInstance().signIn()
+                }))
+                self.present(alert, animated: true)
+            } else {
+                GIDSignIn.sharedInstance().signIn()
+                sender.setTitle("Show Classes", for: .normal)
+                
+                
+            }
+            classButtonTitle = "Show Classes"
+        } else {
+            getInfo()
+            classButtonTitle = ""
+
+        }
+     //   assignmentTableView.reloadData()
          service.authorizer = myAuth
     }
     
@@ -363,6 +401,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 //        return 200
 //    }
+    
+  func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {return}
     
   func timeConversion12(time24: String) -> String {
       let dateAsString = time24
@@ -490,16 +530,14 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
     
     @objc func handleRefreshControl() {
-        
+
         self.assignmentTableView.reloadData()
 
         DispatchQueue.main.async {
             self.assignmentTableView.refreshControl?.endRefreshing()
         }
     }
-    
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {return}
-    
+        
 //    func dayView(dayView: DayView, didTapTimelineAt date: Date) {
 //        let format = DateFormatter()
 //        format.timeZone = .current
@@ -570,6 +608,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     
     func fetchAssignments() {
+        print("FETCH")
         
         assignmentsPerCourse = Array(repeating: [], count:classIDAndName.count)
         
@@ -591,8 +630,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
         }
         
-        let alert = UIAlertController(title: "Information Fetched", message: "", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        let alert = UIAlertController(title: "Information Fetched", message: "Dismiss to view classes", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { action in
+            //run your function here
+            self.showInfo()
+        }))
         self.present(alert, animated: true)
         self.assignmentTableView.reloadData()
     }
@@ -674,7 +716,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     //    print(outputText)
         arrayHeader = Array(repeating: 0, count:classIDAndName.count)
         assignmentIndex = 0
-        fetchAssignments()
+       fetchAssignments()
+
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -731,8 +774,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     }
     
-    @IBAction func getInfo(_ sender: Any) {
-
+    func getInfo() {
+        
         if GIDSignIn.sharedInstance()?.currentUser != nil {
             
             myAuth = GIDSignIn.sharedInstance()?.currentUser.authentication.fetcherAuthorizer()
@@ -741,24 +784,27 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
         service.authorizer = myAuth
         fetchCourses()
+               
         
     }
     
-    @IBAction func showInfo(_ sender: Any) {
-        assignmentIndex = 0
-        
-        if assignmentsPerCourse.count != 0 {
-            for i in 0...assignmentsPerCourse.count - 1 {
-                if assignmentsPerCourse[i].first != nil {
-                    classNameAndAssignments.updateValue(assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: assignmentsPerCourse[i].first ?? "no name")
-                }
-            }
-        } else {
-            let alert = UIAlertController(title: "Unable to Show Info", message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-            self.present(alert, animated: true)
-        }
-        
-        assignmentTableView.reloadData()
-    }
+    func showInfo() {
+    
+       assignmentIndex = 0
+           
+       if assignmentsPerCourse.count != 0 {
+           for i in 0...assignmentsPerCourse.count - 1 {
+               if assignmentsPerCourse[i].first != nil {
+                   classNameAndAssignments.updateValue(assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: assignmentsPerCourse[i].first ?? "no name")
+               }
+           }
+       } else {
+           let alert = UIAlertController(title: "Unable to Show Info", message: "", preferredStyle: .alert)
+           alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+           self.present(alert, animated: true)
+       }
+       
+       assignmentTableView.reloadData()
+   }
+
 }

@@ -75,20 +75,6 @@
                                 <action selector="signOut:" destination="zcv-In-QdX" id="GOL-7S-W2a"/>
                             </connections>
                         </barButtonItem>
-                        <rightBarButtonItems>
-                            <barButtonItem title="Show" image="show" id="tDz-yr-rTc">
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <connections>
-                                    <action selector="showInfo:" destination="zcv-In-QdX" id="6FK-gG-LJX"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Fetch" image="fetch" id="gZ2-wo-hz8">
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <connections>
-                                    <action selector="getInfo:" destination="zcv-In-QdX" id="HpA-j0-qvk"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="assignmentTableView" destination="Hlr-ja-OiJ" id="OYZ-Bq-LMN"/>
@@ -98,7 +84,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oen-GF-wRZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2282.608695652174" y="-224.33035714285714"/>
+            <point key="canvasLocation" x="2081" y="-224"/>
         </scene>
         <!--Sign In View Controller-->
         <scene sceneID="9rw-gh-k6r">
@@ -163,8 +149,6 @@
     </scenes>
     <resources>
         <image name="app_logo.png" width="626" height="626"/>
-        <image name="fetch" width="30" height="30"/>
         <image name="logout" width="30" height="30"/>
-        <image name="show" width="30" height="30"/>
     </resources>
 </document>
