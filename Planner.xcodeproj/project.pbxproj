@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07803649A158A468DA7D2DFA /* Pods_Planner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67B77B5EEB5E70542B767D72 /* Pods_Planner.framework */; };
+		2C77E8F144CE8F8F0A47C513 /* Pods_PlannerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1FF72B43E26EFA8E57187D /* Pods_PlannerTests.framework */; };
 		620ABAF6249726B500730D80 /* AssignmentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620ABAF4249726B500730D80 /* AssignmentTableViewCell.swift */; };
 		620ABAF7249726B500730D80 /* AssignmentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620ABAF5249726B500730D80 /* AssignmentTableViewCell.xib */; };
+		623079B2249EB3C5006BD643 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623079B1249EB3C5006BD643 /* SignInViewController.swift */; };
 		6235D9D72494B32400D81324 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6235D9D62494B32400D81324 /* Extensions.swift */; };
 		624BABFD24908E790050EA6F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BABFC24908E790050EA6F /* AppDelegate.swift */; };
 		624BABFF24908E790050EA6F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BABFE24908E790050EA6F /* SceneDelegate.swift */; };
@@ -18,12 +21,12 @@
 		624BAC0924908E7C0050EA6F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 624BAC0724908E7B0050EA6F /* LaunchScreen.storyboard */; };
 		624BAC1424908E7C0050EA6F /* PlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BAC1324908E7C0050EA6F /* PlannerTests.swift */; };
 		624BAC1F24908E7C0050EA6F /* PlannerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BAC1E24908E7C0050EA6F /* PlannerUITests.swift */; };
+		627FB368249EC77D007E0E4C /* app_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 627FB367249EC77D007E0E4C /* app_logo.png */; };
 		6280AC85249C751000F66107 /* iPhone X 01.png in Resources */ = {isa = PBXBuildFile; fileRef = 6280AC84249C751000F66107 /* iPhone X 01.png */; };
+		62C7E55A249EB9A100155748 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 62C7E559249EB9A100155748 /* GoogleService-Info.plist */; };
 		62D84CE9249985D50011BD6F /* CalendarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D84CE7249985D50011BD6F /* CalendarTableViewCell.swift */; };
 		62D84CEA249985D50011BD6F /* CalendarTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 62D84CE8249985D50011BD6F /* CalendarTableViewCell.xib */; };
-		85F4DA535D2B594932E7F5CB /* libPods-Planner-PlannerUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5B330DDDA35E164852449E /* libPods-Planner-PlannerUITests.a */; };
-		C9B3010FCB25B09D36CAA9CB /* libPods-PlannerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F5962F075C8AD4E22BF77A6 /* libPods-PlannerTests.a */; };
-		DC395BFDF6961047F89050CD /* libPods-Planner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E1F3F7E20DEA72DD265A194 /* libPods-Planner.a */; };
+		E0602791331351E05F2A2BA5 /* Pods_Planner_PlannerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D34907A22D4322E0AC896D6 /* Pods_Planner_PlannerUITests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,10 +48,12 @@
 
 /* Begin PBXFileReference section */
 		2950B3B3B06E8EA0B26CE3A9 /* Pods-Planner-PlannerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Planner-PlannerUITests.release.xcconfig"; path = "Target Support Files/Pods-Planner-PlannerUITests/Pods-Planner-PlannerUITests.release.xcconfig"; sourceTree = "<group>"; };
-		3E1F3F7E20DEA72DD265A194 /* libPods-Planner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Planner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C1FF72B43E26EFA8E57187D /* Pods_PlannerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PlannerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D34907A22D4322E0AC896D6 /* Pods_Planner_PlannerUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Planner_PlannerUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		55876FC994EED796FCC51024 /* Pods-Planner-PlannerUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Planner-PlannerUITests.debug.xcconfig"; path = "Target Support Files/Pods-Planner-PlannerUITests/Pods-Planner-PlannerUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		620ABAF4249726B500730D80 /* AssignmentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentTableViewCell.swift; sourceTree = "<group>"; };
 		620ABAF5249726B500730D80 /* AssignmentTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AssignmentTableViewCell.xib; sourceTree = "<group>"; };
+		623079B1249EB3C5006BD643 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		6235D9D62494B32400D81324 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		624BABF924908E790050EA6F /* Planner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Planner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		624BABFC24908E790050EA6F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -65,12 +70,13 @@
 		624BAC1E24908E7C0050EA6F /* PlannerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlannerUITests.swift; sourceTree = "<group>"; };
 		624BAC2024908E7C0050EA6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		625414A02490A45C00AA7908 /* Planner-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Planner-Bridging-Header.h"; sourceTree = "<group>"; };
+		627FB367249EC77D007E0E4C /* app_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_logo.png; sourceTree = "<group>"; };
 		6280AC84249C751000F66107 /* iPhone X 01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iPhone X 01.png"; sourceTree = "<group>"; };
+		62C7E559249EB9A100155748 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		62D84CE7249985D50011BD6F /* CalendarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTableViewCell.swift; sourceTree = "<group>"; };
 		62D84CE8249985D50011BD6F /* CalendarTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CalendarTableViewCell.xib; sourceTree = "<group>"; };
 		632B8D664A9206503C8834DA /* Pods-PlannerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlannerTests.release.xcconfig"; path = "Target Support Files/Pods-PlannerTests/Pods-PlannerTests.release.xcconfig"; sourceTree = "<group>"; };
-		8F5962F075C8AD4E22BF77A6 /* libPods-PlannerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PlannerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AE5B330DDDA35E164852449E /* libPods-Planner-PlannerUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Planner-PlannerUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		67B77B5EEB5E70542B767D72 /* Pods_Planner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Planner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7CC4F2584060ECF9180E505 /* Pods-Planner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Planner.release.xcconfig"; path = "Target Support Files/Pods-Planner/Pods-Planner.release.xcconfig"; sourceTree = "<group>"; };
 		BB0B754AE293445E03D54F5A /* Pods-Planner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Planner.debug.xcconfig"; path = "Target Support Files/Pods-Planner/Pods-Planner.debug.xcconfig"; sourceTree = "<group>"; };
 		E659B549A9BCCBF9E3CC19F1 /* Pods-PlannerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlannerTests.debug.xcconfig"; path = "Target Support Files/Pods-PlannerTests/Pods-PlannerTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -81,7 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DC395BFDF6961047F89050CD /* libPods-Planner.a in Frameworks */,
+				07803649A158A468DA7D2DFA /* Pods_Planner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,7 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9B3010FCB25B09D36CAA9CB /* libPods-PlannerTests.a in Frameworks */,
+				2C77E8F144CE8F8F0A47C513 /* Pods_PlannerTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,7 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85F4DA535D2B594932E7F5CB /* libPods-Planner-PlannerUITests.a in Frameworks */,
+				E0602791331351E05F2A2BA5 /* Pods_Planner_PlannerUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				624BABFC24908E790050EA6F /* AppDelegate.swift */,
+				623079B1249EB3C5006BD643 /* SignInViewController.swift */,
 				624BABFE24908E790050EA6F /* SceneDelegate.swift */,
 				624BAC0024908E790050EA6F /* ViewController.swift */,
 				6235D9D62494B32400D81324 /* Extensions.swift */,
@@ -143,6 +150,8 @@
 				624BAC0724908E7B0050EA6F /* LaunchScreen.storyboard */,
 				624BAC0A24908E7C0050EA6F /* Info.plist */,
 				6280AC84249C751000F66107 /* iPhone X 01.png */,
+				627FB367249EC77D007E0E4C /* app_logo.png */,
+				62C7E559249EB9A100155748 /* GoogleService-Info.plist */,
 			);
 			path = Planner;
 			sourceTree = "<group>";
@@ -168,9 +177,9 @@
 		66E5BA507A0EE0740BBF3B4F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3E1F3F7E20DEA72DD265A194 /* libPods-Planner.a */,
-				AE5B330DDDA35E164852449E /* libPods-Planner-PlannerUITests.a */,
-				8F5962F075C8AD4E22BF77A6 /* libPods-PlannerTests.a */,
+				67B77B5EEB5E70542B767D72 /* Pods_Planner.framework */,
+				3D34907A22D4322E0AC896D6 /* Pods_Planner_PlannerUITests.framework */,
+				2C1FF72B43E26EFA8E57187D /* Pods_PlannerTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -200,6 +209,7 @@
 				624BABF624908E790050EA6F /* Frameworks */,
 				624BABF724908E790050EA6F /* Resources */,
 				4E8645321AE8B0F1640BEC22 /* [CP] Copy Pods Resources */,
+				0E6ECB0C1CAAD0CB3537154F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -238,6 +248,7 @@
 				624BAC1724908E7C0050EA6F /* Frameworks */,
 				624BAC1824908E7C0050EA6F /* Resources */,
 				E05D7F93F12D5E04ED280BB5 /* [CP] Copy Pods Resources */,
+				3DAF64D8AEDACD5E7F80576A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -298,12 +309,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				627FB368249EC77D007E0E4C /* app_logo.png in Resources */,
 				620ABAF7249726B500730D80 /* AssignmentTableViewCell.xib in Resources */,
 				624BAC0924908E7C0050EA6F /* LaunchScreen.storyboard in Resources */,
 				62D84CEA249985D50011BD6F /* CalendarTableViewCell.xib in Resources */,
 				624BAC0624908E7B0050EA6F /* Assets.xcassets in Resources */,
 				6280AC85249C751000F66107 /* iPhone X 01.png in Resources */,
 				624BAC0424908E790050EA6F /* Main.storyboard in Resources */,
+				62C7E55A249EB9A100155748 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +337,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0E6ECB0C1CAAD0CB3537154F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Planner/Pods-Planner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Planner/Pods-Planner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Planner/Pods-Planner-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		1399312B0C100DFC3B2CFAD5 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -344,6 +374,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3DAF64D8AEDACD5E7F80576A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Planner-PlannerUITests/Pods-Planner-PlannerUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Planner-PlannerUITests/Pods-Planner-PlannerUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Planner-PlannerUITests/Pods-Planner-PlannerUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		4E8645321AE8B0F1640BEC22 /* [CP] Copy Pods Resources */ = {
@@ -431,6 +478,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				623079B2249EB3C5006BD643 /* SignInViewController.swift in Sources */,
 				624BAC0124908E790050EA6F /* ViewController.swift in Sources */,
 				624BABFD24908E790050EA6F /* AppDelegate.swift in Sources */,
 				62D84CE9249985D50011BD6F /* CalendarTableViewCell.swift in Sources */,

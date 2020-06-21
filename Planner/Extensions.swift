@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import FirebaseUI
 
 extension Array {
     func arrayWithoutFirstElement() -> Array {
@@ -95,4 +96,60 @@ extension UINavigationBar {
     self.shadowImage = UIImage()
     self.isTranslucent = true
     }
+}
+
+extension SignInViewController {
+    
+    func authUI(_ authUI: FUIAuth, didSignInWith authDataResult: AuthDataResult?, error: Error?) {
+        
+        // Check for error
+        guard error == nil else {
+            return
+        }
+        var title = ""
+        var messege = ""
+        
+        // Transition to home
+                    
+        if Auth.auth().currentUser!.isEmailVerified == true {
+            
+            print("VERIFIED")
+            performSegue(withIdentifier: "goHome", sender: self)
+        } else {
+            
+            print("NOT VERIFIED")
+            title = "Verify Account"
+            messege = "Please check you email and verify your account"
+            let alert = UIAlertController(title: title, message: messege, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            Auth.auth().currentUser?.sendEmailVerification { (error) in
+                // ...
+            }
+            self.present(alert, animated: true)
+
+        }
+
+        
+    }
+}
+
+
+extension Float
+{
+    var clean: String
+    {
+        return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
+    }
+}
+
+extension NSMutableAttributedString {
+
+    func setColorForText(textForAttribute: String, withColor color: UIColor) {
+        let range: NSRange = self.mutableString.range(of: textForAttribute, options: .caseInsensitive)
+
+        // Swift 4.2 and above
+        self.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
+
+    }
+
 }

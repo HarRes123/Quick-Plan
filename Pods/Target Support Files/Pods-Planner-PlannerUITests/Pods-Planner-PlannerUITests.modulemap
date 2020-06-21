@@ -1,4 +1,4 @@
-module Pods_Planner_PlannerUITests {
+framework module Pods_Planner_PlannerUITests {
   umbrella header "Pods-Planner-PlannerUITests-umbrella.h"
 
   export *

@@ -2,8 +2,15 @@
 platform :ios, '11.0'
 
 target 'Planner' do
+    use_frameworks!
     pod 'GoogleAPIClientForREST/Classroom'
     pod 'GoogleSignIn'
+    pod 'Firebase/Core'
+    pod 'Firebase/Messaging'
+    pod 'Firebase/Analytics'
+    pod 'FirebaseUI/Auth'
+    pod 'FirebaseUI/Email'
+    pod 'FirebaseUI/Google'
 
   # Pods for Planner
 

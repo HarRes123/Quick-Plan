@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1150"
+   LastUpgradeVersion = "1100"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "92BE45E3652D6B054A7F47008B940F40"
-               BuildableName = "libPods-Planner-PlannerUITests.a"
+               BuildableName = "Pods_Planner_PlannerUITests.framework"
                BlueprintName = "Pods-Planner-PlannerUITests"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>

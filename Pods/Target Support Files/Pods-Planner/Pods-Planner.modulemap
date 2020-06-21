@@ -1,4 +1,4 @@
-module Pods_Planner {
+framework module Pods_Planner {
   umbrella header "Pods-Planner-umbrella.h"
 
   export *

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vJG-to-3DG">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BA2-jE-DmS">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -17,16 +17,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Hlr-ja-OiJ">
-                                <rect key="frame" x="16" y="101" width="137" height="774"/>
+                                <rect key="frame" x="11" y="101" width="142" height="774"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="137" id="Hju-ac-gVP"/>
+                                    <constraint firstAttribute="width" constant="142" id="03o-dP-F00"/>
                                 </constraints>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="assignmentCell" id="cP5-iY-NZ1" customClass="AssignmentTableViewCell" customModule="Planner" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="73.5" width="105" height="43.5"/>
+                                        <rect key="frame" x="16" y="73.5" width="110" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cP5-iY-NZ1" id="UJJ-vd-gfP">
-                                            <rect key="frame" x="0.0" y="0.0" width="105" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="110" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -37,14 +37,14 @@
                                 </connections>
                             </tableView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="50" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="CKD-gs-1pZ">
-                                <rect key="frame" x="170" y="101" width="235" height="774"/>
+                                <rect key="frame" x="166" y="101" width="239" height="774"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="calendarCell" id="5Ig-Vz-FBa" customClass="CalendarTableViewCell" customModule="Planner" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="235" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="28" width="239" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5Ig-Vz-FBa" id="Y6G-7Y-v1C">
-                                            <rect key="frame" x="0.0" y="0.0" width="235" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="239" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
@@ -58,39 +58,39 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" constant="13" id="F9z-S0-u2n"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" constant="16" id="L7K-JK-0dR"/>
-                            <constraint firstItem="OSv-cR-nIE" firstAttribute="trailing" secondItem="CKD-gs-1pZ" secondAttribute="trailing" constant="9" id="OX4-s2-NCB"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="Hlr-ja-OiJ" secondAttribute="bottom" constant="-13" id="afe-02-DXk"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="bottom" secondItem="CKD-gs-1pZ" secondAttribute="bottom" id="b0L-1H-37Y"/>
-                            <constraint firstItem="CKD-gs-1pZ" firstAttribute="leading" secondItem="Hlr-ja-OiJ" secondAttribute="trailing" constant="17" id="eJX-jW-t3B"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="CKD-gs-1pZ" secondAttribute="top" id="tCZ-52-tkL"/>
+                            <constraint firstItem="OSv-cR-nIE" firstAttribute="trailing" secondItem="CKD-gs-1pZ" secondAttribute="trailing" constant="9" id="Cqs-nC-WZ4"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" constant="13" id="FNM-cg-Npf"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="Hlr-ja-OiJ" secondAttribute="bottom" constant="-13" id="L3C-Wy-vLp"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" constant="11" id="ajt-NU-Hzb"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="bottom" secondItem="CKD-gs-1pZ" secondAttribute="bottom" id="bVv-Jo-dqr"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="CKD-gs-1pZ" secondAttribute="top" id="cWH-o1-VoQ"/>
+                            <constraint firstItem="CKD-gs-1pZ" firstAttribute="leading" secondItem="Hlr-ja-OiJ" secondAttribute="trailing" constant="13" id="uq4-C2-owr"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="OSv-cR-nIE"/>
                     </view>
                     <navigationItem key="navigationItem" title="Planner" id="eCj-Fl-F42">
                         <leftBarButtonItems>
-                            <barButtonItem image="minus icon" id="J6G-PA-1Q2">
+                            <barButtonItem title="Sign Out" image="logout" id="J6G-PA-1Q2">
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <action selector="signOut:" destination="zcv-In-QdX" id="GOL-7S-W2a"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Fetch" id="gZ2-wo-hz8">
-                                <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <barButtonItem title="Fetch" image="fetch" id="gZ2-wo-hz8">
+                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <action selector="getInfo:" destination="zcv-In-QdX" id="HpA-j0-qvk"/>
                                 </connections>
                             </barButtonItem>
                         </leftBarButtonItems>
                         <rightBarButtonItems>
-                            <barButtonItem title="Sign In" image="plus icon" id="aMc-rz-PUX">
+                            <barButtonItem title="Sign In" image="login" id="aMc-rz-PUX">
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <action selector="signIn:" destination="zcv-In-QdX" id="YW8-Gl-LeQ"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Show" id="tDz-yr-rTc">
+                            <barButtonItem title="Show" image="show" id="tDz-yr-rTc">
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <action selector="showInfo:" destination="zcv-In-QdX" id="6FK-gG-LJX"/>
@@ -101,17 +101,59 @@
                     <connections>
                         <outlet property="assignmentTableView" destination="Hlr-ja-OiJ" id="OYZ-Bq-LMN"/>
                         <outlet property="calendarTableView" destination="CKD-gs-1pZ" id="acB-3U-zKS"/>
+                        <segue destination="BA2-jE-DmS" kind="presentation" identifier="logOut" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="0n5-jj-Dax"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oen-GF-wRZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2282.608695652174" y="-224.33035714285714"/>
         </scene>
+        <!--Sign In View Controller-->
+        <scene sceneID="9rw-gh-k6r">
+            <objects>
+                <viewController storyboardIdentifier="signInVC" id="BA2-jE-DmS" customClass="SignInViewController" customModule="Planner" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Vz6-gH-F8O">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="app_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="xDb-H3-Jhn">
+                                <rect key="frame" x="87" y="130" width="240" height="240"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vKl-YD-PrK">
+                                <rect key="frame" x="136" y="433" width="142" height="30"/>
+                                <state key="normal" title="Sign In"/>
+                                <connections>
+                                    <action selector="loginTapped:" destination="BA2-jE-DmS" eventType="touchUpInside" id="qap-zJ-4lq"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="vKl-YD-PrK" firstAttribute="centerY" secondItem="Vz6-gH-F8O" secondAttribute="centerY" id="4fm-6J-AL9"/>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="leading" secondItem="y5B-ki-s5Y" secondAttribute="leading" constant="87" id="8eU-6i-Zy2"/>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="centerX" secondItem="Vz6-gH-F8O" secondAttribute="centerX" id="Aic-qO-3HB"/>
+                            <constraint firstItem="vKl-YD-PrK" firstAttribute="top" secondItem="xDb-H3-Jhn" secondAttribute="bottom" constant="63" id="M37-p4-EQd"/>
+                            <constraint firstItem="vKl-YD-PrK" firstAttribute="leading" secondItem="y5B-ki-s5Y" secondAttribute="leading" constant="136" id="q0V-mP-cLT"/>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="centerX" secondItem="vKl-YD-PrK" secondAttribute="centerX" id="unU-bI-wd0"/>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="top" secondItem="y5B-ki-s5Y" secondAttribute="top" constant="86" id="yVo-Hv-BVD"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="y5B-ki-s5Y"/>
+                    </view>
+                    <connections>
+                        <outlet property="logInOutlet" destination="vKl-YD-PrK" id="6dL-hJ-y76"/>
+                        <segue destination="vJG-to-3DG" kind="presentation" identifier="goHome" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="Fbu-Rj-0GA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Tpw-E8-y6g" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="656.52173913043487" y="-224.33035714285714"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="BvR-78-2Wz">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="vJG-to-3DG" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="mainVC" automaticallyAdjustsScrollViewInsets="NO" id="vJG-to-3DG" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="NJ0-dF-MIq"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="7ew-dX-QtP">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -127,7 +169,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="minus icon" width="30" height="30"/>
-        <image name="plus icon" width="30" height="30"/>
+        <image name="app_logo.png" width="626" height="626"/>
+        <image name="fetch" width="30" height="30"/>
+        <image name="login" width="30" height="30"/>
+        <image name="logout" width="30" height="30"/>
+        <image name="show" width="30" height="30"/>
     </resources>
 </document>

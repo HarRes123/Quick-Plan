@@ -9,6 +9,7 @@
 import UIKit
 import GoogleSignIn
 import MobileCoreServices
+import Firebase
 
 class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate  {
     
@@ -36,7 +37,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     lazy var refreshController = UIRefreshControl()
     
-    private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID,kGTLRAuthScopeClassroomStudentSubmissionsStudentsReadonly, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomRostersReadonly, kGTLRAuthScopeClassroomCourseworkMe]
+    private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID,kGTLRAuthScopeClassroomStudentSubmissionsStudentsReadonly, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomCourseworkMe]
         
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
@@ -180,10 +181,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 rightButton.frame = CGRect(x: labelX - 15 + 75  , y: 5, width: 30, height: 40)
                 label.text = currentDate
                 label.textAlignment = .center
-                leftButton.setTitle("<", for: .normal)
+             //   leftButton.setTitle("<", for: .normal)
+                leftButton.setImage(UIImage(named: "backwards"), for: .normal)
+
                 leftButton.setTitleColor(.black, for: .normal)
                 leftButton.setTitleColor(.gray, for: .selected)
-                rightButton.setTitle(">", for: .normal)
+               // rightButton.setTitle(">", for: .normal)
+                rightButton.setImage(UIImage(named: "fowards"), for: .normal)
                 rightButton.setTitleColor(.gray, for: .selected)
                 rightButton.setTitleColor(.black, for: .normal)
                 
@@ -386,6 +390,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         setUpCalendar()
         
         configureRefreshControl()
+        self.navigationItem.title = Auth.auth().currentUser?.displayName
 
         GIDSignIn.sharedInstance()?.presentingViewController = self
         GIDSignIn.sharedInstance().scopes = scopes
@@ -425,12 +430,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         setUpUI(view: assignmentTableView)
         setUpUI(view: calendarTableView)
         
+        self.navigationController?.navigationBar.transparentNavigationBar()
         self.view.backgroundColor = UIColor(hexFromString: "9eb5e8")
-        self.navigationController?.navigationBar.layer.shadowColor = UIColor.darkGray.cgColor
-        self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 8)
-        self.navigationController?.navigationBar.layer.shadowRadius = 2
-        self.navigationController?.navigationBar.layer.shadowOpacity = 1.0
-        self.navigationController?.navigationBar.layer.masksToBounds = false
+//        self.navigationController?.navigationBar.layer.shadowColor = UIColor.darkGray.cgColor
+//        self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 3)
+//        self.navigationController?.navigationBar.layer.shadowRadius = 1.5
+//        self.navigationController?.navigationBar.layer.shadowOpacity = 1.0
+//        self.navigationController?.navigationBar.layer.masksToBounds = false
 
     }
     
@@ -439,12 +445,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         let containerView:UIView = UIView(frame: view.frame)
         containerView.backgroundColor = UIColor.clear
         containerView.layer.shadowColor = UIColor.darkGray.cgColor
-        containerView.layer.shadowOffset = CGSize(width: -6, height: 6)
+        containerView.layer.shadowOffset = CGSize(width: -3, height: 3)
         containerView.layer.shadowOpacity = 1.0
-        containerView.layer.shadowRadius = 2
+        containerView.layer.shadowRadius = 1.5
         
         view.layer.borderColor = UIColor.darkGray.cgColor
-        view.layer.borderWidth = 3
+        view.layer.borderWidth = 2
 
         view.layer.cornerRadius = 15
         view.layer.masksToBounds = true
@@ -483,8 +489,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     func fetchCourses() {
         
-        let fullName = UserDefaults.standard.string(forKey: "fullName") ?? "Planner"
-        self.navigationItem.title = fullName
 
         let query = GTLRClassroomQuery_CoursesList.query()
         query.pageSize = 100
@@ -623,6 +627,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
 
+
     @objc func obtainClassIds(ticket: GTLRServiceTicket,
                                  finishedWithObject result : GTLRClassroom_ListCoursesResponse,
                                  error : NSError?) {
@@ -670,20 +675,36 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
   
     @IBAction func signOut(_ sender: Any) {
         
-        assignmentsPerCourse = [Array<String>]()
-        assignmentIndex = 0
-        classIDAndName = [String:String]()
-        classNameAndAssignments = [String: Array<String>]()
-        
-       // resetDefaults()
-        self.navigationItem.title = "Planner"
-        
-        GIDSignIn.sharedInstance().signOut()
-        GIDSignIn.sharedInstance().disconnect()
-        service.authorizer = myAuth
-        
+       let alert = UIAlertController(title: "Would You Like to Sign Out of Your Account?", message: "", preferredStyle: .alert)
+       let yes = UIAlertAction(title: "Yes", style: .default) { (action:UIAlertAction) in
+           
+           
+            self.assignmentsPerCourse = [Array<String>]()
+            self.assignmentIndex = 0
+            self.classIDAndName = [String:String]()
+            self.classNameAndAssignments = [String: Array<String>]()
 
-        self.assignmentTableView.reloadData()
+            // resetDefaults()
+            self.navigationItem.title = "Planner"
+
+            GIDSignIn.sharedInstance().signOut()
+            GIDSignIn.sharedInstance().disconnect()
+            self.service.authorizer = self.myAuth
+
+
+            self.assignmentTableView.reloadData()
+            try! Auth.auth().signOut()
+            self.performSegue(withIdentifier: "logOut", sender: self)
+       }
+       
+       let no = UIAlertAction(title: "No", style: .cancel) { (action:UIAlertAction) in
+           alert.dismiss(animated: true, completion: nil)
+       }
+       alert.addAction(yes)
+       alert.addAction(no)
+       self.present(alert, animated: true)
+        
+    
     }
     
     @IBAction func signIn(_ sender: Any) {

@@ -8,22 +8,41 @@
 
 import UIKit
 import GoogleSignIn
+import Firebase
 
 @UIApplicationMain
 
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
-
-  var window: UIWindow?
+    
+    var window: UIWindow?
     
   // [START didfinishlaunching]
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-    GIDSignIn.sharedInstance().clientID = "136124065580-737s6o2l8t0jsj975oskchvr2jrmpljq.apps.googleusercontent.com"
+    GIDSignIn.sharedInstance().clientID = "822317343063-e7vjk7hv66ungvddj0nu82a4n857m9cp.apps.googleusercontent.com"
     GIDSignIn.sharedInstance().delegate = self
+    FirebaseApp.configure()
+    
+    let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+
+    // controller identifier sets up in storyboard utilities
+    // panel (on the right), it called Storyboard ID
+    var viewController = UIViewController()
+    if Auth.auth().currentUser != nil && Auth.auth().currentUser!.isEmailVerified == true {
+        viewController = storyboard.instantiateViewController(withIdentifier: "mainVC")
+    } else {
+        viewController = storyboard.instantiateViewController(withIdentifier: "signInVC") as! SignInViewController
+    }
+
+    self.window?.rootViewController = viewController
+    self.window?.makeKeyAndVisible()
+
 
     return true
   }
+ 
+
 
   func application(_ application: UIApplication,
                    open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
@@ -52,8 +71,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
 //    let userId = user.userID                  // For client-side use only!
 //    let idToken = user.authentication.idToken // Safe to send to the server
       let fullName = user.profile.name
-      UserDefaults.standard.set(fullName, forKey: "fullName")
-
     //  print(fullName)
 //    let givenName = user.profile.givenName
 //    let familyName = user.profile.familyName
