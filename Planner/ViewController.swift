@@ -134,7 +134,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
     
     func scrollViewWillBeginDragging(cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("test")
+        //print("test")
         return showAllClassInfo(assignmentTableView, cellForRowAt: indexPath)
         
     }
@@ -155,7 +155,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             button.titleLabel?.textAlignment = .center
 
             button.tag = section
-            print("test")
+       //     print("test")
             
             if classNameAndAssignments.count > 0 {
                 if section == 0 {
@@ -263,6 +263,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         
         if GIDSignIn.sharedInstance()?.currentUser == nil {
+            print("YESYES")
             if sender.title(for: .normal) == "Show Classes" {
                 print("yes")
                 let alert = UIAlertController(title: "Unable to Show Classes", message: "Please sign in", preferredStyle: .alert)
@@ -279,6 +280,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
             classButtonTitle = "Show Classes"
         } else {
+            print("NONO")
             getInfo()
             classButtonTitle = ""
 
@@ -447,11 +449,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
         }
     }
+
     
     override func viewDidLoad() {
       super.viewDidLoad()
         
         setUpCalendar()
+        GIDSignIn.sharedInstance()?.signOut()
         
         configureRefreshControl()
         self.navigationItem.title = Auth.auth().currentUser?.displayName
@@ -530,7 +534,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
     
     @objc func handleRefreshControl() {
-
+        
+        if assignmentsPerCourse.count > 0 {
+            self.showInfo()
+        }
         self.assignmentTableView.reloadData()
 
         DispatchQueue.main.async {
