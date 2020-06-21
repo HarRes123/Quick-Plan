@@ -198,14 +198,14 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 view.backgroundColor = UIColor(hexFromString: "E8E8E8") //tableView.backgroundColor
                 let labelWidth = 110
                 let labelX = Int(tableView.frame.size.width)/2
-                let label = UILabel(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 40))
+                let label = UIButton(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 40))
                 let leftButton = UIButton(type: .custom)
                 let rightButton = UIButton(type: .custom)
                 leftButton.frame = CGRect(x: labelX - 15 - 75, y: 5, width: 30, height: 40)
                 rightButton.frame = CGRect(x: labelX - 15 + 75  , y: 5, width: 30, height: 40)
-                label.text = currentDate
-                label.textAlignment = .center
-             //   leftButton.setTitle("<", for: .normal)
+                label.setTitle(currentDate, for: .normal)
+                label.setTitleColor(.black, for: .normal)
+                label.setTitleColor(.gray, for: .selected)
                 leftButton.setImage(UIImage(named: "backwards"), for: .normal)
 
                 leftButton.setTitleColor(.black, for: .normal)
@@ -217,6 +217,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 
                 leftButton.addTarget(self, action: #selector(backDay(sender:)), for: .touchUpInside)
                 rightButton.addTarget(self, action: #selector(aheadDay(sender:)), for: .touchUpInside)
+                label.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
+              //   self.calendarTableView.addGestureRecognizer(lpgr)
                 
                 view.sizeToFit()
                 view.addSubview(label)
@@ -228,6 +230,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
             
         }
+    }
+    
+    func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+
+        if session.localDragSession != nil { // Drag originated from the same app.
+            return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        }
+
+        return UITableViewDropProposal(operation: .cancel, intent: .unspecified)
     }
     
     func getViewedDate() -> String {
@@ -449,14 +460,47 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
         }
     }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
+    }
 
+    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    
+ 
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+            let movedObject = self.calendarItems[sourceIndexPath.row]
+            calendarItems.remove(at: sourceIndexPath.row)
+            calendarItems.insert(movedObject, at: destinationIndexPath.row)
+            let defaults = UserDefaults.standard
+            defaults.set(self.calendarItems, forKey: self.getViewedDate())
+            self.assignmentTableView.reloadData()
+        
+    }
+    
+    @objc func pressedOnDate(sender: UIButton) {
+        
+        if calendarTableView.isEditing == false {
+            calendarTableView.isEditing = true
+        } else {
+            calendarTableView.isEditing = false
+        }
+    
+    }
     
     override func viewDidLoad() {
       super.viewDidLoad()
         
         setUpCalendar()
         GIDSignIn.sharedInstance()?.signOut()
-        
+
         configureRefreshControl()
         self.navigationItem.title = Auth.auth().currentUser?.displayName
 
@@ -484,7 +528,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         assignmentTableView.dragDelegate = self
         calendarTableView.dropDelegate = self
         assignmentTableView.dragInteractionEnabled = true
-        calendarTableView.dragInteractionEnabled = true
+       // calendarTableView.dragInteractionEnabled = true
         
       //  self.assignmentTableView.register(AssignmentTableViewCell.self, forCellReuseIdentifier: "assignmentCell")
         let nibClassroom = UINib.init(nibName: "AssignmentTableViewCell", bundle: nil)
