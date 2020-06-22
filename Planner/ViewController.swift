@@ -27,6 +27,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     var calendarItems = [String]()
     
+    var assignmentAndDueDate = [String : String]()
+    
     var daysFromToday = 0
     
     let date = Date()
@@ -42,10 +44,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
         // if the table view in question is the left table view then read from leftItems, otherwise read from rightItems
-        let string = tableView == assignmentTableView ? classNameAndAssignments[classes[indexPath.section]]?[indexPath.row] : calendarItems[indexPath.row]
+        let assignment = classNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
+        let dueDate = assignmentAndDueDate[assignment] ?? ""
+        let string = tableView == assignmentTableView ? "\(assignment)\n\n\(dueDate)" : calendarItems[indexPath.row]
         
         // Attempt to convert the string to a Data object so it can be passed around using drag and drop
-        guard let data = string?.data(using: .utf8) else { return [] }
+        guard let data = string.data(using: .utf8) else { return [] }
         
         // Place that data inside an NSItemProvider, marking it as containing a plain text string so other apps know what to do with it
         let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypePlainText as String)
@@ -337,8 +341,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 //                let assignments = classNameAndAssignments[classes[indexPath.row]]?.joined(separator: "; ") // "1-2-3"
   //              cell.classAssignments.text = assignments//
                 if indexPath.row < classNameAndAssignments[classes[indexPath.section]]!.count {
-                    let cellText = classNameAndAssignments[classes[indexPath.section]]?[indexPath.row]
-                    cell.classAssignments.text = cellText
+                    let cellText = classNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
+                    
+                    let dueDate = assignmentAndDueDate[cellText] ?? ""
+                    cell.classAssignments.text = "\(cellText)\n\n\(dueDate)"
+                   // print(dueDate)
     //                    for assignment in 0...classNameAndAssignments[classes[indexPath.section]]!.count-1 {
     //    //
     //                        cell.classAssignments.text! += classNameAndAssignments[classes[indexPath.section]]?[assignment] ?? "No assignment"
@@ -710,15 +717,24 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         //  for classCount in 0...classNames.count - 1 {
          
             for assignment in assignments {
+                let dueMonth = assignment.dueDate?.month as? Int ?? 0
+                let dueDay = assignment.dueDate?.day as? Int ?? 0
+                let dueYear = assignment.dueDate?.year as? Int ?? 0
                 
-//                let dueMonth = assignment.dueDate?.month as? Int
-//                let dueDay = assignment.dueDate?.day as? Int
-//                let dueYear = assignment.dueDate?.year as? Int
+                var finalDate = "\(dueMonth)/\(dueDay)/\(dueYear)"
+                
+                if finalDate == "0/0/0" {
+                    finalDate = "No Due Date"
+                }
+                
+                assignmentAndDueDate.updateValue("Due: \(finalDate)", forKey: assignment.title ?? "no title")
+//
                 
                 //outputText += "Title: \(assignment.title ?? "No title")\nDue Date: \(dueMonth ?? 0)/\(dueDay ?? 0)/\(dueYear ?? 0)\n"
                 if assignmentsPerCourse.count != 0 {
                     if assignmentsPerCourse[assignmentIndex].count == 0 {
                         assignmentsPerCourse[assignmentIndex].append(classIDAndName[assignment.courseId ?? "0"] ?? "No name")
+                        
                     }
                 }
                 assignmentsPerCourse[assignmentIndex].append(assignment.title ?? "No title")
