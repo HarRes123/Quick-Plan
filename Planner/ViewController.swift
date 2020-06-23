@@ -61,26 +61,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         // place that item provider inside a UIDragItem so that it can be used for drag and drop by UIKit
         return [UIDragItem(itemProvider: itemProvider)]
     }
-    
-    
-    func isKeyPresentInFireBase(key: String) -> Bool {
-        var doesExist = Bool()
-        
-        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child(key).observe(.value, with: { (snapshot) in
-               if(snapshot.exists()) {
-                 doesExist = true
-               } else {
-                doesExist = false
-               }
-            
-           }) { (error) in
-               print(error.localizedDescription)
-               
-           }
-        
-         return doesExist
-    }
-    
+
     func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
         let destinationIndexPath: IndexPath
         
@@ -305,12 +286,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         calendarTableView.isUserInteractionEnabled = false
         self.setUpCalendar()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             
             self.setUpCalendar()
             self.calendarTableView.isUserInteractionEnabled = true
             self.removeSpinner()
-            
             
         }
         
@@ -469,11 +449,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
     }
 
-    
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 200
-//    }
-    
   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {return}
     
   func timeConversion12(time24: String) -> String {
@@ -532,38 +507,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             print(error.localizedDescription)
             
         }
-   
-        
-//        if isKeyPresentInFireBase(key: getViewedDate()) {
-//            let defaults = UserDefaults.standard
-//            //calendarItems = defaults.stringArray(forKey: getViewedDate()) ?? [String]()
-//            let viewedDate = getViewedDate()
-//            calendarItems = refResponse.child((Auth.auth().currentUser?.displayName)!).value(forKey: viewedDate) as! [String]
-//            print("DATA", refResponse.child((Auth.auth().currentUser?.displayName)!).value(forKey: viewedDate) as! [String])
-//        } else {
-//
-//            let lastTime: Double = 23
-//            var currentTime: Double = 0
-//            let incrementMinutes: Double = 30 // increment by 15 minutes
-//            calendarItems = []
-//            calendarItems.append("12:00 AM")
-//
-//            while currentTime <= lastTime {
-//                currentTime += (incrementMinutes/60)
-//
-//
-//                let hours = Int(floor(currentTime))
-//                let minutes = Int(currentTime.truncatingRemainder(dividingBy: 1)*60)
-//
-//                if minutes == 0 {
-//                    let time24 = "\(hours):00"
-//                    calendarItems.append(timeConversion12(time24: time24))
-//                } else {
-//                    let time24 = "\(hours):\(minutes)"
-//                    calendarItems.append(timeConversion12(time24: time24))
-//                }
-//            }
-//        }
+
         calendarTableView.reloadData()
         assignmentTableView.reloadData()
     }
@@ -603,7 +547,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         self.showSpinner(onView: calendarTableView)
         self.setUpCalendar()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             
             self.setUpCalendar()
             self.removeSpinner()
@@ -614,18 +558,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
     
     func addResponse() {
-        
 
         let currentDate = getViewedDate()
-            
-   //     let key = (Auth.auth().currentUser?.displayName)! + ": " + currentDate
-  
-        
-    //    refResponse.child(key).setValue(calendar_data)
         refResponse.child((Auth.auth().currentUser?.uid)!).child(currentDate).setValue(calendarItems)
-       // self.refResponse.child("users").child((Auth.auth().currentUser?.email) ?? "no email").setValue(calendar_data)
-
-
         
     }
 
