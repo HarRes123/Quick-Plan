@@ -222,29 +222,34 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 view.backgroundColor = UIColor(hexFromString: "E8E8E8") //tableView.backgroundColor
                 var labelWidth = 150
                 let labelX = Int(tableView.frame.size.width)/2
-                let label = UIButton(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 40))
+                var label = UIButton()
                 let leftButton = UIButton(type: .custom)
                 let rightButton = UIButton(type: .custom)
                 leftButton.frame = CGRect(x: labelX - 15 - 75, y: 5, width: 30, height: 40)
                 rightButton.frame = CGRect(x: labelX - 15 + 75  , y: 5, width: 30, height: 40)
                 
                 if loadCalendar == false {
+                    labelWidth = 110
+                    label = UIButton(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 40))
                     label.setTitle(currentDate, for: .normal)
                     //label.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
                     label.removeTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
-                   
+                    
                     view.addSubview(leftButton)
                     view.addSubview(rightButton)
                 } else {
+                    label = UIButton(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 80))
                     label.setTitle("Load Calendar", for: .normal)
                     label.addTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
-                    labelWidth = 110
+                    
+                    
                     loadCalendar = false
                 }
                 
                 label.setTitleColor(.black, for: .normal)
                 label.setTitleColor(.gray, for: .selected)
                 leftButton.setImage(UIImage(named: "backwards"), for: .normal)
+                print("WIDTH", label.frame.width)
 
                 leftButton.setTitleColor(.black, for: .normal)
                 leftButton.setTitleColor(.gray, for: .selected)
@@ -288,32 +293,22 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         
     }
+
     
-    @objc func backDay(sender: UIButton) {
+    @objc func changeDays(sender: UIButton, sign: Int) {
         
-        daysFromToday -= 1
+        print("PRESSED")
+        daysFromToday += sign
+        let indexPath = IndexPath(row: 0, section: 0)
+        self.calendarTableView.scrollToRow(at: indexPath, at: .top, animated: false)
         self.showSpinner(onView: calendarTableView)
+        calendarTableView.isUserInteractionEnabled = false
         self.setUpCalendar()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             
             self.setUpCalendar()
-            self.removeSpinner()
-            
-            
-        }
-        
-    }
-    
-    @objc func aheadDay(sender: UIButton) {
-        
-        daysFromToday += 1
-        self.showSpinner(onView: calendarTableView)
-        self.setUpCalendar()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            
-            self.setUpCalendar()
+            calendarTableView.isUserInteractionEnabled = true
             self.removeSpinner()
             
             
