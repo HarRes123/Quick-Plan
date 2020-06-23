@@ -232,8 +232,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     labelWidth = 110
                     label = UIButton(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 40))
                     label.setTitle(currentDate, for: .normal)
-                    //label.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
-                    label.removeTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
+                    label.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
+                    //label.removeTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
                     
                     view.addSubview(leftButton)
                     view.addSubview(rightButton)
@@ -295,7 +295,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     
-    @objc func changeDays(sender: UIButton, sign: Int) {
+    func changeDays(sign: Int) {
         
         print("PRESSED")
         daysFromToday += sign
@@ -308,15 +308,23 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             
             self.setUpCalendar()
-            calendarTableView.isUserInteractionEnabled = true
+            self.calendarTableView.isUserInteractionEnabled = true
             self.removeSpinner()
             
             
         }
         
     }
-
     
+    @objc func backDay(sender: UIButton) {
+        changeDays(sign: -1)
+        
+    }
+    @objc func aheadDay(sender: UIButton) {
+        changeDays(sign: 1)
+        
+    }
+
     @objc func tapImport(sender: UIButton) {
 
         
@@ -586,13 +594,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     @objc func pressedOnDate(sender: UIButton) {
         
-        if calendarTableView.isEditing == false {
-            calendarTableView.isEditing = true
-        } else {
-            calendarTableView.isEditing = false
-        }
-        
-       // setUpCalendar()
+        changeDays(sign: -daysFromToday)
     
     }
     
@@ -635,7 +637,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         refResponse = Database.database().reference().child("users")
 
         configureRefreshControl()
-        self.navigationItem.title = Auth.auth().currentUser?.displayName
+        
 
         GIDSignIn.sharedInstance()?.presentingViewController = self
         GIDSignIn.sharedInstance().scopes = scopes
@@ -669,6 +671,35 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         let nibCalendar = UINib.init(nibName: "CalendarTableViewCell", bundle: nil)
         self.calendarTableView.register(nibCalendar, forCellReuseIdentifier: "calendarCell")
+        
+        var firstName = Auth.auth().currentUser?.displayName ?? "User"
+        var greeting = String()
+
+        if let dotRange = firstName.range(of: " ") {
+          firstName.removeSubrange(dotRange.lowerBound..<firstName.endIndex)
+        }
+        
+        
+        let now = NSDate()
+        let nowDateValue = now as Date
+        
+        let midnight = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nowDateValue)
+        let sixAM = calendar.date(bySettingHour: 6, minute: 0, second: 0, of: nowDateValue)
+        let noon = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: nowDateValue)
+        let sixPM = calendar.date(bySettingHour: 18, minute: 0, second: 0, of: nowDateValue)
+
+        if nowDateValue >= midnight! && nowDateValue <= sixAM! {
+            greeting = "Good Evening"
+        } else if nowDateValue >= sixAM! && nowDateValue <= noon! {
+            greeting = "Good Morning"
+        } else if nowDateValue >= noon! && nowDateValue <= sixPM! {
+            greeting = "Good Afternoon"
+        } else if nowDateValue >= sixPM! && nowDateValue <= midnight! {
+            greeting = "Good Evening"
+        }
+        
+        self.navigationItem.title = "\(greeting), \(firstName)!"
+        
         
         service.authorizer = myAuth
         
