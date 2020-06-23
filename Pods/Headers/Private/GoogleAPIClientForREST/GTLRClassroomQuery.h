@@ -1,1 +1,0 @@
-../../../GoogleAPIClientForREST/Source/GeneratedServices/Classroom/GTLRClassroomQuery.h

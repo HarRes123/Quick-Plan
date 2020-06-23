@@ -153,3 +153,39 @@ extension NSMutableAttributedString {
     }
 
 }
+
+
+
+var vSpinner : UIView?
+extension UIViewController {
+    func showSpinner(onView : UIView) {
+        
+        let spinnerView = UIView.init(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+
+        let ai = UIActivityIndicatorView.init(style: .whiteLarge)
+        ai.startAnimating()
+        ai.center = onView.center
+        
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.bounds
+        blurEffectView.alpha = 0.75
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        spinnerView.addSubview(blurEffectView)
+        
+        DispatchQueue.main.async {
+            spinnerView.addSubview(ai)
+            onView.addSubview(spinnerView)
+        }
+        
+        vSpinner = spinnerView
+    }
+    
+    func removeSpinner() {
+        DispatchQueue.main.async {
+            vSpinner?.removeFromSuperview()
+            vSpinner = nil
+        }
+    }
+}

@@ -27,6 +27,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     var calendarItems = [String]()
     
+    var refResponse: DatabaseReference!
+    
+    var loadCalendar = true
+    
     var assignmentAndDueDate = [String : String]()
     
     var daysFromToday = 0
@@ -58,8 +62,23 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         return [UIDragItem(itemProvider: itemProvider)]
     }
     
-    func isKeyPresentInUserDefaults(key: String) -> Bool {
-        return UserDefaults.standard.object(forKey: key) != nil
+    
+    func isKeyPresentInFireBase(key: String) -> Bool {
+        var doesExist = Bool()
+        
+        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child(key).observe(.value, with: { (snapshot) in
+               if(snapshot.exists()) {
+                 doesExist = true
+               } else {
+                doesExist = false
+               }
+            
+           }) { (error) in
+               print(error.localizedDescription)
+               
+           }
+        
+         return doesExist
     }
     
     func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
@@ -96,8 +115,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
             
             // insert them all into the table view at once
-            let defaults = UserDefaults.standard
-            defaults.set(self.calendarItems, forKey: self.getViewedDate())
+
+            self.addResponse()
+            self.calendarTableView.reloadData()
             self.assignmentTableView.reloadData()
             
 //            tableView.insertRows(at: indexPaths, with: .automatic)
@@ -200,14 +220,28 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 
                 let view = UIView(frame: .zero)
                 view.backgroundColor = UIColor(hexFromString: "E8E8E8") //tableView.backgroundColor
-                let labelWidth = 110
+                var labelWidth = 150
                 let labelX = Int(tableView.frame.size.width)/2
                 let label = UIButton(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 40))
                 let leftButton = UIButton(type: .custom)
                 let rightButton = UIButton(type: .custom)
                 leftButton.frame = CGRect(x: labelX - 15 - 75, y: 5, width: 30, height: 40)
                 rightButton.frame = CGRect(x: labelX - 15 + 75  , y: 5, width: 30, height: 40)
-                label.setTitle(currentDate, for: .normal)
+                
+                if loadCalendar == false {
+                    label.setTitle(currentDate, for: .normal)
+                    //label.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
+                    label.removeTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
+                   
+                    view.addSubview(leftButton)
+                    view.addSubview(rightButton)
+                } else {
+                    label.setTitle("Load Calendar", for: .normal)
+                    label.addTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
+                    labelWidth = 110
+                    loadCalendar = false
+                }
+                
                 label.setTitleColor(.black, for: .normal)
                 label.setTitleColor(.gray, for: .selected)
                 leftButton.setImage(UIImage(named: "backwards"), for: .normal)
@@ -218,16 +252,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 rightButton.setImage(UIImage(named: "fowards"), for: .normal)
                 rightButton.setTitleColor(.gray, for: .selected)
                 rightButton.setTitleColor(.black, for: .normal)
-                
                 leftButton.addTarget(self, action: #selector(backDay(sender:)), for: .touchUpInside)
                 rightButton.addTarget(self, action: #selector(aheadDay(sender:)), for: .touchUpInside)
-                label.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
+                
+               
+              //  label.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
               //   self.calendarTableView.addGestureRecognizer(lpgr)
                 
                 view.sizeToFit()
                 view.addSubview(label)
-                view.addSubview(leftButton)
-                view.addSubview(rightButton)
+                
                 return view
             } else {
                 return nil
@@ -258,18 +292,32 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     @objc func backDay(sender: UIButton) {
         
         daysFromToday -= 1
-        setUpCalendar()
-        calendarTableView.reloadData()
-        assignmentTableView.reloadData()
+        self.showSpinner(onView: calendarTableView)
+        self.setUpCalendar()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            
+            self.setUpCalendar()
+            self.removeSpinner()
+            
+            
+        }
         
     }
     
     @objc func aheadDay(sender: UIButton) {
         
         daysFromToday += 1
-        setUpCalendar()
-        calendarTableView.reloadData()
-        assignmentTableView.reloadData()
+        self.showSpinner(onView: calendarTableView)
+        self.setUpCalendar()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            
+            self.setUpCalendar()
+            self.removeSpinner()
+            
+            
+        }
         
     }
 
@@ -411,6 +459,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 cell.isUserInteractionEnabled = true
             }
             
+            
             return cell
             
         }
@@ -438,34 +487,82 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
   }
     
     func setUpCalendar() {
+       // print("DATA", Database.database().reference().child((Auth.auth().currentUser?.displayName)!).value(forKey: getViewedDate()) as! [String])
         
-        if isKeyPresentInUserDefaults(key: getViewedDate()) {
-            let defaults = UserDefaults.standard
-            calendarItems = defaults.stringArray(forKey: getViewedDate()) ?? [String]()
-        } else {
-        
-            let lastTime: Double = 23
-            var currentTime: Double = 0
-            let incrementMinutes: Double = 30 // increment by 15 minutes
-            calendarItems = []
-            calendarItems.append("12:00 AM")
-
-            while currentTime <= lastTime {
-                currentTime += (incrementMinutes/60)
+        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child(getViewedDate()).observe(.value, with: { (snapshot) in
+            if(snapshot.exists()) {
+              //  self.followButton.isEnabled = true
+                self.calendarItems = []
+                self.calendarItems.append("12:00 AM")
+                if let calendarData = snapshot.value as? NSArray{
+                    self.calendarItems = calendarData as! [String]
                     
-
-                let hours = Int(floor(currentTime))
-                let minutes = Int(currentTime.truncatingRemainder(dividingBy: 1)*60)
-                
-                if minutes == 0 {
-                    let time24 = "\(hours):00"
-                    calendarItems.append(timeConversion12(time24: time24))
-                } else {
-                    let time24 = "\(hours):\(minutes)"
-                    calendarItems.append(timeConversion12(time24: time24))
                 }
+                print("ARRAY", self.refResponse.child((Auth.auth().currentUser?.uid)!).child(self.getViewedDate()))
+            } else {
+                print("Not in array")
+                let lastTime: Double = 23
+                      var currentTime: Double = 0
+                      let incrementMinutes: Double = 30 // increment by 15 minutes
+                    self.calendarItems = []
+                   // self.calendarItems.append("12:00 AM")
+
+                      while currentTime <= lastTime {
+                          currentTime += (incrementMinutes/60)
+                              
+
+                          let hours = Int(floor(currentTime))
+                          let minutes = Int(currentTime.truncatingRemainder(dividingBy: 1)*60)
+                          
+                          if minutes == 0 {
+                              let time24 = "\(hours):00"
+                                self.calendarItems.append(self.timeConversion12(time24: time24))
+                          } else {
+                              let time24 = "\(hours):\(minutes)"
+                                self.calendarItems.append(self.timeConversion12(time24: time24))
+                          }
+                      }
+                self.addResponse()
+
             }
+        }) { (error) in
+            print(error.localizedDescription)
+            
         }
+   
+        
+//        if isKeyPresentInFireBase(key: getViewedDate()) {
+//            let defaults = UserDefaults.standard
+//            //calendarItems = defaults.stringArray(forKey: getViewedDate()) ?? [String]()
+//            let viewedDate = getViewedDate()
+//            calendarItems = refResponse.child((Auth.auth().currentUser?.displayName)!).value(forKey: viewedDate) as! [String]
+//            print("DATA", refResponse.child((Auth.auth().currentUser?.displayName)!).value(forKey: viewedDate) as! [String])
+//        } else {
+//
+//            let lastTime: Double = 23
+//            var currentTime: Double = 0
+//            let incrementMinutes: Double = 30 // increment by 15 minutes
+//            calendarItems = []
+//            calendarItems.append("12:00 AM")
+//
+//            while currentTime <= lastTime {
+//                currentTime += (incrementMinutes/60)
+//
+//
+//                let hours = Int(floor(currentTime))
+//                let minutes = Int(currentTime.truncatingRemainder(dividingBy: 1)*60)
+//
+//                if minutes == 0 {
+//                    let time24 = "\(hours):00"
+//                    calendarItems.append(timeConversion12(time24: time24))
+//                } else {
+//                    let time24 = "\(hours):\(minutes)"
+//                    calendarItems.append(timeConversion12(time24: time24))
+//                }
+//            }
+//        }
+        calendarTableView.reloadData()
+        assignmentTableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
@@ -486,8 +583,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             let movedObject = self.calendarItems[sourceIndexPath.row]
             calendarItems.remove(at: sourceIndexPath.row)
             calendarItems.insert(movedObject, at: destinationIndexPath.row)
-            let defaults = UserDefaults.standard
-            defaults.set(self.calendarItems, forKey: self.getViewedDate())
+            addResponse()
+            self.calendarTableView.reloadData()
             self.assignmentTableView.reloadData()
         
     }
@@ -499,14 +596,48 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         } else {
             calendarTableView.isEditing = false
         }
+        
+       // setUpCalendar()
     
     }
     
+    @objc func loadCal(sender: UIButton) {
+            
+        self.showSpinner(onView: calendarTableView)
+        self.setUpCalendar()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            
+            self.setUpCalendar()
+            self.removeSpinner()
+            
+            
+        }
+        
+    }
+    
+    func addResponse() {
+        
+
+        let currentDate = getViewedDate()
+            
+   //     let key = (Auth.auth().currentUser?.displayName)! + ": " + currentDate
+  
+        
+    //    refResponse.child(key).setValue(calendar_data)
+        refResponse.child((Auth.auth().currentUser?.uid)!).child(currentDate).setValue(calendarItems)
+       // self.refResponse.child("users").child((Auth.auth().currentUser?.email) ?? "no email").setValue(calendar_data)
+
+
+        
+    }
+
     override func viewDidLoad() {
       super.viewDidLoad()
         
-        setUpCalendar()
         GIDSignIn.sharedInstance()?.signOut()
+        
+        refResponse = Database.database().reference().child("users")
 
         configureRefreshControl()
         self.navigationItem.title = Auth.auth().currentUser?.displayName
@@ -557,6 +688,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 //        self.navigationController?.navigationBar.layer.shadowOpacity = 1.0
 //        self.navigationController?.navigationBar.layer.masksToBounds = false
 
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+         setUpCalendar()
     }
     
     func setUpUI(view: UIView) {
@@ -633,9 +768,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
     
     func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
-        
-        let defaults = UserDefaults.standard
-        defaults.set(self.calendarItems, forKey: self.getViewedDate())
+
+        addResponse()
+        self.calendarTableView.reloadData()
         self.assignmentTableView.reloadData()
     }
     
@@ -795,16 +930,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         } else {
             return 50
         }
-    }
-    
-    func resetDefaults() {
-        let defaults = UserDefaults.standard
-        let dictionary = defaults.dictionaryRepresentation()
-        dictionary.keys.forEach { key in
-            defaults.removeObject(forKey: key)
-        }
-        setUpCalendar()
-        self.calendarTableView.reloadData()
     }
   
     @IBAction func signOut(_ sender: Any) {
