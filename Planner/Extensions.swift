@@ -154,6 +154,8 @@ extension NSMutableAttributedString {
 
 }
 
+
+
 var vSpinner : UIView?
 extension UIViewController {
     func showSpinner(onView : UIView) {
@@ -164,7 +166,7 @@ extension UIViewController {
         ai.startAnimating()
         ai.center = onView.center
         
-        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = view.bounds
         blurEffectView.alpha = 0.75

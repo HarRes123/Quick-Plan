@@ -232,14 +232,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     labelWidth = 110
                     label = UIButton(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 40))
                     label.setTitle(currentDate, for: .normal)
-                    label.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
+                    //label.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
+                    label.removeTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
                     
                     view.addSubview(leftButton)
                     view.addSubview(rightButton)
                 } else {
                     label = UIButton(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 80))
-                    label.setTitle("Import Calendar", for: .normal)
+                    label.setTitle("Load Calendar", for: .normal)
                     label.addTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
+                    
                     
                     loadCalendar = false
                 }
@@ -289,32 +291,29 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         formatter.dateFormat = "MMM dd, yyyy"
         return formatter.string(from: date.getDate(dayDifference: daysFromToday))
         
-    }
-    
-    func changeDays(sign: Int) {
         
-       daysFromToday += sign
-       let indexPath = IndexPath(row: 0, section: 0)
-       self.calendarTableView.scrollToRow(at: indexPath, at: .top, animated: false)
-       self.showSpinner(onView: calendarTableView)
-       calendarTableView.isUserInteractionEnabled = false
-       self.setUpCalendar()
-       
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-           
-           self.setUpCalendar()
-           self.calendarTableView.isUserInteractionEnabled = true
-           self.removeSpinner()
-           
-       }
     }
+
     
-    @objc func backDay(sender: UIButton) {
-        changeDays(sign: -1)
-    }
-    
-    @objc func aheadDay(sender: UIButton) {
-        changeDays(sign: 1)
+    @objc func changeDays(sender: UIButton, sign: Int) {
+        
+        print("PRESSED")
+        daysFromToday += sign
+        let indexPath = IndexPath(row: 0, section: 0)
+        self.calendarTableView.scrollToRow(at: indexPath, at: .top, animated: false)
+        self.showSpinner(onView: calendarTableView)
+        calendarTableView.isUserInteractionEnabled = false
+        self.setUpCalendar()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            
+            self.setUpCalendar()
+            calendarTableView.isUserInteractionEnabled = true
+            self.removeSpinner()
+            
+            
+        }
+        
     }
 
     
@@ -450,12 +449,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 
                 cell.backgroundColor = UIColor(hexFromString: "f5bc49")
                 cell.isUserInteractionEnabled = false
-                
             } else {
                 cell.backgroundColor = .white
                 cell.isUserInteractionEnabled = true
-
-                //cell.layer.masksToBounds = true
             }
             
             
@@ -492,7 +488,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             if(snapshot.exists()) {
               //  self.followButton.isEnabled = true
                 self.calendarItems = []
-                //self.calendarItems.append("12:00 AM")
+                self.calendarItems.append("12:00 AM")
                 if let calendarData = snapshot.value as? NSArray{
                     self.calendarItems = calendarData as! [String]
                     
@@ -504,7 +500,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                       var currentTime: Double = 0
                       let incrementMinutes: Double = 30 // increment by 15 minutes
                     self.calendarItems = []
-                    self.calendarItems.append("12:00 AM")
+                   // self.calendarItems.append("12:00 AM")
 
                       while currentTime <= lastTime {
                           currentTime += (incrementMinutes/60)
@@ -590,8 +586,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     @objc func pressedOnDate(sender: UIButton) {
         
-        print("PRESSED")
-        changeDays(sign: -daysFromToday)
+        if calendarTableView.isEditing == false {
+            calendarTableView.isEditing = true
+        } else {
+            calendarTableView.isEditing = false
+        }
+        
+       // setUpCalendar()
     
     }
     
@@ -600,7 +601,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         self.showSpinner(onView: calendarTableView)
         self.setUpCalendar()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             
             self.setUpCalendar()
             self.removeSpinner()
@@ -611,10 +612,19 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
     
     func addResponse() {
+        
 
         let currentDate = getViewedDate()
+            
+   //     let key = (Auth.auth().currentUser?.displayName)! + ": " + currentDate
+  
+        
+    //    refResponse.child(key).setValue(calendar_data)
         refResponse.child((Auth.auth().currentUser?.uid)!).child(currentDate).setValue(calendarItems)
+       // self.refResponse.child("users").child((Auth.auth().currentUser?.email) ?? "no email").setValue(calendar_data)
 
+
+        
     }
 
     override func viewDidLoad() {
@@ -625,32 +635,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         refResponse = Database.database().reference().child("users")
 
         configureRefreshControl()
-        
-        var firstName = Auth.auth().currentUser?.displayName ?? "User"
-
-        if let dotRange = firstName.range(of: " ") {
-          firstName.removeSubrange(dotRange.lowerBound..<firstName.endIndex)
-        }
-        
-        let now = NSDate()
-        let nowDateValue = now as Date
-        
-        let twelveAM = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nowDateValue)
-        let sixAM = calendar.date(bySettingHour: 6, minute: 0, second: 0, of: nowDateValue)
-        let twelvePM = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: nowDateValue)
-        let sixPM = calendar.date(bySettingHour: 18, minute: 0, second: 0, of: nowDateValue)
-        
-        var greeting = String()
-        
-        if nowDateValue >= twelveAM! && nowDateValue <= sixAM! {
-            greeting = "Good Evening"
-        } else if nowDateValue >= sixAM! && nowDateValue <= twelvePM! {
-            greeting = "Good Morning"
-        } else if nowDateValue >= twelvePM! && nowDateValue <= sixPM! {
-            greeting = "Good Afternoon"
-        }
-        
-        self.navigationItem.title = "\(greeting), \(firstName)!"
+        self.navigationItem.title = Auth.auth().currentUser?.displayName
 
         GIDSignIn.sharedInstance()?.presentingViewController = self
         GIDSignIn.sharedInstance().scopes = scopes
