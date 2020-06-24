@@ -220,7 +220,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     view.addSubview(rightButton)
                 } else {
                     label = UIButton(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 80))
-                    label.setTitle("Load Calendar", for: .normal)
+                    label.setTitle("Import Calendar", for: .normal)
                     label.addTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
                     
                     
@@ -573,7 +573,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         configureRefreshControl()
         
-
         GIDSignIn.sharedInstance()?.presentingViewController = self
         GIDSignIn.sharedInstance().scopes = scopes
         
@@ -618,23 +617,23 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         let now = NSDate()
         let nowDateValue = now as Date
         
-        let midnight = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nowDateValue)
+        let midnight1 = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nowDateValue)
+        let midnight2 = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: nowDateValue)
         let sixAM = calendar.date(bySettingHour: 6, minute: 0, second: 0, of: nowDateValue)
         let noon = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: nowDateValue)
         let sixPM = calendar.date(bySettingHour: 18, minute: 0, second: 0, of: nowDateValue)
 
-        if nowDateValue >= midnight! && nowDateValue <= sixAM! {
+        if nowDateValue >= midnight1! && nowDateValue <= sixAM! {
             greeting = "Good Evening"
         } else if nowDateValue >= sixAM! && nowDateValue <= noon! {
             greeting = "Good Morning"
         } else if nowDateValue >= noon! && nowDateValue <= sixPM! {
             greeting = "Good Afternoon"
-        } else if nowDateValue >= sixPM! && nowDateValue <= midnight! {
+        } else if nowDateValue >= sixPM! && nowDateValue <= midnight2! {
             greeting = "Good Evening"
         }
         
         self.navigationItem.title = "\(greeting), \(firstName)!"
-        
         
         service.authorizer = myAuth
         
