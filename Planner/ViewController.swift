@@ -448,6 +448,57 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
         
     }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if tableView == assignmentTableView {
+            if classNameAndAssignments.count > 0 {
+                if self.arrayHeader[section] == 1 {
+                    return 50
+                } else {
+                    return 0
+                }
+            } else {
+                return 0
+            }
+        } else {
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        
+        if tableView == assignmentTableView {
+            
+            if classNameAndAssignments.count > 0 {
+                if self.arrayHeader[section] == 1 {
+            
+                    let button = UIButton(frame: CGRect(x: 0, y: 25, width: tableView.tableFooterView?.frame.width ?? 100, height: tableView.tableFooterView?.frame.height ?? 50))
+                    button.setTitle("Show All", for: .normal)
+                    button.setTitleColor(.black, for: .normal)
+                    button.setTitleColor(.gray, for: .selected)
+                    button.titleLabel?.textAlignment = .center
+                    button.layer.cornerRadius = 10
+                    button.backgroundColor = .lightGray
+                    button.addTarget(self, action: #selector(showAllClasses(sender:)), for: .touchUpInside)
+                    
+                    return button
+                    
+                } else {
+                    return nil
+                }
+            } else {
+                return nil
+            }
+        
+        } else {
+            return nil
+        }
+    }
+    
+    @objc func showAllClasses(sender: UIButton) {
+        
+        print("PRESSED")
+    }
 
   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {return}
     
