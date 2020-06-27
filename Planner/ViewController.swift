@@ -31,6 +31,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     var expandAssignments = 0
     
+    var assignmentCellWidth = CGFloat()
+    
     var refResponse: DatabaseReference!
     
     var loadCalendar = true
@@ -373,6 +375,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     
         let cell = tableView.dequeueReusableCell(withIdentifier: "assignmentCell", for: indexPath) as! AssignmentTableViewCell
+        
+        
+        assignmentCellWidth = cell.bounds.width
  
         classes = Array<String>(classNameAndAssignments.keys)
        // let assignments: Array<Array<String>> = Array<Array<String>>(classNameAndAssignments.values)
@@ -495,30 +500,31 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         if tableView == assignmentTableView {
             
             if classNameAndAssignments.count > 0 {
-                let button = UIButton(frame: CGRect(x: 0, y: 25, width: tableView.tableFooterView?.frame.width ?? 100, height: tableView.tableFooterView?.frame.height ?? 50))
-                button.setTitleColor(.black, for: .normal)
-                button.setTitleColor(.gray, for: .selected)
-                button.titleLabel?.textAlignment = .center
-                button.layer.cornerRadius = 10
-                button.backgroundColor = .lightGray
-                button.tag = section
-                button.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping;
-                button.titleLabel?.font = .systemFont(ofSize: 14)
-                button.addTarget(self, action: #selector(showAllClasses(sender:)), for: .touchUpInside)
+                                //tableView.frame.size.width/4
                 
+                let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 50))
+                view.backgroundColor = .clear
+                let button = UIButton(frame: CGRect(x: tableView.bounds.width/2 - 41.5, y: 0, width: 50, height: 50))
+                button.layer.cornerRadius = 10
+                button.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+                button.backgroundColor = UIColor(hexFromString: "E8E8E8")
+                button.tag = section
+
+                button.addTarget(self, action: #selector(showAllClasses(sender:)), for: .touchUpInside)
+                view.addSubview(button)
                 if self.arrayHeader[section] == 1 {
                     
-            
-                    button.setTitle("Show Old Assignments", for: .normal)
+                    let plusImage = UIImage(named: "plus")
+                    button.setImage(plusImage, for: .normal)
       
-                    return button
+                    return view
                     
                 } else if self.arrayHeader[section] == 2 {
 
-                    
-                    button.setTitle("Hide Old Assignments", for: .normal)
+                    let minusImage = UIImage(named: "minus")
+                    button.setImage(minusImage, for: .normal)
       
-                    return button
+                    return view
                 }else {
                     return nil
                 }
@@ -938,7 +944,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                         newAssignmentsPerCourse[assignmentIndex].append(classIDAndName[assignment.courseId ?? "0"] ?? "No name")
                         
                     }
-                    
   
                 }
                 assignmentsPerCourse[assignmentIndex].append(assignment.title ?? "No title")
@@ -961,13 +966,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 
                 print(newAssignmentsPerCourse)
 
-                
-                    
-                
-                
-     
-             //  print(assignmentsPerCourse)
-           // break
         }
         assignmentIndex += 1
         print("index", assignmentIndex)

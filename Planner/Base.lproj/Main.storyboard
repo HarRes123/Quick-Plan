@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BA2-jE-DmS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17132" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BA2-jE-DmS">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17105"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -38,7 +39,7 @@
                             </tableView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="50" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="CKD-gs-1pZ">
                                 <rect key="frame" x="166" y="101" width="239" height="774"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="calendarCell" id="5Ig-Vz-FBa" customClass="CalendarTableViewCell" customModule="Planner" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="239" height="43.5"/>
@@ -56,7 +57,8 @@
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="OSv-cR-nIE"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="OSv-cR-nIE" firstAttribute="trailing" secondItem="CKD-gs-1pZ" secondAttribute="trailing" constant="9" id="Cqs-nC-WZ4"/>
                             <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" constant="13" id="FNM-cg-Npf"/>
@@ -66,7 +68,6 @@
                             <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="CKD-gs-1pZ" secondAttribute="top" id="cWH-o1-VoQ"/>
                             <constraint firstItem="CKD-gs-1pZ" firstAttribute="leading" secondItem="Hlr-ja-OiJ" secondAttribute="trailing" constant="13" id="uq4-C2-owr"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="OSv-cR-nIE"/>
                     </view>
                     <navigationItem key="navigationItem" title="Planner" id="eCj-Fl-F42">
                         <barButtonItem key="leftBarButtonItem" title="Sign Out" image="logout" id="J6G-PA-1Q2">
@@ -97,7 +98,7 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="app_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="xDb-H3-Jhn">
                                 <rect key="frame" x="0.0" y="130" width="414" height="235.5"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vKl-YD-PrK">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vKl-YD-PrK">
                                 <rect key="frame" x="136" y="428.5" width="142" height="39"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <state key="normal" title="Sign In"/>
@@ -106,7 +107,8 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="y5B-ki-s5Y"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="xDb-H3-Jhn" firstAttribute="top" secondItem="y5B-ki-s5Y" secondAttribute="top" constant="86" id="8hu-4u-fjb"/>
                             <constraint firstItem="vKl-YD-PrK" firstAttribute="leading" secondItem="y5B-ki-s5Y" secondAttribute="leading" constant="136" id="SSQ-KI-FQQ"/>
@@ -116,7 +118,6 @@
                             <constraint firstItem="vKl-YD-PrK" firstAttribute="centerY" secondItem="Vz6-gH-F8O" secondAttribute="centerY" id="nkY-7d-r8C"/>
                             <constraint firstItem="xDb-H3-Jhn" firstAttribute="centerX" secondItem="Vz6-gH-F8O" secondAttribute="centerX" id="ybB-QE-Xa1"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="y5B-ki-s5Y"/>
                     </view>
                     <connections>
                         <outlet property="logInOutlet" destination="vKl-YD-PrK" id="6dL-hJ-y76"/>
@@ -150,5 +151,8 @@
     <resources>
         <image name="app_logo.png" width="626" height="626"/>
         <image name="logout" width="30" height="30"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>
