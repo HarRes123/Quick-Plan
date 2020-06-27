@@ -17,15 +17,19 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     private let service = GTLRClassroomService()
     
     var assignmentsPerCourse = [Array<String>]()
+    var newAssignmentsPerCourse = [Array<String>]()
     var assignmentIndex = 0
     
     var classIDAndName = [String : String]()
     var classNameAndAssignments = [String : Array<String>]()
+    var newClassNameAndAssignments = [String : Array<String>]()
     
     var classes = Array<String>()
     var arrayHeader = [Int]()
     
     var calendarItems = [String]()
+    
+    var expandAssignments = 0
     
     var refResponse: DatabaseReference!
     
@@ -48,7 +52,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
         // if the table view in question is the left table view then read from leftItems, otherwise read from rightItems
-        let assignment = classNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
+        var assignment = ""
+        if arrayHeader[indexPath.section] == 1 {
+            assignment = newClassNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
+        } else if arrayHeader[indexPath.section] == 2 {
+            assignment = classNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
+        }
         let dueDate = assignmentAndDueDate[assignment] ?? ""
         let string = tableView == assignmentTableView ? "\(assignment)\n\n\(dueDate)" : calendarItems[indexPath.row]
         
@@ -112,7 +121,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             classes = Array<String>(classNameAndAssignments.keys)
             if classNameAndAssignments.count > 0 {
                 //return classNameAndAssignments[classes[section]]?.count ?? 1
-                return (self.arrayHeader[section] == 0) ? 0 : classNameAndAssignments[classes[section]]?.count ?? 1
+                if self.arrayHeader[section] == 0 {
+                    return 0
+                } else if self.arrayHeader[section] == 1 {
+                    return newClassNameAndAssignments[classes[section]]?.count ?? 1
+                } else {
+                    return classNameAndAssignments[classes[section]]?.count ?? 1
+                }
             } else {
                 return 0
             }
@@ -372,9 +387,19 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 //                let assignments = classNameAndAssignments[classes[indexPath.row]]?.joined(separator: "; ") // "1-2-3"
   //              cell.classAssignments.text = assignments//
                 if indexPath.row < classNameAndAssignments[classes[indexPath.section]]!.count {
-                    let cellText = classNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
+                    var cellText = ""
                     
-                    let dueDate = assignmentAndDueDate[cellText] ?? ""
+                    var dueDate = ""
+                    if arrayHeader[indexPath.section] == 1 {
+                        cellText = newClassNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
+                        dueDate = assignmentAndDueDate[cellText] ?? ""
+                    } else if arrayHeader[indexPath.section] == 2 {
+                        cellText = classNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
+                        dueDate = assignmentAndDueDate[cellText] ?? ""
+                        
+                    }
+                    
+                    
                     cell.classAssignments.text = "\(cellText)\n\n\(dueDate)"
                    // print(dueDate)
     //                    for assignment in 0...classNameAndAssignments[classes[indexPath.section]]!.count-1 {
@@ -452,7 +477,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if tableView == assignmentTableView {
             if classNameAndAssignments.count > 0 {
-                if self.arrayHeader[section] == 1 {
+                if self.arrayHeader[section] == 1 || self.arrayHeader[section] == 2 {
                     return 50
                 } else {
                     return 0
@@ -470,20 +495,31 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         if tableView == assignmentTableView {
             
             if classNameAndAssignments.count > 0 {
+                let button = UIButton(frame: CGRect(x: 0, y: 25, width: tableView.tableFooterView?.frame.width ?? 100, height: tableView.tableFooterView?.frame.height ?? 50))
+                button.setTitleColor(.black, for: .normal)
+                button.setTitleColor(.gray, for: .selected)
+                button.titleLabel?.textAlignment = .center
+                button.layer.cornerRadius = 10
+                button.backgroundColor = .lightGray
+                button.tag = section
+                button.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping;
+                button.titleLabel?.font = .systemFont(ofSize: 14)
+                button.addTarget(self, action: #selector(showAllClasses(sender:)), for: .touchUpInside)
+                
                 if self.arrayHeader[section] == 1 {
-            
-                    let button = UIButton(frame: CGRect(x: 0, y: 25, width: tableView.tableFooterView?.frame.width ?? 100, height: tableView.tableFooterView?.frame.height ?? 50))
-                    button.setTitle("Show All", for: .normal)
-                    button.setTitleColor(.black, for: .normal)
-                    button.setTitleColor(.gray, for: .selected)
-                    button.titleLabel?.textAlignment = .center
-                    button.layer.cornerRadius = 10
-                    button.backgroundColor = .lightGray
-                    button.addTarget(self, action: #selector(showAllClasses(sender:)), for: .touchUpInside)
                     
+            
+                    button.setTitle("Show Old Assignments", for: .normal)
+      
                     return button
                     
-                } else {
+                } else if self.arrayHeader[section] == 2 {
+
+                    
+                    button.setTitle("Hide Old Assignments", for: .normal)
+      
+                    return button
+                }else {
                     return nil
                 }
             } else {
@@ -498,6 +534,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     @objc func showAllClasses(sender: UIButton) {
         
         print("PRESSED")
+        
+        if classNameAndAssignments.count > 0 {
+            self.arrayHeader[sender.tag] = (self.arrayHeader[sender.tag] == 1) ? 2 : 1
+            self.assignmentTableView.reloadSections([sender.tag], with: .fade)
+            print(arrayHeader)
+        }
+        
     }
 
   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {return}
@@ -815,6 +858,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         print("FETCH")
         
         assignmentsPerCourse = Array(repeating: [], count:classIDAndName.count)
+        newAssignmentsPerCourse = Array(repeating: [], count:classIDAndName.count)
         
         for (key, _) in classIDAndName {
             if classIDAndName != [:] {
@@ -842,6 +886,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         self.present(alert, animated: true)
         self.assignmentTableView.reloadData()
     }
+
         
     @objc func obtainClasses(ticket: GTLRServiceTicket,
                                  finishedWithObject result : GTLRClassroom_ListCourseWorkResponse,
@@ -856,16 +901,25 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             return
         }
                 
-//        let currentMonth = calendar.component(.month, from: date)
-//        let currentDay = calendar.component(.day, from: date)
-//        let currentYear = calendar.component(.year, from: date)
+        let currentMonth = calendar.component(.month, from: date)
+        let currentDay = calendar.component(.day, from: date)
+        let currentYear = calendar.component(.year, from: date)
+        
+        let currentDate = "\(currentMonth)/\(currentDay)/\(currentYear)"
+
         
         //  for classCount in 0...classNames.count - 1 {
          
             for assignment in assignments {
+                
+                
                 let dueMonth = assignment.dueDate?.month as? Int ?? 0
                 let dueDay = assignment.dueDate?.day as? Int ?? 0
                 let dueYear = assignment.dueDate?.year as? Int ?? 0
+                
+                
+                
+                
                 
                 var finalDate = "\(dueMonth)/\(dueDay)/\(dueYear)"
                 
@@ -873,6 +927,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     finalDate = "No Due Date"
                 }
                 
+
                 assignmentAndDueDate.updateValue("Due: \(finalDate)", forKey: assignment.title ?? "no title")
 //
                 
@@ -880,27 +935,42 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 if assignmentsPerCourse.count != 0 {
                     if assignmentsPerCourse[assignmentIndex].count == 0 {
                         assignmentsPerCourse[assignmentIndex].append(classIDAndName[assignment.courseId ?? "0"] ?? "No name")
+                        newAssignmentsPerCourse[assignmentIndex].append(classIDAndName[assignment.courseId ?? "0"] ?? "No name")
                         
                     }
+                    
+  
                 }
                 assignmentsPerCourse[assignmentIndex].append(assignment.title ?? "No title")
-//                if dueYear ?? 100 >= currentYear {
-//                    if dueMonth ?? 100 >= currentMonth {
-//                        if dueDay ?? 100 >= currentDay {
+                
+                
+//                    print("server:", finalDate)
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+                    dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+                    dateFormatter.dateFormat = "MM/dd/yyyy"
 //
-//                          //  print(assignment.title ?? "no title")
-//                            //Append these assignments to an array --> this is what the user will be able to see
-//
-//                        }
-//                    }
-//                    //       }
-//
-//
-//            }
-            //    print(assignmentsPerCourse)
+//                    let date = Date()
+//                    let calendar = Calendar.current
+                    let currentDate = dateFormatter.date(from: currentDate) ?? Date()
+                    let dueDate = dateFormatter.date(from: finalDate) ?? Date()
+                    print(dueDate, currentDate)
+                    if dueDate > currentDate {
+                        newAssignmentsPerCourse[assignmentIndex].append(assignment.title ?? "No title")
+                    }
+                
+                print(newAssignmentsPerCourse)
+
+                
+                    
+                
+                
+     
+             //  print(assignmentsPerCourse)
            // break
         }
         assignmentIndex += 1
+        print("index", assignmentIndex)
 
         //print(outputText)
     }
@@ -999,8 +1069,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
            for i in 0...assignmentsPerCourse.count - 1 {
                if assignmentsPerCourse[i].first != nil {
                    classNameAndAssignments.updateValue(assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: assignmentsPerCourse[i].first ?? "no name")
+                   
                }
+            
            }
+            for i in 0...newAssignmentsPerCourse.count - 1 {
+                if newAssignmentsPerCourse[i].first != nil {
+                    newClassNameAndAssignments.updateValue(newAssignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: newAssignmentsPerCourse[i].first ?? "no name")
+                }
+            }
        } else {
            let alert = UIAlertController(title: "Unable to Show Info", message: "", preferredStyle: .alert)
            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
