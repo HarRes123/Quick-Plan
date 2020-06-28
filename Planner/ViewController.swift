@@ -175,6 +175,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             button.setTitleColor(.gray, for: .selected)
             button.titleLabel?.lineBreakMode = .byWordWrapping
             button.titleLabel?.textAlignment = .center
+            button.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: (button.titleLabel?.font.pointSize)!)
 
             button.tag = section
        //     print("test")
@@ -216,37 +217,36 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 
                 let view = UIView(frame: .zero)
                 view.backgroundColor = UIColor(hexFromString: "E8E8E8") //tableView.backgroundColor
-                var labelWidth = 150
-                let labelX = Int(tableView.frame.size.width)/2
-                var label = UIButton()
+                var buttonWidth = 150
+                let buttonX = Int(tableView.frame.size.width)/2
+                var button = UIButton()
                 let leftButton = UIButton(type: .custom)
                 let rightButton = UIButton(type: .custom)
-                leftButton.frame = CGRect(x: labelX - 15 - 75, y: 5, width: 30, height: 40)
-                rightButton.frame = CGRect(x: labelX - 15 + 75  , y: 5, width: 30, height: 40)
+                leftButton.frame = CGRect(x: buttonX - 15 - 75, y: 5, width: 30, height: 40)
+                rightButton.frame = CGRect(x: buttonX - 15 + 75  , y: 5, width: 30, height: 40)
                 
                 if loadCalendar == false {
-                    labelWidth = 110
-                    label = UIButton(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 40))
-                    label.setTitle(currentDate, for: .normal)
-                    label.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
+                    buttonWidth = 110
+                    button = UIButton(frame: CGRect(x: buttonX - buttonWidth/2, y: 5, width: buttonWidth, height: 40))
+                    button.setTitle(currentDate, for: .normal)
+                    button.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
                     //label.removeTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
                     assignmentTableView.dragInteractionEnabled = true
                     view.addSubview(leftButton)
                     view.addSubview(rightButton)
                 } else {
-                    label = UIButton(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 80))
-                    label.setTitle("Import Calendar", for: .normal)
-                    label.addTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
+                    button = UIButton(frame: CGRect(x: buttonX - buttonWidth/2, y: 5, width: buttonWidth, height: 80))
+                    button.setTitle("Import Calendar", for: .normal)
+                    button.addTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
                     assignmentTableView.dragInteractionEnabled = false
                     
-                    
-                    loadCalendar = false
                 }
                 
-                label.setTitleColor(.black, for: .normal)
-                label.setTitleColor(.gray, for: .selected)
+                button.setTitleColor(.black, for: .normal)
+                button.setTitleColor(.gray, for: .selected)
+                button.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: (button.titleLabel?.font.pointSize)!)
                 leftButton.setImage(UIImage(named: "backwards"), for: .normal)
-                print("WIDTH", label.frame.width)
+                print("WIDTH", button.frame.width)
 
                 leftButton.setTitleColor(.black, for: .normal)
                 leftButton.setTitleColor(.gray, for: .selected)
@@ -262,7 +262,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
               //   self.calendarTableView.addGestureRecognizer(lpgr)
                 
                 view.sizeToFit()
-                view.addSubview(label)
+                view.addSubview(button)
                 
                 return view
             } else {
@@ -662,6 +662,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     @objc func loadCal(sender: UIButton) {
             
+        loadCalendar = false
         self.showSpinner(onView: calendarTableView)
         self.setUpCalendar()
 
@@ -689,12 +690,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         GIDSignIn.sharedInstance()?.signOut()
         
         refResponse = Database.database().reference().child("users")
-
-        configureRefreshControl()
         
         GIDSignIn.sharedInstance()?.presentingViewController = self
         GIDSignIn.sharedInstance().scopes = scopes
-        
         
         assignmentTableView.delegate = self
         assignmentTableView.dataSource = self
@@ -711,7 +709,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         assignmentTableView.estimatedRowHeight = 250.0 // Replace with your actual estimation
         // Automatic dimensions to tell the table view to use dynamic height
         assignmentTableView.rowHeight = UITableView.automaticDimension
-        
+                
         calendarTableView.estimatedRowHeight = 250.0 // Replace with your actual estimation
         // Automatic dimensions to tell the table view to use dynamic height
         calendarTableView.rowHeight = UITableView.automaticDimension
@@ -762,6 +760,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         setUpUI(view: assignmentTableView)
         setUpUI(view: calendarTableView)
         
+        //self.navigationController?.navigationBar.tex.lineBreakMode = .ByCharWrapping
+
         self.navigationController?.navigationBar.transparentNavigationBar()
         self.view.backgroundColor = UIColor(hexFromString: "9eb5e8")
 //        self.navigationController?.navigationBar.layer.shadowColor = UIColor.darkGray.cgColor
@@ -793,24 +793,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         self.view.addSubview(containerView)
         containerView.addSubview(view)
         
-    }
-    
-    func configureRefreshControl () {
-        self.assignmentTableView.refreshControl = UIRefreshControl()
-        self.assignmentTableView.refreshControl?.addTarget(self, action:
-            #selector(handleRefreshControl), for: .valueChanged)
-    }
-    
-    @objc func handleRefreshControl() {
-        
-        if assignmentsPerCourse.count > 0 {
-            self.showInfo()
-        }
-        self.assignmentTableView.reloadData()
-
-        DispatchQueue.main.async {
-            self.assignmentTableView.refreshControl?.endRefreshing()
-        }
     }
         
 //    func dayView(dayView: DayView, didTapTimelineAt date: Date) {
