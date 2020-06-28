@@ -161,8 +161,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
     }
     
-    var classButtonTitle = "Import Classes"
-   
+    var importTitle = "Import Classes"
+       
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         
@@ -180,11 +180,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
        //     print("test")
             
             if classNameAndAssignments.count > 0 {
-                if section == 0 {
-                    button.setTitle("\n\n" + classes[section] + "\n", for: .normal)
-                } else {
-                    button.setTitle("\n" + classes[section] + "\n", for: .normal)
-                }
+                
+                button.setTitle("\n\n" + classes[section] + "\n\n", for: .normal)
+                
                 button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
 
               //  button.removeTarget(self, action: #selector(tapImport(sender:)), for: .touchUpInside)
@@ -193,7 +191,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 
                 
                 button.addTarget(self, action: #selector(tapImport(sender:)), for: .touchUpInside)
-                button.setTitle(classButtonTitle, for: .normal)
+                button.setTitle(importTitle, for: .normal)
 
                
               //  button.removeTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
@@ -232,13 +230,14 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     label.setTitle(currentDate, for: .normal)
                     label.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
                     //label.removeTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
-                    
+                    assignmentTableView.dragInteractionEnabled = true
                     view.addSubview(leftButton)
                     view.addSubview(rightButton)
                 } else {
                     label = UIButton(frame: CGRect(x: labelX - labelWidth/2, y: 5, width: labelWidth, height: 80))
                     label.setTitle("Import Calendar", for: .normal)
                     label.addTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
+                    assignmentTableView.dragInteractionEnabled = false
                     
                     
                     loadCalendar = false
@@ -321,13 +320,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         changeDays(sign: 1)
         
     }
-
-    @objc func tapImport(sender: UIButton) {
-
+    
+    @IBAction func showButton(_ sender: UIBarButtonItem) {
         
         if GIDSignIn.sharedInstance()?.currentUser == nil {
             print("YESYES")
-            if sender.title(for: .normal) == "Show Classes" {
+            if sender.isEnabled == true {
                 print("yes")
                 let alert = UIAlertController(title: "Unable to Show Classes", message: "Please sign in", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Sign In", style: .default, handler: { action in
@@ -337,19 +335,37 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 self.present(alert, animated: true)
             } else {
                 GIDSignIn.sharedInstance().signIn()
-                sender.setTitle("Show Classes", for: .normal)
+                sender.isEnabled = true
                 
                 
             }
-            classButtonTitle = "Show Classes"
         } else {
             print("NONO")
+            importTitle = ""
             getInfo()
-            classButtonTitle = ""
 
         }
-     //   assignmentTableView.reloadData()
+        service.authorizer = myAuth
+    }
+    
+    @IBOutlet weak var showButtonOutlet: UIBarButtonItem!
+    
+    @objc func tapImport(sender: UIButton) {
+
+        if GIDSignIn.sharedInstance()?.currentUser == nil {
+            
+            if !showButtonOutlet.isEnabled {
+                GIDSignIn.sharedInstance().signIn()
+                showButtonOutlet.isEnabled = true
+                sender.isEnabled = false
+                sender.setTitleColor(.lightGray, for: .normal)
+            } else {
+                print("use sign show button")
+ 
+            }
+        
          service.authorizer = myAuth
+        }
     }
     
     @objc func tapSection(sender: UIButton) {
@@ -382,6 +398,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         classes = Array<String>(classNameAndAssignments.keys)
        // let assignments: Array<Array<String>> = Array<Array<String>>(classNameAndAssignments.values)
         cell.backgroundColor = .white
+        cell.selectionStyle = .none
         
         if classNameAndAssignments.count > 0 {
 
@@ -454,6 +471,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "calendarCell", for: indexPath) as! CalendarTableViewCell
             var fixedTime = ""
+            cell.selectionStyle = .none
             
             if calendarItems[indexPath.row].first == "0" {
                 fixedTime = String(calendarItems[indexPath.row].dropFirst())
@@ -476,7 +494,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             return cell
             
         }
-        
+       
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -663,6 +681,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         refResponse.child((Auth.auth().currentUser?.uid)!).child(currentDate).setValue(calendarItems)
         
     }
+     
 
     override func viewDidLoad() {
       super.viewDidLoad()
@@ -682,6 +701,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         calendarTableView.delegate = self
         calendarTableView.dataSource = self
+        
+        showButtonOutlet.isEnabled = false
+        showButtonOutlet.tintColor = .darkGray
         
         calendarTableView.backgroundColor = UIColor(hexFromString: "E8E8E8")
         assignmentTableView.backgroundColor = UIColor(hexFromString: "5FD7EC")
