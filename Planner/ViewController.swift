@@ -29,6 +29,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     var calendarItems = [String]()
     
+    var assignmentsFetched = false
+    
     var expandAssignments = 0
     
     var assignmentCellWidth = CGFloat()
@@ -170,21 +172,31 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
             classes = Array<String>(classNameAndAssignments.keys)
             let button = UIButton(type: .custom)
-            
-            button.setTitleColor(.black, for: .normal)
-            button.setTitleColor(.gray, for: .selected)
+           // button.setTitleColor(.black, for: .normal)
+            //button.setTitleColor(.gray, for: .selected)
             button.titleLabel?.lineBreakMode = .byWordWrapping
             button.titleLabel?.textAlignment = .center
             button.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: (button.titleLabel?.font.pointSize)!)
+            
+            if showButtonOutlet.isEnabled == true && assignmentsFetched == false {
+                button.setTitleColor(.lightGray, for: .normal)
+            } else {
+                button.setTitleColor(.black, for: .normal)
+            }
+            
 
             button.tag = section
        //     print("test")
             
+   
             if classNameAndAssignments.count > 0 {
                 
+               
                 button.setTitle("\n\n" + classes[section] + "\n\n", for: .normal)
                 
                 button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
+                
+              //  button.setTitleColor(.black, for: .normal)
 
               //  button.removeTarget(self, action: #selector(tapImport(sender:)), for: .touchUpInside)
                 
@@ -193,6 +205,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 
                 button.addTarget(self, action: #selector(tapImport(sender:)), for: .touchUpInside)
                 button.setTitle(importTitle, for: .normal)
+        //        button.setTitleColor(.black, for: .normal)
 
                
               //  button.removeTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
@@ -201,8 +214,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
             
           
-            button.setTitleColor(.black, for: .normal)
-            button.setTitleColor(.lightGray, for: .selected)
+            
+           // button.setTitleColor(.lightGray, for: .selected)
             button.titleLabel?.lineBreakMode = .byWordWrapping
             button.titleLabel?.textAlignment = .center
              //assignmentTableView.reloadData()
@@ -589,7 +602,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             if(snapshot.exists()) {
               //  self.followButton.isEnabled = true
                 self.calendarItems = []
-                self.calendarItems.append("12:00 AM")
+                //self.calendarItems.append("12:00 AM")
                 if let calendarData = snapshot.value as? NSArray{
                     self.calendarItems = calendarData as! [String]
                     
@@ -598,10 +611,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             } else {
                 print("Not in array")
                 let lastTime: Double = 23
-                      var currentTime: Double = 0
+                var currentTime: Double = -0.5
                       let incrementMinutes: Double = 30 // increment by 15 minutes
                     self.calendarItems = []
-                   // self.calendarItems.append("12:00 AM")
+                    //self.calendarItems.append("12:00 AM")
 
                       while currentTime <= lastTime {
                           currentTime += (incrementMinutes/60)
@@ -893,6 +906,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             //run your function here
             self.showInfo()
         }))
+        assignmentsFetched = true
         self.present(alert, animated: true)
         self.assignmentTableView.reloadData()
     }
