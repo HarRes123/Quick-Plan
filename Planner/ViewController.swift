@@ -10,6 +10,7 @@ import UIKit
 import GoogleSignIn
 import MobileCoreServices
 import Firebase
+import UserNotifications
 
 class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate  {
     
@@ -192,7 +193,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             if classNameAndAssignments.count > 0 {
                 
                
-                button.setTitle("\n\n" + classes[section] + "\n\n", for: .normal)
+                button.setTitle("\n\n\n" + classes[section] + "\n\n\n", for: .normal)
                 
                 button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
                 
@@ -695,10 +696,42 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         refResponse.child((Auth.auth().currentUser?.uid)!).child(currentDate).setValue(calendarItems)
         
     }
+    
+    @IBAction func sendNotification(_ sender: Any) {
+        // 1
+        let content = UNMutableNotificationContent()
+        content.title = "Message from Planner"
+        content.subtitle = "Test notification"
+        content.body = "Notification triggered"
+        
+        // 2
+        let imageName = "app_logo"
+        guard let imageURL = Bundle.main.url(forResource: imageName, withExtension: "png") else { return }
+            
+        let attachment = try! UNNotificationAttachment(identifier: imageName, url: imageURL, options: .none)
+            
+        content.attachments = [attachment]
+        
+        // 3
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+        let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
+        
+        // 4
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
      
 
     override func viewDidLoad() {
       super.viewDidLoad()
+        
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge,.sound]) {
+              (granted, error) in
+              if granted {
+                  print("yes")
+              } else {
+                  print("No")
+              }
+          }
         
         GIDSignIn.sharedInstance()?.signOut()
         

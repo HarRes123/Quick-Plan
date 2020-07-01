@@ -6,7 +6,6 @@ target 'Planner' do
     pod 'GoogleAPIClientForREST/Classroom'
     pod 'GoogleSignIn'
     pod 'Firebase/Core'
-    pod 'Firebase/Messaging'
     pod 'Firebase/Analytics'
     pod 'FirebaseUI/Auth'
     pod 'FirebaseUI/Email'
