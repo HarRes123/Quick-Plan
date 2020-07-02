@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17132" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BA2-jE-DmS">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="ipad11_0rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17105"/>
@@ -14,13 +14,13 @@
             <objects>
                 <viewController id="zcv-In-QdX" customClass="ViewController" customModule="Planner" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gHu-cg-eaM">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Hlr-ja-OiJ">
-                                <rect key="frame" x="11" y="101" width="142" height="774"/>
+                                <rect key="frame" x="11" y="63" width="142" height="764"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="142" id="03o-dP-F00"/>
+                                    <constraint firstAttribute="width" constant="142" id="CqN-Fa-BGw"/>
                                 </constraints>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="assignmentCell" id="cP5-iY-NZ1" customClass="AssignmentTableViewCell" customModule="Planner" customModuleProvider="target">
@@ -38,14 +38,14 @@
                                 </connections>
                             </tableView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="50" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="CKD-gs-1pZ">
-                                <rect key="frame" x="166" y="101" width="239" height="774"/>
+                                <rect key="frame" x="166" y="63" width="1019" height="764"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="calendarCell" id="5Ig-Vz-FBa" customClass="CalendarTableViewCell" customModule="Planner" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="239" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="28" width="1019" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5Ig-Vz-FBa" id="Y6G-7Y-v1C">
-                                            <rect key="frame" x="0.0" y="0.0" width="239" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="1019" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
@@ -60,13 +60,13 @@
                         <viewLayoutGuide key="safeArea" id="OSv-cR-nIE"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="OSv-cR-nIE" firstAttribute="trailing" secondItem="CKD-gs-1pZ" secondAttribute="trailing" constant="9" id="Cqs-nC-WZ4"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" constant="13" id="FNM-cg-Npf"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="Hlr-ja-OiJ" secondAttribute="bottom" constant="-13" id="L3C-Wy-vLp"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" constant="11" id="ajt-NU-Hzb"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="bottom" secondItem="CKD-gs-1pZ" secondAttribute="bottom" id="bVv-Jo-dqr"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="CKD-gs-1pZ" secondAttribute="top" id="cWH-o1-VoQ"/>
-                            <constraint firstItem="CKD-gs-1pZ" firstAttribute="leading" secondItem="Hlr-ja-OiJ" secondAttribute="trailing" constant="13" id="uq4-C2-owr"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="CKD-gs-1pZ" secondAttribute="top" id="CgK-0t-fCd"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="bottom" secondItem="CKD-gs-1pZ" secondAttribute="bottom" id="UHH-dM-3To"/>
+                            <constraint firstItem="OSv-cR-nIE" firstAttribute="trailing" secondItem="CKD-gs-1pZ" secondAttribute="trailing" constant="9" id="ffn-Oz-8zU"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="Hlr-ja-OiJ" secondAttribute="bottom" constant="-13" id="gXS-8c-Wfw"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" constant="13" id="mN0-Rw-jiS"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" constant="11" id="tS4-go-Dqb"/>
+                            <constraint firstItem="CKD-gs-1pZ" firstAttribute="leading" secondItem="Hlr-ja-OiJ" secondAttribute="trailing" constant="13" id="x7v-TD-ISk"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Planner" id="eCj-Fl-F42">
@@ -106,14 +106,14 @@
             <objects>
                 <viewController storyboardIdentifier="signInVC" id="BA2-jE-DmS" customClass="SignInViewController" customModule="Planner" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Vz6-gH-F8O">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="app_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="xDb-H3-Jhn">
-                                <rect key="frame" x="0.0" y="130" width="414" height="235.5"/>
+                                <rect key="frame" x="0.0" y="86" width="1194" height="248.5"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vKl-YD-PrK">
-                                <rect key="frame" x="136" y="428.5" width="142" height="39"/>
+                                <rect key="frame" x="136" y="397.5" width="922" height="39"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <state key="normal" title="Sign In"/>
                                 <connections>
@@ -149,7 +149,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="NJ0-dF-MIq"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="7ew-dX-QtP">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1194" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="20"/>
