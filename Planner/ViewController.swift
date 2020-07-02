@@ -35,7 +35,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var expandAssignments = 0
     
     var importTitle = "Import Classes"
-        
+            
     var assignmentCellWidth = CGFloat()
     
     var refResponse: DatabaseReference!
@@ -724,10 +724,18 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         // 4
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
+
     
-    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
-        assignmentTableView.reloadData()
-        calendarTableView.reloadData()
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        if (size.width != self.view.frame.size.width) {
+            // Reload TableView to update cell's constraints.
+        // Ensuring no dequeued cells have old constraints.
+            DispatchQueue.main.async {
+                self.calendarTableView.reloadData()
+                self.assignmentTableView.reloadData()
+            }
+        }
     }
 
     override func viewDidLoad() {
