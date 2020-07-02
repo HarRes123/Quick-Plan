@@ -34,6 +34,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     var expandAssignments = 0
     
+    var importTitle = "Import Classes"
+        
     var assignmentCellWidth = CGFloat()
     
     var refResponse: DatabaseReference!
@@ -163,8 +165,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         return showAllClassInfo(assignmentTableView, cellForRowAt: indexPath)
         
     }
-    
-    var importTitle = "Import Classes"
        
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
@@ -230,14 +230,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 let currentDate = getViewedDate()
                 
                 let view = UIView(frame: .zero)
-                view.backgroundColor = UIColor(hexFromString: "E8E8E8") //tableView.backgroundColor
                 var buttonWidth = 150
                 let buttonX = Int(tableView.frame.size.width)/2
                 var button = UIButton()
                 let leftButton = UIButton(type: .custom)
                 let rightButton = UIButton(type: .custom)
-                leftButton.frame = CGRect(x: buttonX - 15 - 75, y: 5, width: 30, height: 40)
-                rightButton.frame = CGRect(x: buttonX - 15 + 75  , y: 5, width: 30, height: 40)
+                leftButton.frame = CGRect(x: 5, y: 5, width: 30, height: 40)
+                rightButton.frame = CGRect(x: tableView.frame.width - 35  , y: 5, width: 30, height: 40)
                 
                 if loadCalendar == false {
                     buttonWidth = 110
@@ -246,12 +245,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     button.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
                     //label.removeTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
                     assignmentTableView.dragInteractionEnabled = true
+                    calendarTableView.backgroundColor = UIColor(hexFromString: "E8E8E8")
+                    view.backgroundColor = UIColor(hexFromString: "E8E8E8")
                     view.addSubview(leftButton)
                     view.addSubview(rightButton)
                 } else {
                     button = UIButton(frame: CGRect(x: buttonX - buttonWidth/2, y: 5, width: buttonWidth, height: 80))
                     button.setTitle("Import Calendar", for: .normal)
                     button.addTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
+                    calendarTableView.backgroundColor = .white
+                    view.backgroundColor = .white
                     assignmentTableView.dragInteractionEnabled = false
                     
                 }
@@ -487,10 +490,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             var fixedTime = ""
             cell.selectionStyle = .none
             
-            if calendarItems[indexPath.row].first == "0" {
-                fixedTime = String(calendarItems[indexPath.row].dropFirst())
-            } else {
-                fixedTime = calendarItems[indexPath.row]
+            if loadCalendar == false {
+                if calendarItems[indexPath.row].first == "0" {
+                    fixedTime = String(calendarItems[indexPath.row].dropFirst())
+                } else {
+                    fixedTime = calendarItems[indexPath.row]
+                }
             }
             
             cell.calendarEventText.text = fixedTime
@@ -719,7 +724,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         // 4
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
-     
+    
+    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
+        assignmentTableView.reloadData()
+        calendarTableView.reloadData()
+    }
 
     override func viewDidLoad() {
       super.viewDidLoad()
@@ -732,7 +741,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                   print("No")
               }
           }
-        
+
         GIDSignIn.sharedInstance()?.signOut()
         
         refResponse = Database.database().reference().child("users")
@@ -749,7 +758,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         showButtonOutlet.isEnabled = false
         showButtonOutlet.tintColor = .darkGray
         
-        calendarTableView.backgroundColor = UIColor(hexFromString: "E8E8E8")
         assignmentTableView.backgroundColor = UIColor(hexFromString: "5FD7EC")
         
         assignmentTableView.estimatedRowHeight = 250.0 // Replace with your actual estimation

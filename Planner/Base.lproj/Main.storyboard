@@ -113,7 +113,11 @@
                                 <rect key="frame" x="0.0" y="86" width="1194" height="248.5"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vKl-YD-PrK">
-                                <rect key="frame" x="136" y="397.5" width="922" height="39"/>
+                                <rect key="frame" x="547" y="397.5" width="100" height="39"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="3qR-tM-6E6"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="djE-qZ-Nvl"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <state key="normal" title="Sign In"/>
                                 <connections>
@@ -124,13 +128,12 @@
                         <viewLayoutGuide key="safeArea" id="y5B-ki-s5Y"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="top" secondItem="y5B-ki-s5Y" secondAttribute="top" constant="86" id="8hu-4u-fjb"/>
-                            <constraint firstItem="vKl-YD-PrK" firstAttribute="leading" secondItem="y5B-ki-s5Y" secondAttribute="leading" constant="136" id="SSQ-KI-FQQ"/>
-                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="leading" secondItem="y5B-ki-s5Y" secondAttribute="leading" id="T3S-2S-jQF"/>
-                            <constraint firstItem="vKl-YD-PrK" firstAttribute="top" secondItem="xDb-H3-Jhn" secondAttribute="bottom" constant="63" id="fHZ-YR-GFd"/>
-                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="centerX" secondItem="vKl-YD-PrK" secondAttribute="centerX" id="h1f-hw-8zB"/>
-                            <constraint firstItem="vKl-YD-PrK" firstAttribute="centerY" secondItem="Vz6-gH-F8O" secondAttribute="centerY" id="nkY-7d-r8C"/>
-                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="centerX" secondItem="Vz6-gH-F8O" secondAttribute="centerX" id="ybB-QE-Xa1"/>
+                            <constraint firstItem="vKl-YD-PrK" firstAttribute="centerY" secondItem="Vz6-gH-F8O" secondAttribute="centerY" id="PIl-bK-Eik"/>
+                            <constraint firstItem="vKl-YD-PrK" firstAttribute="top" secondItem="xDb-H3-Jhn" secondAttribute="bottom" constant="63" id="Upl-J2-bpg"/>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="top" secondItem="y5B-ki-s5Y" secondAttribute="top" constant="86" id="dmJ-6F-BBs"/>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="centerX" secondItem="vKl-YD-PrK" secondAttribute="centerX" id="qCs-4E-kmY"/>
+                            <constraint firstItem="vKl-YD-PrK" firstAttribute="centerX" secondItem="Vz6-gH-F8O" secondAttribute="centerX" id="vQL-Sx-vF7"/>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="leading" secondItem="y5B-ki-s5Y" secondAttribute="leading" id="zsd-jC-jRL"/>
                         </constraints>
                     </view>
                     <connections>
