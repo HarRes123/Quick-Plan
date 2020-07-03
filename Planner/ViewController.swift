@@ -738,7 +738,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         let nameAndDueDate = assignment.components(separatedBy: "\n\nDue: ")
 
         content.title = "Study for \"\(nameAndDueDate[0])\""
-        content.body = "Make sure to turn in \"\(nameAndDueDate[0])\" in by \(nameAndDueDate[1])"
+        content.body = "Make sure to turn \"\(nameAndDueDate[0])\" in by \(nameAndDueDate[1])"
         content.sound = .default
         
         let dateFormatter = DateFormatter()
