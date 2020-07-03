@@ -666,7 +666,7 @@
 				CODE_SIGN_ENTITLEMENTS = Planner/Planner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.08;
+				CURRENT_PROJECT_VERSION = 1.09;
 				DEVELOPMENT_TEAM = 5JJZ9DST9Z;
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = Planner/Info.plist;
@@ -694,7 +694,7 @@
 				CODE_SIGN_ENTITLEMENTS = Planner/Planner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.08;
+				CURRENT_PROJECT_VERSION = 1.09;
 				DEVELOPMENT_TEAM = 5JJZ9DST9Z;
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = Planner/Info.plist;

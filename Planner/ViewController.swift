@@ -112,10 +112,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 
                 
                 
-                print("DATE: \(notificationDay)")
-                getReminderTime(indexPath: indexPath)
+                print("DATE: \(self.notificationDay)")
+                self.getReminderTime(indexPath: indexPath)
 
-                self.setUpNotification(date: notificationDay, time: reminderTime, assignment: string)
+                self.setUpNotification(date: self.notificationDay, time: self.reminderTime, assignment: string)
                 
                 
                 // keep track of this new row
