@@ -30,6 +30,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     var calendarItems = [String]()
     
+    var reminderTime = String()
+    
     var notificationDay = String()
     
     var assignmentsFetched = false
@@ -107,21 +109,14 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 self.calendarItems.insert(string, at: indexPath.row)
                 indexPaths.append(indexPath)
                 tableView.insertRows(at: indexPaths, with: .automatic)
-                var reminderTime = String()
-                for i in 0...30 {
-                    if checkTimeIsValid(from: calendarItems[indexPath.row-i]) {
-                        
-                        print("TIME: \(calendarItems[indexPath.row-i])")
-                        reminderTime = calendarItems[indexPath.row-i]
-                        break
-                        
-                    }
- 
-                }
+                
+                
                 
                 print("DATE: \(notificationDay)")
+                getReminderTime(indexPath: indexPath)
 
                 self.setUpNotification(date: notificationDay, time: reminderTime, assignment: string)
+                
                 
                 // keep track of this new row
                 //indexPaths.append(indexPath)
@@ -136,6 +131,20 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
            
             
 //            tableView.insertRows(at: indexPaths, with: .automatic)
+        }
+    }
+    
+    func getReminderTime(indexPath: IndexPath) {
+        
+        for i in 0...30 {
+            if checkTimeIsValid(from: calendarItems[indexPath.row-i]) {
+                
+                print("TIME: \(calendarItems[indexPath.row-i])")
+                reminderTime = calendarItems[indexPath.row-i]
+                break
+                
+            }
+
         }
     }
     
@@ -729,7 +738,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         let nameAndDueDate = assignment.components(separatedBy: "\n\nDue: ")
 
         content.title = "Study for \"\(nameAndDueDate[0])\""
-        content.body = "Make sure to turn \"\(nameAndDueDate[0])\" in by \(nameAndDueDate[1])"
+        content.body = "Make sure to turn in \"\(nameAndDueDate[0])\" in by \(nameAndDueDate[1])"
         content.sound = .default
         
         let dateFormatter = DateFormatter()
@@ -749,14 +758,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
         
         let request = UNNotificationRequest(identifier: "\(assignment), \(notifcationDate)", content: content, trigger: trigger)
-        
+        print("ID: \(assignment), \(notifcationDate)")
         // 4
         UNUserNotificationCenter.current().add(request, withCompletionHandler: { (error) in
             if let error = error {
               print("ERROR: \(error)")
             }
           })
-        
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -916,10 +924,18 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 
         let deleteAction = UITableViewRowAction(style: .default, title: "Delete", handler: { (action, indexPath) in
-            print("Delete tapped")
+            
+            self.getReminderTime(indexPath: indexPath)
+            let notifcationDate = "\(self.notificationDay) \(self.reminderTime)"
+            let assignment = self.calendarItems[indexPath.row]
+            
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["\(assignment), \(notifcationDate)"])
+            
+            print("ID: \(assignment), \(notifcationDate)")
+            
             self.calendarItems.remove(at: indexPath.row)
-            //         self.tableView.deleteRows(at: [indexPath], with: .automatic)
-                     tableView.deleteRows(at: [indexPath], with: .automatic)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            
         })
         deleteAction.backgroundColor = UIColor.red
 
