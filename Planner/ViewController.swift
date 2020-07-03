@@ -30,6 +30,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     var calendarItems = [String]()
     
+    var currentDate = String()
+    
     var assignmentsFetched = false
     
     var expandAssignments = 0
@@ -90,7 +92,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
         
         // attempt to load strings from the drop coordinator
-        coordinator.session.loadObjects(ofClass: NSString.self) { items in
+        coordinator.session.loadObjects(ofClass: NSString.self) { [self] items in
             // convert the item provider array to a string array or bail out
             guard let strings = items as? [String] else { return }
             
@@ -101,11 +103,25 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             for (index, string) in strings.enumerated() {
                 // create an index path for this new row, moving it down depending on how many we've already inserted
                 let indexPath = IndexPath(row: destinationIndexPath.row + index, section: destinationIndexPath.section)
-    
+                    
                 self.calendarItems.insert(string, at: indexPath.row)
                 indexPaths.append(indexPath)
                 tableView.insertRows(at: indexPaths, with: .automatic)
+                var reminderTime = String()
+                for i in 0...30 {
+                    if checkTimeIsValid(from: calendarItems[indexPath.row-i]) {
+                        
+                        print("TIME: \(calendarItems[indexPath.row-i])")
+                        reminderTime = calendarItems[indexPath.row-i]
+                        break
+                        
+                    }
+ 
+                }
                 
+                print("DATE: \(currentDate)")
+
+                self.setUpNotification(date: currentDate, time: reminderTime, assignment: string)
                 
                 // keep track of this new row
                 //indexPaths.append(indexPath)
@@ -116,6 +132,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             self.addResponse()
             self.calendarTableView.reloadData()
             self.assignmentTableView.reloadData()
+            
+           
             
 //            tableView.insertRows(at: indexPaths, with: .automatic)
         }
@@ -226,9 +244,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         } else {
            // return nil
             if section == 0 {
-            
-                let currentDate = getViewedDate()
-                
+                            
                 let view = UIView(frame: .zero)
                 var buttonWidth = 150
                 let buttonX = Int(tableView.frame.size.width)/2
@@ -241,7 +257,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 if loadCalendar == false {
                     buttonWidth = 110
                     button = UIButton(frame: CGRect(x: buttonX - buttonWidth/2, y: 5, width: buttonWidth, height: 40))
-                    button.setTitle(currentDate, for: .normal)
+                    button.setTitle(getViewedDate(), for: .normal)
                     button.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
                     //label.removeTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
                     assignmentTableView.dragInteractionEnabled = true
@@ -683,11 +699,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             
         loadCalendar = false
         self.showSpinner(onView: calendarTableView)
+        self.calendarTableView.isUserInteractionEnabled = false
         self.setUpCalendar()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             
             self.setUpCalendar()
+            self.calendarTableView.isUserInteractionEnabled = true
             self.removeSpinner()
             
             
@@ -697,35 +715,47 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     func addResponse() {
 
-        let currentDate = getViewedDate()
-        refResponse.child((Auth.auth().currentUser?.uid)!).child(currentDate).setValue(calendarItems)
+        refResponse.child((Auth.auth().currentUser?.uid)!).child(getViewedDate()).setValue(calendarItems)
         
     }
     
-    @IBAction func sendNotification(_ sender: Any) {
-        // 1
+    func setUpNotification(date: String, time: String, assignment: String) {
+        
         let content = UNMutableNotificationContent()
-        content.title = "Message from Planner"
-        content.subtitle = "Test notification"
-        content.body = "Notification triggered"
         
-        // 2
-        let imageName = "app_logo"
-        guard let imageURL = Bundle.main.url(forResource: imageName, withExtension: "png") else { return }
-            
-        let attachment = try! UNNotificationAttachment(identifier: imageName, url: imageURL, options: .none)
-            
-        content.attachments = [attachment]
+        let nameAndDueDate = assignment.components(separatedBy: "\n\nDue: ")
         
-        // 3
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-        let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
+        content.title = "Study for \"\(nameAndDueDate[0])\""
+        content.body = "Make sure to turn \"\(nameAndDueDate[0])\" in by \(nameAndDueDate[1])"
+        content.sound = .default
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = .current
+        dateFormatter.dateFormat = "MMM dd, yyyy hh:mm a"
+        let notifcationDate = "\(date) \(time)"
+        print(notifcationDate)
+        let turnInDate = dateFormatter.date(from: notifcationDate)!
+        
+        let triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute],
+          from: turnInDate)
+        
+        print(triggerDate)
+        print(assignment)
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+        
+        let request = UNNotificationRequest(identifier: "\(assignment), \(notifcationDate)", content: content, trigger: trigger)
         
         // 4
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: { (error) in
+            if let error = error {
+              print("ERROR: \(error)")
+            }
+          })
+        
     }
 
-    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if (size.width != self.view.frame.size.width) {
@@ -978,7 +1008,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         let currentDay = calendar.component(.day, from: date)
         let currentYear = calendar.component(.year, from: date)
         
-        let currentDate = "\(currentMonth)/\(currentDay)/\(currentYear)"
+        let calendarDate = "\(currentMonth)/\(currentDay)/\(currentYear)"
 
         
         //  for classCount in 0...classNames.count - 1 {
@@ -1019,15 +1049,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 //                    print("server:", finalDate)
                     let dateFormatter = DateFormatter()
                     dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-                    dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+                    dateFormatter.timeZone = .current
                     dateFormatter.dateFormat = "MM/dd/yyyy"
 //
 //                    let date = Date()
 //                    let calendar = Calendar.current
-                    let currentDate = dateFormatter.date(from: currentDate) ?? Date()
+                    let currentDateAsDate = dateFormatter.date(from: calendarDate) ?? Date()
                     let dueDate = dateFormatter.date(from: finalDate) ?? Date()
-                    print(dueDate, currentDate)
-                    if dueDate > currentDate {
+                    print(dueDate, currentDateAsDate)
+                    if dueDate > currentDateAsDate {
                         newAssignmentsPerCourse[assignmentIndex].append(assignment.title ?? "No title")
                     }
                 

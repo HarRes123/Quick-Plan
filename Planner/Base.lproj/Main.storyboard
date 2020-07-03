@@ -76,19 +76,11 @@
                                 <action selector="signOut:" destination="zcv-In-QdX" id="GOL-7S-W2a"/>
                             </connections>
                         </barButtonItem>
-                        <rightBarButtonItems>
-                            <barButtonItem title="Item" image="visible" id="0Jl-m5-KA9">
-                                <connections>
-                                    <action selector="showButton:" destination="zcv-In-QdX" id="L1b-Wu-ib0"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Push" id="NnU-RE-am0">
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <connections>
-                                    <action selector="sendNotification:" destination="zcv-In-QdX" id="BwO-Ye-vuI"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="visible" id="0Jl-m5-KA9">
+                            <connections>
+                                <action selector="showButton:" destination="zcv-In-QdX" id="L1b-Wu-ib0"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="assignmentTableView" destination="Hlr-ja-OiJ" id="OYZ-Bq-LMN"/>
