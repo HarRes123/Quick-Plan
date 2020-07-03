@@ -64,12 +64,20 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         // if the table view in question is the left table view then read from leftItems, otherwise read from rightItems
         var assignment = ""
-        if arrayHeader[indexPath.section] == 1 {
-            assignment = newClassNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
-        } else if arrayHeader[indexPath.section] == 2 {
-            assignment = classNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
+        var dueDate = ""
+        
+        if tableView == assignmentTableView {
+            if arrayHeader[indexPath.section] == 1 {
+                assignment = newClassNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
+            } else if arrayHeader[indexPath.section] == 2 {
+                assignment = classNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
+            
+            }
+            
+            dueDate = assignmentAndDueDate[assignment] ?? ""
+        
         }
-        let dueDate = assignmentAndDueDate[assignment] ?? ""
+       
         let string = tableView == assignmentTableView ? "\(assignment)\n\n\(dueDate)" : calendarItems[indexPath.row]
         
         // Attempt to convert the string to a Data object so it can be passed around using drag and drop
@@ -818,9 +826,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         calendarTableView.rowHeight = UITableView.automaticDimension
 
         assignmentTableView.dragDelegate = self
+        calendarTableView.dragDelegate = self
         calendarTableView.dropDelegate = self
         assignmentTableView.dragInteractionEnabled = true
-       // calendarTableView.dragInteractionEnabled = true
+        calendarTableView.dragInteractionEnabled = true
         
       //  self.assignmentTableView.register(AssignmentTableViewCell.self, forCellReuseIdentifier: "assignmentCell")
         let nibClassroom = UINib.init(nibName: "AssignmentTableViewCell", bundle: nil)
