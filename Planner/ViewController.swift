@@ -20,7 +20,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var assignmentsPerCourse = [Array<String>]()
     var newAssignmentsPerCourse = [Array<String>]()
     var assignmentIndex = 0
-    
+        
     var classIDAndName = [String : String]()
     var classNameAndAssignments = [String : Array<String>]()
     var newClassNameAndAssignments = [String : Array<String>]()
@@ -37,9 +37,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var assignmentsFetched = false
     
     var expandAssignments = 0
-    
-    var importTitle = "Import Classes"
-            
+                
     var assignmentCellWidth = CGFloat()
     
     var refResponse: DatabaseReference!
@@ -200,7 +198,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         return showAllClassInfo(assignmentTableView, cellForRowAt: indexPath)
         
     }
-       
+
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         
@@ -208,19 +206,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
             classes = Array<String>(classNameAndAssignments.keys)
             let button = UIButton(type: .custom)
-           // button.setTitleColor(.black, for: .normal)
-            //button.setTitleColor(.gray, for: .selected)
+            button.setTitleColor(.black, for: .normal)
             button.titleLabel?.lineBreakMode = .byWordWrapping
             button.titleLabel?.textAlignment = .center
             button.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: (button.titleLabel?.font.pointSize)!)
-            
-            if showButtonOutlet.isEnabled == true && assignmentsFetched == false {
-                button.setTitleColor(.lightGray, for: .normal)
-            } else {
-                button.setTitleColor(.black, for: .normal)
-            }
-            
-
             button.tag = section
        //     print("test")
             
@@ -231,26 +220,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 button.setTitle("\n\n\n" + classes[section] + "\n\n\n", for: .normal)
                 
                 button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
-                
-              //  button.setTitleColor(.black, for: .normal)
 
-              //  button.removeTarget(self, action: #selector(tapImport(sender:)), for: .touchUpInside)
                 
             } else {
                 
-                
-                button.addTarget(self, action: #selector(tapImport(sender:)), for: .touchUpInside)
-                button.setTitle(importTitle, for: .normal)
-        //        button.setTitleColor(.black, for: .normal)
+                button.setTitle("Import Classes", for: .normal)
+                button.addTarget(self, action: #selector(importClasses(sender:)), for: .touchUpInside)
 
-               
-              //  button.removeTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
-                
                               
             }
-            
-          
-            
+
            // button.setTitleColor(.lightGray, for: .selected)
             button.titleLabel?.lineBreakMode = .byWordWrapping
             button.titleLabel?.textAlignment = .center
@@ -372,59 +351,18 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         changeDays(sign: 1)
         
     }
-    
-    @IBAction func showButton(_ sender: UIBarButtonItem) {
-        
-        if GIDSignIn.sharedInstance()?.currentUser == nil {
-            print("YESYES")
-            if sender.isEnabled == true {
-                print("yes")
-                let alert = UIAlertController(title: "Unable to Show Classes", message: "Please sign in", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Sign In", style: .default, handler: { action in
-                    //run your function here
-                    GIDSignIn.sharedInstance().signIn()
-                }))
-                self.present(alert, animated: true)
-            } else {
-                GIDSignIn.sharedInstance().signIn()
-                sender.isEnabled = true
-                
-                
-            }
-        } else {
-            print("NONO")
-            importTitle = ""
-            getInfo()
 
-        }
-        service.authorizer = myAuth
-    }
-    
-    @IBOutlet weak var showButtonOutlet: UIBarButtonItem!
-    
-    @objc func tapImport(sender: UIButton) {
-
-        if GIDSignIn.sharedInstance()?.currentUser == nil {
-            
-            if !showButtonOutlet.isEnabled {
-                GIDSignIn.sharedInstance().signIn()
-                showButtonOutlet.isEnabled = true
-                sender.isEnabled = false
-                sender.setTitleColor(.lightGray, for: .normal)
-            } else {
-                print("use sign show button")
- 
-            }
-        
-         service.authorizer = myAuth
-        }
-    }
-    
     @objc func tapSection(sender: UIButton) {
         if classNameAndAssignments.count > 0 {
             self.arrayHeader[sender.tag] = (self.arrayHeader[sender.tag] == 0) ? 1 : 0
             self.assignmentTableView.reloadSections([sender.tag], with: .fade)
         }
+    }
+    
+    @objc func importClasses(sender: UIButton) {
+        
+        self.getInfo()
+        
     }
     
     func tableView( _ tableView : UITableView,  titleForHeaderInSection section: Int)->String? {
@@ -620,8 +558,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
         
     }
-
-  func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {return}
     
   func timeConversion12(time24: String) -> String {
       let dateAsString = time24
@@ -786,6 +722,56 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
         }
     }
+    
+    func application(_ application: UIApplication,
+                     open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+      return GIDSignIn.sharedInstance().handle(url)
+    }
+
+    @available(iOS 9.0, *)
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any]) -> Bool {
+      return GIDSignIn.sharedInstance().handle(url)
+    }
+      
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
+              withError error: Error!) {
+        
+      print("SIGN IN")
+
+      if let error = error {
+        if (error as NSError).code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue {
+          print("The user has not signed in before or they have since signed out.")
+          
+        } else {
+          print("\(error.localizedDescription)")
+        }
+        NotificationCenter.default.post(
+          name: Notification.Name(rawValue: "ToggleAuthUINotification"), object: nil, userInfo: nil)
+        return
+      }
+        self.getInfo()
+  //    let userId = user.userID                  // For client-side use only!
+  //    let idToken = user.authentication.idToken // Safe to send to the server
+        let fullName = user.profile.name
+      //  print(fullName)
+  //    let givenName = user.profile.givenName
+  //    let familyName = user.profile.familyName
+  //    let email = user.profile.email
+      NotificationCenter.default.post(
+        name: Notification.Name(rawValue: "ToggleAuthUINotification"),
+        object: nil,
+        userInfo: ["statusText": "Signed in user:\n\(fullName!)"])
+    }
+
+    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,
+              withError error: Error!) {
+
+      NotificationCenter.default.post(
+        name: Notification.Name(rawValue: "ToggleAuthUINotification"),
+        object: nil,
+        userInfo: ["statusText": "User has disconnected."])
+    }
+  
 
     override func viewDidLoad() {
       super.viewDidLoad()
@@ -799,9 +785,14 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
               }
           }
 
-        GIDSignIn.sharedInstance()?.signOut()
+        if ((GIDSignIn.sharedInstance()?.hasPreviousSignIn()) != nil) {
+            GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+        }
+        service.authorizer = myAuth
         
         refResponse = Database.database().reference().child("users")
+        
+        GIDSignIn.sharedInstance().delegate = self
         
         GIDSignIn.sharedInstance()?.presentingViewController = self
         GIDSignIn.sharedInstance().scopes = scopes
@@ -812,8 +803,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         calendarTableView.delegate = self
         calendarTableView.dataSource = self
         
-        showButtonOutlet.isEnabled = false
-        showButtonOutlet.tintColor = .darkGray
+       // showButtonOutlet.isEnabled = false
         
         assignmentTableView.backgroundColor = UIColor(hexFromString: "5FD7EC")
         
@@ -866,9 +856,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
         
         self.navigationItem.title = "\(greeting), \(firstName)!"
-        
-        service.authorizer = myAuth
-        
+                
         setUpUI(view: assignmentTableView)
         setUpUI(view: calendarTableView)
         
@@ -1105,6 +1093,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                  error : NSError?) {
         if let error = error {
             print(error.localizedDescription)
+            GIDSignIn.sharedInstance()?.signIn()
             return
         }
         

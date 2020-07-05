@@ -76,16 +76,10 @@
                                 <action selector="signOut:" destination="zcv-In-QdX" id="GOL-7S-W2a"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Item" image="visible" id="0Jl-m5-KA9">
-                            <connections>
-                                <action selector="showButton:" destination="zcv-In-QdX" id="L1b-Wu-ib0"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="assignmentTableView" destination="Hlr-ja-OiJ" id="OYZ-Bq-LMN"/>
                         <outlet property="calendarTableView" destination="CKD-gs-1pZ" id="acB-3U-zKS"/>
-                        <outlet property="showButtonOutlet" destination="0Jl-m5-KA9" id="XXA-Pd-uhX"/>
                         <segue destination="BA2-jE-DmS" kind="presentation" identifier="logOut" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="0n5-jj-Dax"/>
                     </connections>
                 </viewController>
@@ -163,7 +157,6 @@
     <resources>
         <image name="app_logo.png" width="626" height="626"/>
         <image name="logout" width="30" height="30"/>
-        <image name="visible" width="30" height="30"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
