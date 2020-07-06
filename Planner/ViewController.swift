@@ -1031,6 +1031,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         guard let assignments = result.courseWork, !assignments.isEmpty else {
             print("No assignments.")
+            assignmentsPerCourse.remove(at: assignmentIndex)
+            newAssignmentsPerCourse.remove(at: assignmentIndex)
             return
         }
                 
@@ -1094,7 +1096,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 print(newAssignmentsPerCourse)
 
         }
-        assignmentIndex += 1
         
         if assignmentIndex + 1 >= assignmentsPerCourse.count {
             
@@ -1104,6 +1105,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             self.showInfo()
             self.assignmentTableView.reloadData()
             
+        } else {
+            assignmentIndex += 1
         }
         print("index", assignmentIndex)
         
