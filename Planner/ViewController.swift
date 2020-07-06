@@ -355,7 +355,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     @objc func tapSection(sender: UIButton) {
         if classNameAndAssignments.count > 0 {
             self.arrayHeader[sender.tag] = (self.arrayHeader[sender.tag] == 0) ? 1 : 0
-            self.assignmentTableView.reloadSections([sender.tag], with: .fade)
+            self.assignmentTableView.reloadSections([sender.tag], with: .automatic)
         }
     }
     
@@ -363,7 +363,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         
         service.authorizer = myAuth
-        sender.isEnabled = false
         
         self.getInfo()
         
@@ -438,10 +437,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             cell.classAssignments.text = "Assignment"
             
         }
-        
-        
-        
-        
 
         return cell
     }
@@ -1128,19 +1123,29 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         guard let courses = result.courses, !courses.isEmpty else {
             print("No courses.")
+            let alert = UIAlertController(title: "Unable to Show Info", message: "Please use a different account", preferredStyle: .alert)
+            
+            let tryAgain = UIAlertAction(title: "Try Again", style: .default) { (action:UIAlertAction) in
+
+                GIDSignIn.sharedInstance()?.signIn()
+            }
+        
+            alert.addAction(tryAgain)
+            
+            self.present(alert, animated: true)
             return
         }
 
-        var outputText = "Courses:\n"
-
         for course in courses {
-            outputText += "\(course.name ?? "") (\(course.identifier!))\n"
-            classIDAndName.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
+            
+            //if course.courseState == "ACTIVE" {
+                classIDAndName.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
+            //}
         }
     //    print(outputText)
         arrayHeader = Array(repeating: 0, count:classIDAndName.count)
         assignmentIndex = 0
-       fetchAssignments()
+        fetchAssignments()
 
     }
     
@@ -1202,6 +1207,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                
         
     }
+    
     
     func showInfo() {
     
