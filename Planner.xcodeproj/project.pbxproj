@@ -22,8 +22,9 @@
 		624BAC1424908E7C0050EA6F /* PlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BAC1324908E7C0050EA6F /* PlannerTests.swift */; };
 		624BAC1F24908E7C0050EA6F /* PlannerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BAC1E24908E7C0050EA6F /* PlannerUITests.swift */; };
 		627FB368249EC77D007E0E4C /* app_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 627FB367249EC77D007E0E4C /* app_logo.png */; };
-		6280AC85249C751000F66107 /* iPhone X 01.png in Resources */ = {isa = PBXBuildFile; fileRef = 6280AC84249C751000F66107 /* iPhone X 01.png */; };
 		62C7E55A249EB9A100155748 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 62C7E559249EB9A100155748 /* GoogleService-Info.plist */; };
+		62D1886624B2F80900675E94 /* top_pattern.png in Resources */ = {isa = PBXBuildFile; fileRef = 62D1886424B2F80900675E94 /* top_pattern.png */; };
+		62D1886724B2F80900675E94 /* bottom_pattern.png in Resources */ = {isa = PBXBuildFile; fileRef = 62D1886524B2F80900675E94 /* bottom_pattern.png */; };
 		62D84CE9249985D50011BD6F /* CalendarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D84CE7249985D50011BD6F /* CalendarTableViewCell.swift */; };
 		62D84CEA249985D50011BD6F /* CalendarTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 62D84CE8249985D50011BD6F /* CalendarTableViewCell.xib */; };
 		E0602791331351E05F2A2BA5 /* Pods_Planner_PlannerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D34907A22D4322E0AC896D6 /* Pods_Planner_PlannerUITests.framework */; };
@@ -71,8 +72,9 @@
 		624BAC2024908E7C0050EA6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		625414A02490A45C00AA7908 /* Planner-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Planner-Bridging-Header.h"; sourceTree = "<group>"; };
 		627FB367249EC77D007E0E4C /* app_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_logo.png; sourceTree = "<group>"; };
-		6280AC84249C751000F66107 /* iPhone X 01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iPhone X 01.png"; sourceTree = "<group>"; };
 		62C7E559249EB9A100155748 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		62D1886424B2F80900675E94 /* top_pattern.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = top_pattern.png; sourceTree = "<group>"; };
+		62D1886524B2F80900675E94 /* bottom_pattern.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bottom_pattern.png; sourceTree = "<group>"; };
 		62D84CE7249985D50011BD6F /* CalendarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTableViewCell.swift; sourceTree = "<group>"; };
 		62D84CE8249985D50011BD6F /* CalendarTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CalendarTableViewCell.xib; sourceTree = "<group>"; };
 		62EF22A424AC24CD00513F63 /* Planner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Planner.entitlements; sourceTree = "<group>"; };
@@ -151,8 +153,9 @@
 				624BAC0524908E7B0050EA6F /* Assets.xcassets */,
 				624BAC0724908E7B0050EA6F /* LaunchScreen.storyboard */,
 				624BAC0A24908E7C0050EA6F /* Info.plist */,
-				6280AC84249C751000F66107 /* iPhone X 01.png */,
 				627FB367249EC77D007E0E4C /* app_logo.png */,
+				62D1886524B2F80900675E94 /* bottom_pattern.png */,
+				62D1886424B2F80900675E94 /* top_pattern.png */,
 				62C7E559249EB9A100155748 /* GoogleService-Info.plist */,
 			);
 			path = Planner;
@@ -313,11 +316,12 @@
 			files = (
 				627FB368249EC77D007E0E4C /* app_logo.png in Resources */,
 				620ABAF7249726B500730D80 /* AssignmentTableViewCell.xib in Resources */,
+				62D1886624B2F80900675E94 /* top_pattern.png in Resources */,
 				624BAC0924908E7C0050EA6F /* LaunchScreen.storyboard in Resources */,
 				62D84CEA249985D50011BD6F /* CalendarTableViewCell.xib in Resources */,
 				624BAC0624908E7B0050EA6F /* Assets.xcassets in Resources */,
-				6280AC85249C751000F66107 /* iPhone X 01.png in Resources */,
 				624BAC0424908E790050EA6F /* Main.storyboard in Resources */,
+				62D1886724B2F80900675E94 /* bottom_pattern.png in Resources */,
 				62C7E55A249EB9A100155748 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -666,7 +670,7 @@
 				CODE_SIGN_ENTITLEMENTS = Planner/Planner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.08;
+				CURRENT_PROJECT_VERSION = 2.01;
 				DEVELOPMENT_TEAM = 5JJZ9DST9Z;
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = Planner/Info.plist;
@@ -694,7 +698,7 @@
 				CODE_SIGN_ENTITLEMENTS = Planner/Planner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.08;
+				CURRENT_PROJECT_VERSION = 2.01;
 				DEVELOPMENT_TEAM = 5JJZ9DST9Z;
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = Planner/Info.plist;

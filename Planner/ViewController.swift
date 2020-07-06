@@ -363,6 +363,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         
         service.authorizer = myAuth
+        self.showSpinner(onView: assignmentTableView)
+        assignmentTableView.isUserInteractionEnabled = false
+        
         
         self.getInfo()
         
@@ -750,7 +753,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any]) -> Bool {
       return GIDSignIn.sharedInstance().handle(url)
     }
-      
+          
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
               withError error: Error!) {
         
@@ -762,12 +765,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
           
         } else {
           print("\(error.localizedDescription)")
+            self.removeSpinner()
+            assignmentTableView.isUserInteractionEnabled = true
         }
         NotificationCenter.default.post(
           name: Notification.Name(rawValue: "ToggleAuthUINotification"), object: nil, userInfo: nil)
         return
       }
         self.getInfo()
+
   //    let userId = user.userID                  // For client-side use only!
   //    let idToken = user.authentication.idToken // Safe to send to the server
         let fullName = user.profile.name
@@ -1016,8 +1022,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         let alert = UIAlertController(title: "Information Fetched", message: "Dismiss to view classes", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { action in
             //run your function here
+            self.removeSpinner()
+            self.assignmentTableView.isUserInteractionEnabled = true
             self.showInfo()
         }))
+
         assignmentsFetched = true
         self.present(alert, animated: true)
         self.assignmentTableView.reloadData()
@@ -1114,10 +1123,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
             if error.localizedDescription == "Request had insufficient authentication scopes." {
                 GIDSignIn.sharedInstance()?.signIn()
+                
                // exit()
             } else if ((GIDSignIn.sharedInstance()?.hasPreviousSignIn()) != nil) {
                 GIDSignIn.sharedInstance()?.restorePreviousSignIn()
             }
+        
             return
         }
         
@@ -1128,11 +1139,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             let tryAgain = UIAlertAction(title: "Try Again", style: .default) { (action:UIAlertAction) in
 
                 GIDSignIn.sharedInstance()?.signIn()
+                
             }
         
             alert.addAction(tryAgain)
             
             self.present(alert, animated: true)
+            
             return
         }
 
@@ -1186,6 +1199,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
        let no = UIAlertAction(title: "No", style: .cancel) { (action:UIAlertAction) in
            alert.dismiss(animated: true, completion: nil)
        }
+        
        alert.addAction(yes)
        alert.addAction(no)
        self.present(alert, animated: true)
