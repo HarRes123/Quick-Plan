@@ -33,9 +33,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var reminderTime = String()
     
     var notificationDay = String()
-    
-    var assignmentsFetched = false
-    
+        
     var expandAssignments = 0
                 
     var assignmentCellWidth = CGFloat()
@@ -1098,20 +1096,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
         assignmentIndex += 1
         
-        if assignmentIndex + 1 == assignmentsPerCourse.count {
+        if assignmentIndex + 1 >= assignmentsPerCourse.count {
             
             print("FINISHED")
-            
-            let alert = UIAlertController(title: "Information Fetched", message: "Dismiss to view classes", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { action in
-                //run your function here
-                self.removeSpinner()
-                self.assignmentTableView.isUserInteractionEnabled = true
-                self.showInfo()
-            }))
-
-            assignmentsFetched = true
-            self.present(alert, animated: true)
+            self.removeSpinner()
+            self.assignmentTableView.isUserInteractionEnabled = true
+            self.showInfo()
             self.assignmentTableView.reloadData()
             
         }
