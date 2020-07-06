@@ -361,6 +361,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     @objc func importClasses(sender: UIButton) {
         
+        
+        service.authorizer = myAuth
+        
         self.getInfo()
         
     }
@@ -803,9 +806,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
               }
           }
 
-        if ((GIDSignIn.sharedInstance()?.hasPreviousSignIn()) != nil) {
-            GIDSignIn.sharedInstance()?.restorePreviousSignIn()
-        }
         service.authorizer = myAuth
         
         refResponse = Database.database().reference().child("users")
@@ -1109,9 +1109,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     @objc func obtainClassIds(ticket: GTLRServiceTicket,
                                  finishedWithObject result : GTLRClassroom_ListCoursesResponse,
                                  error : NSError?) {
+        
         if let error = error {
             print(error.localizedDescription)
-            GIDSignIn.sharedInstance()?.signIn()
+
+            if error.localizedDescription == "Request had insufficient authentication scopes." {
+                GIDSignIn.sharedInstance()?.signIn()
+               // exit()
+            } else if ((GIDSignIn.sharedInstance()?.hasPreviousSignIn()) != nil) {
+                GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+            }
             return
         }
         
@@ -1178,13 +1185,14 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
     
     func getInfo() {
-        
+
         if GIDSignIn.sharedInstance()?.currentUser != nil {
             
             myAuth = GIDSignIn.sharedInstance()?.currentUser.authentication.fetcherAuthorizer()
         } else {
             myAuth = nil
         }
+        
         service.authorizer = myAuth
         fetchCourses()
                
