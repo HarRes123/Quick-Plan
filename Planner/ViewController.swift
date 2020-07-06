@@ -355,7 +355,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     @objc func tapSection(sender: UIButton) {
         if classNameAndAssignments.count > 0 {
             self.arrayHeader[sender.tag] = (self.arrayHeader[sender.tag] == 0) ? 1 : 0
-            self.assignmentTableView.reloadSections([sender.tag], with: .automatic)
+            self.assignmentTableView.reloadSections([sender.tag], with: .fade)
         }
     }
     
@@ -1020,17 +1020,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
         }
         
-        let alert = UIAlertController(title: "Information Fetched", message: "Dismiss to view classes", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { action in
-            //run your function here
-            self.removeSpinner()
-            self.assignmentTableView.isUserInteractionEnabled = true
-            self.showInfo()
-        }))
-
-        assignmentsFetched = true
-        self.present(alert, animated: true)
-        self.assignmentTableView.reloadData()
     }
 
         
@@ -1108,7 +1097,26 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         }
         assignmentIndex += 1
+        
+        if assignmentIndex + 1 == assignmentsPerCourse.count {
+            
+            print("FINISHED")
+            
+            let alert = UIAlertController(title: "Information Fetched", message: "Dismiss to view classes", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { action in
+                //run your function here
+                self.removeSpinner()
+                self.assignmentTableView.isUserInteractionEnabled = true
+                self.showInfo()
+            }))
+
+            assignmentsFetched = true
+            self.present(alert, animated: true)
+            self.assignmentTableView.reloadData()
+            
+        }
         print("index", assignmentIndex)
+        
 
         //print(outputText)
     }
