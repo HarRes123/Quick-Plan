@@ -118,10 +118,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 
                 
                 
-                print("DATE: \(notificationDay)")
-                getReminderTime(indexPath: indexPath)
+                print("DATE: \(self.notificationDay)")
+                self.getReminderTime(indexPath: indexPath)
 
-                self.setUpNotification(date: notificationDay, time: reminderTime, assignment: string)
+                self.setUpNotification(date: self.notificationDay, time: self.reminderTime, assignment: string)
                 
                 
                 // keep track of this new row
@@ -762,6 +762,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
       if let error = error {
         if (error as NSError).code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue {
           print("The user has not signed in before or they have since signed out.")
+          GIDSignIn.sharedInstance()?.signIn()
           
         } else {
           print("\(error.localizedDescription)")
