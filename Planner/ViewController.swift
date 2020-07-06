@@ -363,6 +363,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         
         service.authorizer = myAuth
+        sender.isEnabled = false
         
         self.getInfo()
         
@@ -641,6 +642,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             getReminderTime(indexPath: sourceIndexPath)
             let oldReminderTime = reminderTime
             let assignment = calendarItems[sourceIndexPath.row]
+            let nameAndDueDate = assignment.components(separatedBy: "\n\nDue: ")
         
             let movedObject = self.calendarItems[sourceIndexPath.row]
             calendarItems.remove(at: sourceIndexPath.row)
@@ -658,7 +660,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
             let notifcationDate = "\(self.notificationDay) \(oldReminderTime)"
 
-            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["\(assignment), \(notifcationDate)"])
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["\(nameAndDueDate[0]); \(notifcationDate)"])
 
             self.calendarTableView.reloadData()
             self.assignmentTableView.reloadData()
@@ -722,8 +724,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
         
-        let request = UNNotificationRequest(identifier: "\(assignment), \(notifcationDate)", content: content, trigger: trigger)
-        print("ID: \(assignment), \(notifcationDate)")
+        let request = UNNotificationRequest(identifier: "\(nameAndDueDate[0]); \(notifcationDate)", content: content, trigger: trigger)
+        print("ID: \(nameAndDueDate[0]); \(notifcationDate)")
         // 4
         UNUserNotificationCenter.current().add(request, withCompletionHandler: { (error) in
             if let error = error {
@@ -944,9 +946,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             let notifcationDate = "\(self.notificationDay) \(self.reminderTime)"
             let assignment = self.calendarItems[indexPath.row]
             
-            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["\(assignment), \(notifcationDate)"])
+            let nameAndDueDate = assignment.components(separatedBy: "\n\nDue: ")
             
-            print("ID: \(assignment), \(notifcationDate)")
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["\(nameAndDueDate[0]); \(notifcationDate)"])
+            
+            print("ID: \(nameAndDueDate[0]); \(notifcationDate)")
             
             self.calendarItems.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
