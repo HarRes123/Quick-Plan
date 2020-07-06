@@ -90,7 +90,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
         let destinationIndexPath: IndexPath
-        
+        print("CALLED")
         if let indexPath = coordinator.destinationIndexPath {
             destinationIndexPath = indexPath
         } else {
@@ -633,12 +633,30 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     
- 
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
+            getReminderTime(indexPath: sourceIndexPath)
+            let oldReminderTime = reminderTime
+            let assignment = calendarItems[sourceIndexPath.row]
+        
             let movedObject = self.calendarItems[sourceIndexPath.row]
             calendarItems.remove(at: sourceIndexPath.row)
             calendarItems.insert(movedObject, at: destinationIndexPath.row)
             addResponse()
+        
+            getReminderTime(indexPath: destinationIndexPath)
+        
+            print("Old Time", oldReminderTime)
+            print("New Time", reminderTime)
+            print("Assignment", assignment)
+            print("Day", notificationDay)
+            
+            setUpNotification(date: notificationDay, time: reminderTime, assignment: assignment)
+        
+            let notifcationDate = "\(self.notificationDay) \(oldReminderTime)"
+
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["\(assignment), \(notifcationDate)"])
+
             self.calendarTableView.reloadData()
             self.assignmentTableView.reloadData()
         
