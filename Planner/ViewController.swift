@@ -40,6 +40,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     var refResponse: DatabaseReference!
     
+    let center = UNUserNotificationCenter.current()
+    
     var loadCalendar = true
     
     var assignmentAndDueDate = [String : String]()
@@ -113,14 +115,21 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 self.calendarItems.insert(string, at: indexPath.row)
                 indexPaths.append(indexPath)
                 tableView.insertRows(at: indexPaths, with: .automatic)
-                
-                
-                
+
                 print("DATE: \(self.notificationDay)")
                 self.getReminderTime(indexPath: indexPath)
-
-                self.setUpNotification(date: self.notificationDay, time: self.reminderTime, assignment: string)
                 
+                let nameAndDueDate = string.components(separatedBy: "\n\nDue: ")
+                let dateFormatter = DateFormatter()
+                dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+                dateFormatter.timeZone = .current
+                dateFormatter.dateFormat = "MMM dd, yyyy hh:mm a"
+                let notifcationDate = "\(notificationDay) \(reminderTime)"
+                
+                let identifier = "\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(notifcationDate)"
+
+                self.setUpNotificationsFirebase(identifer: identifier)
+
                 
                 // keep track of this new row
                 //indexPaths.append(indexPath)
@@ -209,14 +218,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             button.titleLabel?.textAlignment = .center
             button.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: (button.titleLabel?.font.pointSize)!)
             button.tag = section
+            
        //     print("test")
             
    
             if classNameAndAssignments.count > 0 {
                 
-               
-                button.setTitle("\n\n\n" + classes[section] + "\n\n\n", for: .normal)
-                
+                button.setTitle(classes[section], for: .normal)
                 button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
 
                 
@@ -329,12 +337,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         self.calendarTableView.scrollToRow(at: indexPath, at: .top, animated: false)
         self.showSpinner(onView: calendarTableView)
         calendarTableView.isUserInteractionEnabled = false
+        self.assignmentTableView.isUserInteractionEnabled = false
         self.setUpCalendar()
+    //    setUpInitialNotifications()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             
             self.setUpCalendar()
             self.calendarTableView.isUserInteractionEnabled = true
+            self.assignmentTableView.isUserInteractionEnabled = true
             self.removeSpinner()
             
         }
@@ -363,6 +374,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         service.authorizer = myAuth
         self.showSpinner(onView: assignmentTableView)
         assignmentTableView.isUserInteractionEnabled = false
+        calendarTableView.isUserInteractionEnabled = false
         
         
         self.getInfo()
@@ -493,7 +505,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         if tableView == assignmentTableView {
             if classNameAndAssignments.count > 0 {
                 if self.arrayHeader[section] == 1 || self.arrayHeader[section] == 2 {
-                    return 50
+                    return 75
                 } else {
                     return 0
                 }
@@ -521,6 +533,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 button.tag = section
 
                 button.addTarget(self, action: #selector(showAllClasses(sender:)), for: .touchUpInside)
+                //view.layoutMargins = UIEdgeInsets(top: 25, left: 0, bottom: 25, right: 0)
+              //  view.frame = view.frame.inset(by: UIEdgeInsets(top: 25, left: 0, bottom: 25, right: 0))
                 view.addSubview(button)
                 if self.arrayHeader[section] == 1 {
                     
@@ -571,6 +585,31 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
       print(time12)
       return time12
   }
+    
+    func setUpInitialNotifications() {
+        var notifcationList = Array<String>()
+        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Reminders").observe(.value, with: { (snapshot) in
+            if(snapshot.exists()) {
+              //  self.followButton.isEnabled = true
+                //self.calendarItems.append("12:00 AM")
+                self.center.removeAllPendingNotificationRequests()
+                if let notifcationData = snapshot.value as? NSArray{
+                    notifcationList = notifcationData as! [String]
+                    
+                    for identifer in notifcationList {
+                        
+                        self.setUpNotificationsFirebase(identifer: identifer)
+                        print("IDIDID", identifer)
+                    }
+                    
+                }
+                print("ARRAY", self.refResponse.child((Auth.auth().currentUser?.uid)!).child(self.getViewedDate()))
+            }
+        })
+
+        calendarTableView.reloadData()
+        assignmentTableView.reloadData()
+    }
     
     func setUpCalendar() {
        // print("DATA", Database.database().reference().child((Auth.auth().currentUser?.displayName)!).value(forKey: getViewedDate()) as! [String])
@@ -643,20 +682,21 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             let movedObject = self.calendarItems[sourceIndexPath.row]
             calendarItems.remove(at: sourceIndexPath.row)
             calendarItems.insert(movedObject, at: destinationIndexPath.row)
-            addResponse()
         
             getReminderTime(indexPath: destinationIndexPath)
         
-            print("Old Time", oldReminderTime)
-            print("New Time", reminderTime)
-            print("Assignment", assignment)
-            print("Day", notificationDay)
+            let oldNotifcationDate = "\(self.notificationDay) \(oldReminderTime)"
+            let newNotifcationDate = "\(self.notificationDay) \(reminderTime)"
+            let identifier = "\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(newNotifcationDate)"
             
-            setUpNotification(date: notificationDay, time: reminderTime, assignment: assignment)
+            center.removePendingNotificationRequests(withIdentifiers: ["\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(oldNotifcationDate)"])
         
-            let notifcationDate = "\(self.notificationDay) \(oldReminderTime)"
-
-            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["\(nameAndDueDate[0]); \(notifcationDate)"])
+            self.setUpNotificationsFirebase(identifer: identifier)
+        
+        
+            //addResponse()
+            
+            addResponse()
 
             self.calendarTableView.reloadData()
             self.assignmentTableView.reloadData()
@@ -674,12 +714,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         loadCalendar = false
         self.showSpinner(onView: calendarTableView)
         self.calendarTableView.isUserInteractionEnabled = false
+        self.assignmentTableView.isUserInteractionEnabled = false
         self.setUpCalendar()
+        self.setUpInitialNotifications()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             
             self.setUpCalendar()
             self.calendarTableView.isUserInteractionEnabled = true
+            self.assignmentTableView.isUserInteractionEnabled = true
             self.removeSpinner()
             
             
@@ -687,11 +730,96 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
     }
     
+//    func getReminder() -> Array<String> {
+//
+//        var reminders = Array<String>()
+//        center.getPendingNotificationRequests { (notifications) in
+//            print("Count: \(notifications.count)")
+//            for item in notifications {
+//                print("IDID", item.identifier)
+//                reminders.append(item.identifier)
+//            }
+//        }
+//
+//        return remin
+//
+//    }
+//
+    
     func addResponse() {
-
-        let currentDate = getViewedDate()
-        refResponse.child((Auth.auth().currentUser?.uid)!).child(currentDate).setValue(calendarItems)
         
+        let currentDate = getViewedDate()
+        
+        var reminders = Array<String>()
+        center.getPendingNotificationRequests { (notifications) in
+            print("Count: \(notifications.count)")
+            for item in notifications {
+                print("IDID", item.identifier)
+                reminders.append(item.identifier)
+                self.refResponse.child((Auth.auth().currentUser?.uid)!).child("Reminders").setValue(reminders)
+                
+                print("Reminders", reminders)
+            }
+        }
+      //  self.setUpInitialNotifications()
+        
+        refResponse.child((Auth.auth().currentUser?.uid)!).child(currentDate).setValue(calendarItems)
+      //  refResponse.child((Auth.auth().currentUser?.uid)!).child("Reminders").setValue(reminders)
+  
+    }
+    
+    func setUpNotificationsFirebase(identifer: String) {
+        
+        let content = UNMutableNotificationContent()
+        
+        let notificationComponents = identifer.components(separatedBy: "___")
+        let name = notificationComponents[0]
+        let dueDate = notificationComponents[1]
+        let notificationDate = notificationComponents[2]
+        
+        content.title = "Study for \"\(name)\""
+        content.body = "Make sure to turn \"\(name)\" in by \(dueDate)"
+        content.sound = .default
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = .current
+        
+        if is12Hours() {
+            
+            dateFormatter.dateFormat = "MMM dd, yyyy hh:mm a"
+        } else {
+            dateFormatter.dateFormat = "MMM dd, yyyy HH:mm"
+        }
+        
+        let turnInDate = dateFormatter.date(from: notificationDate)!
+
+        let triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute],
+          from: turnInDate)
+        
+        print(triggerDate)
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+        
+        let request = UNNotificationRequest(identifier: identifer, content: content, trigger: trigger)
+        
+        center.add(request, withCompletionHandler: { (error) in
+            if let error = error {
+              print("ERROR: \(error)")
+            }
+          })
+    }
+    
+    func is12Hours() -> Bool {
+       let dateString : String = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: Locale.current)!
+
+       if(dateString.contains("a")){
+       // 12 h format
+           return true
+       }else{
+       // 24 h format
+           return false
+       }
     }
     
     func setUpNotification(date: String, time: String, assignment: String) {
@@ -720,10 +848,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
         
-        let request = UNNotificationRequest(identifier: "\(nameAndDueDate[0]); \(notifcationDate)", content: content, trigger: trigger)
-        print("ID: \(nameAndDueDate[0]); \(notifcationDate)")
+        let request = UNNotificationRequest(identifier: "\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(notifcationDate)", content: content, trigger: trigger)
         // 4
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: { (error) in
+        center.add(request, withCompletionHandler: { (error) in
             if let error = error {
               print("ERROR: \(error)")
             }
@@ -764,8 +891,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
           
         } else {
           print("\(error.localizedDescription)")
-            self.removeSpinner()
+            
             assignmentTableView.isUserInteractionEnabled = true
+            calendarTableView.isUserInteractionEnabled = true
+            self.removeSpinner()
         }
         NotificationCenter.default.post(
           name: Notification.Name(rawValue: "ToggleAuthUINotification"), object: nil, userInfo: nil)
@@ -799,7 +928,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     override func viewDidLoad() {
       super.viewDidLoad()
         
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge,.sound]) {
+        center.requestAuthorization(options: [.alert, .badge,.sound]) {
               (granted, error) in
               if granted {
                   print("yes")
@@ -823,8 +952,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         calendarTableView.delegate = self
         calendarTableView.dataSource = self
         
-       // showButtonOutlet.isEnabled = false
-        
+        assignmentTableView.separatorInset = UIEdgeInsets(top: .zero, left: 15, bottom: .zero, right: 15)
+        calendarTableView.separatorInset = UIEdgeInsets(top: .zero, left: 15, bottom: .zero, right: 15)
+            
         assignmentTableView.backgroundColor = UIColor(hexFromString: "5FD7EC")
         
         assignmentTableView.estimatedRowHeight = 250.0 // Replace with your actual estimation
@@ -891,9 +1021,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 //        self.navigationController?.navigationBar.layer.masksToBounds = false
 
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
-         setUpCalendar()
+        super.viewWillAppear(animated)
+
+        setUpCalendar()
+        setUpInitialNotifications()
+        
     }
     
     func setUpUI(view: UIView) {
@@ -948,10 +1082,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             
             let nameAndDueDate = assignment.components(separatedBy: "\n\nDue: ")
             
-            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["\(nameAndDueDate[0]); \(notifcationDate)"])
+            self.center.removePendingNotificationRequests(withIdentifiers: ["\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(notifcationDate)"])
             
-            print("ID: \(nameAndDueDate[0]); \(notifcationDate)")
-            
+            self.addResponse()
             self.calendarItems.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
             
@@ -960,39 +1093,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         return [deleteAction]
     }
-    
-    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
 
-        addResponse()
-        self.calendarTableView.reloadData()
-        self.assignmentTableView.reloadData()
-    }
-    
-
-    
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if tableView == calendarTableView {
-            if checkTimeIsValid(from: calendarItems[indexPath.row]) {
-                return false
-            } else {
-                return true
-            }
-        }
-        return false
-    }
-
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        if tableView == assignmentTableView {
-        
-//            let indexPath = tableView.indexPathForSelectedRow
-//
-//            let currentCell = tableView.cellForRow(at: indexPath!)! as! AssignmentTableViewCell
-
-        }
-    }
-    
     
     func fetchAssignments() {
         print("FETCH")
@@ -1102,6 +1203,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             print("FINISHED")
             self.removeSpinner()
             self.assignmentTableView.isUserInteractionEnabled = true
+            self.calendarTableView.isUserInteractionEnabled = true
             self.showInfo()
             self.assignmentTableView.reloadData()
             
@@ -1168,7 +1270,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         if tableView == assignmentTableView {
         
-            return 100
+            if classNameAndAssignments.count > 0 {
+                return 125
+            } else {
+                return 100
+            }
         } else {
             return 50
         }
