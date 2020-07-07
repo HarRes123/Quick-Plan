@@ -123,7 +123,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 let dateFormatter = DateFormatter()
                 dateFormatter.locale = Locale(identifier: "en_US_POSIX")
                 dateFormatter.timeZone = .current
-                dateFormatter.dateFormat = "MMM dd, yyyy hh:mm a"
+                if is12Hours() {
+                    dateFormatter.dateFormat = "MMM dd, yyyy hh:mm a"
+                } else {
+                    dateFormatter.dateFormat = "MMM dd, yyyy HH:mm"
+                }
                 let notifcationDate = "\(notificationDay) \(reminderTime)"
                 
                 let identifier = "\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(notifcationDate)"
@@ -753,12 +757,17 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         var reminders = Array<String>()
         center.getPendingNotificationRequests { (notifications) in
             print("Count: \(notifications.count)")
-            for item in notifications {
-                print("IDID", item.identifier)
-                reminders.append(item.identifier)
-                self.refResponse.child((Auth.auth().currentUser?.uid)!).child("Reminders").setValue(reminders)
-                
-                print("Reminders", reminders)
+            if notifications.count == 0 {
+                self.center.removeAllPendingNotificationRequests()
+                self.refResponse.child((Auth.auth().currentUser?.uid)!).child("Reminders").removeValue()
+            } else {
+                for item in notifications {
+                    print("IDID", item.identifier)
+                    reminders.append(item.identifier)
+                    self.refResponse.child((Auth.auth().currentUser?.uid)!).child("Reminders").setValue(reminders)
+                    
+                    print("Reminders", reminders)
+                }
             }
         }
       //  self.setUpInitialNotifications()
@@ -820,41 +829,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
        // 24 h format
            return false
        }
-    }
-    
-    func setUpNotification(date: String, time: String, assignment: String) {
-        
-        let content = UNMutableNotificationContent()
-        
-        let nameAndDueDate = assignment.components(separatedBy: "\n\nDue: ")
-
-        content.title = "Study for \"\(nameAndDueDate[0])\""
-        content.body = "Make sure to turn \"\(nameAndDueDate[0])\" in by \(nameAndDueDate[1])"
-        content.sound = .default
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.timeZone = .current
-        dateFormatter.dateFormat = "MMM dd, yyyy hh:mm a"
-        let notifcationDate = "\(date) \(time)"
-        print(notifcationDate)
-        let turnInDate = dateFormatter.date(from: notifcationDate)!
-        
-        let triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute],
-          from: turnInDate)
-        
-        print(triggerDate)
-        print(assignment)
-        
-        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
-        
-        let request = UNNotificationRequest(identifier: "\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(notifcationDate)", content: content, trigger: trigger)
-        // 4
-        center.add(request, withCompletionHandler: { (error) in
-            if let error = error {
-              print("ERROR: \(error)")
-            }
-          })
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -1084,9 +1058,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             
             self.center.removePendingNotificationRequests(withIdentifiers: ["\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(notifcationDate)"])
             
-            self.addResponse()
             self.calendarItems.remove(at: indexPath.row)
+            self.addResponse()
             tableView.deleteRows(at: [indexPath], with: .automatic)
+            
+            tableView.reloadData()
             
         })
         deleteAction.backgroundColor = UIColor.red
@@ -1291,13 +1267,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             self.classIDAndName = [String:String]()
             self.classNameAndAssignments = [String: Array<String>]()
 
-            // resetDefaults()
             self.navigationItem.title = "Planner"
 
             GIDSignIn.sharedInstance().signOut()
             GIDSignIn.sharedInstance().disconnect()
+        
+            self.center.removeAllPendingNotificationRequests()
             self.service.authorizer = self.myAuth
-
 
             self.assignmentTableView.reloadData()
             try! Auth.auth().signOut()
