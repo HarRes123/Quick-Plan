@@ -123,12 +123,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 let dateFormatter = DateFormatter()
                 dateFormatter.locale = Locale(identifier: "en_US_POSIX")
                 dateFormatter.timeZone = .current
-                if is12Hours() {
+                if self.is12Hours() {
                     dateFormatter.dateFormat = "MMM dd, yyyy hh:mm a"
                 } else {
                     dateFormatter.dateFormat = "MMM dd, yyyy HH:mm"
                 }
-                let notifcationDate = "\(notificationDay) \(reminderTime)"
+                let notifcationDate = "\(self.notificationDay) \(self.reminderTime)"
                 
                 let identifier = "\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(notifcationDate)"
 
@@ -356,10 +356,26 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
     }
     
+    @objc func performFetch() {
+        
+        print("FETCHING INFO")
+        if Auth.auth().currentUser != nil {
+            setUpInitialNotifications()
+            setUpCalendar()
+            getInfo()
+            assignmentTableView.reloadData()
+            calendarTableView.reloadData()
+        } else {
+            print("USER NOT SIGNED IN")
+        }
+        
+    }
+    
     @objc func backDay(sender: UIButton) {
         changeDays(sign: -1)
         
     }
+   
     @objc func aheadDay(sender: UIButton) {
         changeDays(sign: 1)
         
@@ -607,7 +623,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     }
                     
                 }
-                print("ARRAY", self.refResponse.child((Auth.auth().currentUser?.uid)!).child(self.getViewedDate()))
             }
         })
 
@@ -852,6 +867,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any]) -> Bool {
       return GIDSignIn.sharedInstance().handle(url)
     }
+    
           
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
               withError error: Error!) {
@@ -870,33 +886,14 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             calendarTableView.isUserInteractionEnabled = true
             self.removeSpinner()
         }
-        NotificationCenter.default.post(
-          name: Notification.Name(rawValue: "ToggleAuthUINotification"), object: nil, userInfo: nil)
-        return
+       
       }
         self.getInfo()
 
-  //    let userId = user.userID                  // For client-side use only!
-  //    let idToken = user.authentication.idToken // Safe to send to the server
-        let fullName = user.profile.name
-      //  print(fullName)
-  //    let givenName = user.profile.givenName
-  //    let familyName = user.profile.familyName
-  //    let email = user.profile.email
-      NotificationCenter.default.post(
-        name: Notification.Name(rawValue: "ToggleAuthUINotification"),
-        object: nil,
-        userInfo: ["statusText": "Signed in user:\n\(fullName!)"])
     }
 
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,
-              withError error: Error!) {
-
-      NotificationCenter.default.post(
-        name: Notification.Name(rawValue: "ToggleAuthUINotification"),
-        object: nil,
-        userInfo: ["statusText": "User has disconnected."])
-    }
+              withError error: Error!) {}
   
 
     override func viewDidLoad() {
@@ -910,6 +907,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                   print("No")
               }
           }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(performFetch), name: Notification.Name("performFetch"), object: nil)
 
         service.authorizer = myAuth
         

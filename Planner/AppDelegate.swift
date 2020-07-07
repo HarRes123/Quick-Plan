@@ -40,4 +40,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     return true
   }
+
+    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "performFetch"), object: nil) 
+       
+    }
 }
