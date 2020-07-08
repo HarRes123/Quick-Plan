@@ -34,6 +34,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         viewController = storyboard.instantiateViewController(withIdentifier: "signInVC") as! SignInViewController
     }
 
+    UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+
     self.window?.rootViewController = viewController
     self.window?.makeKeyAndVisible()
 
