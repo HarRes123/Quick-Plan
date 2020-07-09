@@ -56,7 +56,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     lazy var refreshController = UIRefreshControl()
     
-    private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID,kGTLRAuthScopeClassroomStudentSubmissionsStudentsReadonly, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomCourseworkMe]
+    private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomCourseworkMe]
         
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
@@ -360,26 +360,22 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
  
         print("FETCHING INFO")
         if Auth.auth().currentUser != nil {
-           // setUpInitialNotifications()
             
-            let content = UNMutableNotificationContent()
+//            let content = UNMutableNotificationContent()
+//            content.title = "TEST"
+//            content.body = "Background refresh occured"
+//            content.sound = .default
+//
+//            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+//            let request = UNNotificationRequest(identifier: "TEST NOTIFICATION", content: content, trigger: trigger)
+//
+//            center.add(request, withCompletionHandler: { (error) in
+//                if let error = error {
+//                  print("ERROR: \(error)")
+//                }
+//              })
             
-           
-            content.title = "TEST"
-            content.body = "Background refresh occured"
-            content.sound = .default
-
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-
-            let request = UNNotificationRequest(identifier: "TEST NOTIFICATION", content: content, trigger: trigger)
-            
-            center.add(request, withCompletionHandler: { (error) in
-                if let error = error {
-                  print("ERROR: \(error)")
-                }
-              })
-            
-            
+            setUpInitialNotifications()
             setUpCalendar()
             getInfo()
             assignmentTableView.reloadData()
