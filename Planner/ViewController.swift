@@ -16,7 +16,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     var myAuth: GTMFetcherAuthorizationProtocol? = nil
     private let service = GTLRClassroomService()
-    
+        
     var assignmentsPerCourse = [Array<String>]()
     var newAssignmentsPerCourse = [Array<String>]()
     var assignmentIndex = 0
@@ -56,7 +56,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     lazy var refreshController = UIRefreshControl()
     
-    private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomCourseworkMe, kGTLRAuthScopeClassroomStudentSubmissionsStudentsReadonly]
+    private let scopes = [kGTLRAuthScopeClassroomCourseworkMeReadonly, kGTLRAuthScopeClassroomCoursesReadonly]
         
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
@@ -892,18 +892,17 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
       if let error = error {
         if (error as NSError).code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue {
           print("The user has not signed in before or they have since signed out.")
-          GIDSignIn.sharedInstance()?.signIn()
-          
+            GIDSignIn.sharedInstance()?.signIn()
         } else {
           print("\(error.localizedDescription)")
-            
             assignmentTableView.isUserInteractionEnabled = true
             calendarTableView.isUserInteractionEnabled = true
             self.removeSpinner()
         }
        
-      }
-        self.getInfo()
+      } else {
+            self.getInfo()
+        }
 
     }
 
@@ -1087,7 +1086,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     func fetchAssignments() {
         print("FETCH")
-        
         assignmentsPerCourse = Array(repeating: [], count:classIDAndName.count)
         newAssignmentsPerCourse = Array(repeating: [], count:classIDAndName.count)
         
@@ -1118,6 +1116,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         if let error = error {
             print(error.localizedDescription)
           //  GIDSignIn.sharedInstance()?.signIn()
+            errorNotification()
+            
             return
         }
         
@@ -1127,7 +1127,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             newAssignmentsPerCourse.remove(at: assignmentIndex)
             return
         }
-                
         let currentMonth = calendar.component(.month, from: date)
         let currentDay = calendar.component(.day, from: date)
         let currentYear = calendar.component(.year, from: date)
@@ -1207,7 +1206,21 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         //print(outputText)
     }
 
+    func errorNotification() {
+        
+        let alert = UIAlertController(title: "Unable to Show Info", message: "Please use a different account", preferredStyle: .alert)
+        
+        let tryAgain = UIAlertAction(title: "Try Again", style: .default) { [] (action:UIAlertAction) in
 
+            GIDSignIn.sharedInstance()?.signIn()
+
+            
+        }
+    
+        alert.addAction(tryAgain)
+        
+        self.present(alert, animated: true)
+    }
 
     @objc func obtainClassIds(ticket: GTLRServiceTicket,
                                  finishedWithObject result : GTLRClassroom_ListCoursesResponse,
@@ -1218,29 +1231,21 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
             if error.localizedDescription == "Request had insufficient authentication scopes." {
                 GIDSignIn.sharedInstance()?.signIn()
-                
-               // exit()
+            } else if error.localizedDescription == "@ClassroomDisabled The user is not permitted to access Classroom." {
+                errorNotification()
             } else if ((GIDSignIn.sharedInstance()?.hasPreviousSignIn()) != nil) {
                 GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+            } else {
+                errorNotification()
             }
+            
         
             return
         }
         
         guard let courses = result.courses, !courses.isEmpty else {
             print("No courses.")
-            let alert = UIAlertController(title: "Unable to Show Info", message: "Please use a different account", preferredStyle: .alert)
-            
-            let tryAgain = UIAlertAction(title: "Try Again", style: .default) { (action:UIAlertAction) in
-
-                GIDSignIn.sharedInstance()?.signIn()
-                
-            }
-        
-            alert.addAction(tryAgain)
-            
-            self.present(alert, animated: true)
-            
+            errorNotification()
             return
         }
 
