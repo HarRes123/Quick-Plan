@@ -1141,6 +1141,17 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
     }
     
+    @IBAction func showManualEntry(_ sender: Any) {
+        
+        
+        let popView = ManualEntryViewController(nibName: "ManualEntryViewController", bundle: nil)
+        popView.modalPresentationStyle = .popover
+        present(popView, animated: true, completion: nil)
+        let presentationController = popView.popoverPresentationController
+        presentationController?.sourceView = view
+    }
+    
+    
     @IBAction func signOut(_: Any) {
         let alert = UIAlertController(title: "Would You Like to Sign Out of Your Account?", message: "", preferredStyle: .alert)
         let yes = UIAlertAction(title: "Yes", style: .default) { (_: UIAlertAction) in
