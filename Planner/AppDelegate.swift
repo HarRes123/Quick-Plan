@@ -6,46 +6,41 @@
 //  Copyright © 2020 Harrison Resnick. All rights reserved.
 //
 
-import UIKit
-import GoogleSignIn
 import Firebase
+import GoogleSignIn
+import UIKit
 
 @UIApplicationMain
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
     var window: UIWindow?
     
-  // [START didfinishlaunching]
-  func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
-    FirebaseApp.configure()
-    
-    let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-    GIDSignIn.sharedInstance().clientID = "822317343063-e7vjk7hv66ungvddj0nu82a4n857m9cp.apps.googleusercontent.com"
-
-    // controller identifier sets up in storyboard utilities
-    // panel (on the right), it called Storyboard ID
-    var viewController = UIViewController()
-    if Auth.auth().currentUser != nil && Auth.auth().currentUser!.isEmailVerified == true {
-        viewController = storyboard.instantiateViewController(withIdentifier: "mainVC")
-    } else {
-        viewController = storyboard.instantiateViewController(withIdentifier: "signInVC") as! SignInViewController
-    }
-
-    UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
-
-    self.window?.rootViewController = viewController
-    self.window?.makeKeyAndVisible()
-
-
-    return true
-  }
-
-    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    // [START didfinishlaunching]
+    func application(_: UIApplication,
+                     didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        FirebaseApp.configure()
         
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "performFetch"), object: nil) 
-       
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        GIDSignIn.sharedInstance().clientID = "822317343063-e7vjk7hv66ungvddj0nu82a4n857m9cp.apps.googleusercontent.com"
+        
+        // controller identifier sets up in storyboard utilities
+        // panel (on the right), it called Storyboard ID
+        var viewController = UIViewController()
+        if Auth.auth().currentUser != nil, Auth.auth().currentUser!.isEmailVerified == true {
+            viewController = storyboard.instantiateViewController(withIdentifier: "mainVC")
+        } else {
+            viewController = storyboard.instantiateViewController(withIdentifier: "signInVC") as! SignInViewController
+        }
+        
+        UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+        
+        window?.rootViewController = viewController
+        window?.makeKeyAndVisible()
+        
+        return true
+    }
+    
+    func application(_: UIApplication, performFetchWithCompletionHandler _: @escaping (UIBackgroundFetchResult) -> Void) {
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "performFetch"), object: nil)
     }
 }

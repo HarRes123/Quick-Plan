@@ -6,8 +6,8 @@
 //  Copyright © 2020 Harrison Resnick. All rights reserved.
 //
 
-import Foundation
 import FirebaseUI
+import Foundation
 
 extension Array {
     func arrayWithoutFirstElement() -> Array {
@@ -22,7 +22,6 @@ extension Array {
 
 extension UITableViewCell: UITextViewDelegate {
     public func textViewDidChange(_ textView: UITextView) {
-
         let size = textView.bounds.size
         let newSize = textView.sizeThatFits(CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude))
         
@@ -43,41 +42,37 @@ extension UITableViewCell: UITextViewDelegate {
 extension UITableViewCell {
     /// Search up the view hierarchy of the table view cell to find the containing table view
     var tableView: UITableView? {
-        get {
-            var table: UIView? = superview
-            while !(table is UITableView) && table != nil {
-                table = table?.superview
-            }
-
-            return table as? UITableView
+        var table: UIView? = superview
+        while !(table is UITableView), table != nil {
+            table = table?.superview
         }
+        
+        return table as? UITableView
     }
 }
 
-extension Date
-{
-    var startOfDay: Date
-    {
+extension Date {
+    var startOfDay: Date {
         return Calendar.current.startOfDay(for: self)
     }
-
+    
     func getDate(dayDifference: Int) -> Date {
         var components = DateComponents()
         components.day = dayDifference
-        return Calendar.current.date(byAdding: components, to:startOfDay)!
+        return Calendar.current.date(byAdding: components, to: startOfDay)!
     }
 }
 
 extension UIColor {
-    convenience init(hexFromString:String, alpha:CGFloat = 1.0) {
-        var cString:String = hexFromString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-        var rgbValue:UInt32 = 10066329 //color #999999 if string has wrong format
+    convenience init(hexFromString: String, alpha: CGFloat = 1.0) {
+        var cString: String = hexFromString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        var rgbValue: UInt32 = 10_066_329 // color #999999 if string has wrong format
         
-        if (cString.hasPrefix("#")) {
+        if cString.hasPrefix("#") {
             cString.remove(at: cString.startIndex)
         }
         
-        if ((cString.count) == 6) {
+        if cString.count == 6 {
             Scanner(string: cString).scanHexInt32(&rgbValue)
         }
         
@@ -92,16 +87,14 @@ extension UIColor {
 
 extension UINavigationBar {
     func transparentNavigationBar() {
-    self.setBackgroundImage(UIImage(), for: .default)
-    self.shadowImage = UIImage()
-    self.isTranslucent = true
+        setBackgroundImage(UIImage(), for: .default)
+        shadowImage = UIImage()
+        isTranslucent = true
     }
 }
 
 extension SignInViewController {
-    
-    func authUI(_ authUI: FUIAuth, didSignInWith authDataResult: AuthDataResult?, error: Error?) {
-        
+    func authUI(_: FUIAuth, didSignInWith _: AuthDataResult?, error: Error?) {
         // Check for error
         guard error == nil else {
             return
@@ -110,59 +103,45 @@ extension SignInViewController {
         var messege = ""
         
         // Transition to home
-                    
+        
         if Auth.auth().currentUser!.isEmailVerified == true {
-            
             print("VERIFIED")
             performSegue(withIdentifier: "goHome", sender: self)
         } else {
-            
             print("NOT VERIFIED")
             title = "Verify Account"
             messege = "Please check you email and verify your account"
             let alert = UIAlertController(title: title, message: messege, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            Auth.auth().currentUser?.sendEmailVerification { (error) in
+            Auth.auth().currentUser?.sendEmailVerification { _ in
                 // ...
             }
-            self.present(alert, animated: true)
-
+            present(alert, animated: true)
         }
-
-        
     }
 }
 
-
 extension Float {
-
     var clean: String {
-    
-        return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
+        return truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
     }
 }
 
 extension NSMutableAttributedString {
-
     func setColorForText(textForAttribute: String, withColor color: UIColor) {
-        let range: NSRange = self.mutableString.range(of: textForAttribute, options: .caseInsensitive)
-
+        let range: NSRange = mutableString.range(of: textForAttribute, options: .caseInsensitive)
+        
         // Swift 4.2 and above
-        self.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
-
+        addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
     }
-
 }
 
-
-
-var vSpinner : UIView?
+var vSpinner: UIView?
 extension UIViewController {
-    func showSpinner(onView : UIView) {
+    func showSpinner(onView: UIView) {
+        let spinnerView = UIView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
         
-        let spinnerView = UIView.init(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-
-        let ai = UIActivityIndicatorView.init(style: .whiteLarge)
+        let ai = UIActivityIndicatorView(style: .whiteLarge)
         ai.startAnimating()
         ai.center = onView.center
         

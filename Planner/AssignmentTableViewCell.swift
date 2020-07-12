@@ -9,16 +9,15 @@
 import UIKit
 
 class AssignmentTableViewCell: UITableViewCell {
+    @IBOutlet var classAssignments: UITextView!
     
-    @IBOutlet weak var classAssignments: UITextView!
-
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
-       
+    
     required init?(coder aDecoder: NSCoder) {
-           super.init(coder: aDecoder)
-       }
+        super.init(coder: aDecoder)
+    }
     
     var textString: String {
         get {
@@ -31,7 +30,6 @@ class AssignmentTableViewCell: UITableViewCell {
         }
     }
     
-
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -39,13 +37,11 @@ class AssignmentTableViewCell: UITableViewCell {
         classAssignments.isScrollEnabled = false
         classAssignments.delegate = self
         
-//        classAssignments.numberOfLines = 10
-       
-
-      //  updateLabelFrame()
-
+        //        classAssignments.numberOfLines = 10
+        
+        //  updateLabelFrame()
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if selected {
@@ -55,5 +51,4 @@ class AssignmentTableViewCell: UITableViewCell {
         }
         // Configure the view for the selected state
     }
-    
 }

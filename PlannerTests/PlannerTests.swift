@@ -6,11 +6,10 @@
 //  Copyright © 2020 Harrison Resnick. All rights reserved.
 //
 
-import XCTest
 @testable import Planner
+import XCTest
 
 class PlannerTests: XCTestCase {
-
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -26,9 +25,8 @@ class PlannerTests: XCTestCase {
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
-        self.measure {
+        measure {
             // Put the code you want to measure the time of here.
         }
     }
-
 }
