@@ -56,7 +56,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     lazy var refreshController = UIRefreshControl()
     
-    private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomCourseworkMe]
+    private let scopes = [OIDScopeEmail, OIDScopeProfile, OIDScopeOpenID, kGTLRAuthScopeClassroomCoursesReadonly, kGTLRAuthScopeClassroomCourseworkMe, kGTLRAuthScopeClassroomStudentSubmissionsStudentsReadonly]
         
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
@@ -1117,6 +1117,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                  error : NSError?) {
         if let error = error {
             print(error.localizedDescription)
+          //  GIDSignIn.sharedInstance()?.signIn()
             return
         }
         
