@@ -778,11 +778,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
         }
     }
-    
-    
-    
-    
-    
+
     func application(_: UIApplication,
                      open url: URL, sourceApplication _: String?, annotation _: Any) -> Bool {
         return GIDSignIn.sharedInstance().handle(url)
