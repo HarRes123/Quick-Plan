@@ -15,7 +15,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var dropDownStackView: UIStackView!
     @IBOutlet weak var selectClass: UIButton!
     @IBOutlet weak var navBar: UINavigationBar!
-    @IBOutlet weak var question1Label: PaddingLabel!
+    @IBOutlet weak var question1Label: UILabel!
     @IBOutlet weak var question2Label: UILabel!
     @IBOutlet weak var question3Label: UILabel!
     var classesCollection = Array<UIButton>()
@@ -77,15 +77,12 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewDidLayoutSubviews() {
         
-        self.stackView.translatesAutoresizingMaskIntoConstraints = false
+        self.stackView.translatesAutoresizingMaskIntoConstraints = true
         
-        self.stackView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor).isActive = true
-        self.stackView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor).isActive = true
-        self.stackView.topAnchor.constraint(equalTo: self.scrollView.topAnchor).isActive = true
-        self.stackView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor).isActive = true
-        question1Label.topInset = navBar.frame.height
-        question1Label.width = question2Label.frame.width
-        question1Label.bottomInset = question2Label.frame.height/2
+//        self.stackView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor).isActive = true
+//        self.stackView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor).isActive = true
+//        self.stackView.topAnchor.constraint(equalTo: self.scrollView.topAnchor).isActive = true
+//        self.stackView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor).isActive = true
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -115,3 +112,4 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate {
     }
     
 }
+

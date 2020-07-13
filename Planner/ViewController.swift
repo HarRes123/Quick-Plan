@@ -1145,14 +1145,14 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
     }
     
-    @IBAction func showManualEntry(_ sender: Any) {
+    @IBAction func showManualEntry(_ sender: UIBarButtonItem) {
         print("YES")
-        
-        let popView = ManualEntryViewController(nibName: "ManualEntryViewController", bundle: nil)
-        popView.modalPresentationStyle = .popover
-        present(popView, animated: true, completion: nil)
-        let presentationController = popView.popoverPresentationController
-        presentationController?.sourceView = view
+
+        let vc = ManualEntryViewController(nibName: "ManualEntryViewController", bundle: nil)
+        vc.modalPresentationStyle = .popover
+        let popover: UIPopoverPresentationController = vc.popoverPresentationController!
+        popover.barButtonItem = sender
+        present(vc, animated: true, completion:nil)
     }
     
     
