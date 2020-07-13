@@ -12,6 +12,7 @@
 		620ABAF6249726B500730D80 /* AssignmentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620ABAF4249726B500730D80 /* AssignmentTableViewCell.swift */; };
 		620ABAF7249726B500730D80 /* AssignmentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620ABAF5249726B500730D80 /* AssignmentTableViewCell.xib */; };
 		623079B2249EB3C5006BD643 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623079B1249EB3C5006BD643 /* SignInViewController.swift */; };
+		623295C024BC740700373465 /* iOSDropDown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623295BF24BC740700373465 /* iOSDropDown.swift */; };
 		6235D9D72494B32400D81324 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6235D9D62494B32400D81324 /* Extensions.swift */; };
 		624BABFD24908E790050EA6F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BABFC24908E790050EA6F /* AppDelegate.swift */; };
 		624BABFF24908E790050EA6F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BABFE24908E790050EA6F /* SceneDelegate.swift */; };
@@ -57,6 +58,7 @@
 		620ABAF4249726B500730D80 /* AssignmentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentTableViewCell.swift; sourceTree = "<group>"; };
 		620ABAF5249726B500730D80 /* AssignmentTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AssignmentTableViewCell.xib; sourceTree = "<group>"; };
 		623079B1249EB3C5006BD643 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		623295BF24BC740700373465 /* iOSDropDown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iOSDropDown.swift; sourceTree = "<group>"; };
 		6235D9D62494B32400D81324 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		624BABF924908E790050EA6F /* Planner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Planner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		624BABFC24908E790050EA6F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 				62A3A52124BB9D6700B375D6 /* ManualEntryViewController.xib */,
 				620ABAF4249726B500730D80 /* AssignmentTableViewCell.swift */,
 				620ABAF5249726B500730D80 /* AssignmentTableViewCell.xib */,
+				623295BF24BC740700373465 /* iOSDropDown.swift */,
 				624BAC0524908E7B0050EA6F /* Assets.xcassets */,
 				624BAC0724908E7B0050EA6F /* LaunchScreen.storyboard */,
 				624BAC0A24908E7C0050EA6F /* Info.plist */,
@@ -491,6 +494,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				623295C024BC740700373465 /* iOSDropDown.swift in Sources */,
 				623079B2249EB3C5006BD643 /* SignInViewController.swift in Sources */,
 				62A3A52224BB9D6700B375D6 /* ManualEntryViewController.swift in Sources */,
 				624BAC0124908E790050EA6F /* ViewController.swift in Sources */,

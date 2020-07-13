@@ -12,79 +12,62 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var stackView: UIStackView!
-    @IBOutlet weak var dropDownStackView: UIStackView!
-    @IBOutlet weak var selectClass: UIButton!
+
     @IBOutlet weak var navBar: UINavigationBar!
     @IBOutlet weak var question1Label: UILabel!
     @IBOutlet weak var question2Label: UILabel!
     @IBOutlet weak var question3Label: UILabel!
     @IBOutlet weak var assignmentName: UITextField!
     @IBOutlet weak var dueDate: UITextField!
+    @IBOutlet weak var classPicker: DropDown!
     
-    var classesCollection = Array<UIButton>()
-    
+    var classNames = Array<String>()
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
         scrollView.delegate = self
         assignmentName.delegate = self
         dueDate.delegate = self
+        classPicker.optionArray = classNames + ["Add Class"]
+        
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            navBar.isUserInteractionEnabled = false
+            navBar.isHidden = true
+        } else {
+            navBar.isUserInteractionEnabled = true
+            navBar.isHidden = false
+        }
+        
+
+        // The the Closure returns Selected Index and String
+        classPicker.didSelect{(selectedText , index ,_) in
+            if selectedText == "Add Class" {
+                print("USER WANTS TO ADD A CLASS")
+            }
+            print("Selected String: \(selectedText) \n index: \(index)")
+        }
         
         self.scrollView.addSubview(stackView)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         self.hideKeyboardWhenTappedAround()
-        selectClass.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: (selectClass.titleLabel?.font.pointSize)!)
+       // selectClass.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: (selectClass.titleLabel?.font.pointSize)!)
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font : UIFont(name: "AvenirNext-Regular", size: 17)!],for: .normal)
         navBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "AvenirNext-Regular", size: 20)!]
-        selectClass.layer.cornerRadius = 15
+        
+        //stackView.insertArrangedSubview(dropDownStackView, at: 1)
+        
 
         
-        if Global.classNames.count != 0 {
-            for name in Global.classNames {
-                let button = UIButton()
-                button.setTitleColor(.black, for: .normal)
-                button.backgroundColor = UIColor(hexFromString: "5FD7EC")
-                button.setTitle(name, for: .normal)
-                button.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: (selectClass.titleLabel?.font.pointSize)!)
-                button.heightAnchor.constraint(equalToConstant: selectClass.frame.height).isActive = true
-                button.addTarget(self, action: #selector(classPressed(sender:)), for: .touchUpInside)
-                button.layer.cornerRadius = 15
-                button.isHidden = true
-                button.alpha = 0
-                classesCollection.append(button)
-                dropDownStackView.addArrangedSubview(button)
-                
-            }
-        } else {
-            print("NO CLASSES FOUND")
-        }
-        
-    }
-    
-    @objc func classPressed(sender: UIButton) {
-        if let buttonLabel = sender.titleLabel?.text {
-            print(buttonLabel)
-        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
     }
-    
-    @IBAction func selectClassButton(_ sender: Any) {
-        classesCollection.forEach { (button) in
-            UIView.animate(withDuration: 0.3) {
-                button.isHidden  = !button.isHidden
-                button.alpha = button.alpha == 0 ? 1 : 0
-                button.layoutIfNeeded()
-            }
-        }
-        
-    }
-    
+
     override func viewDidLayoutSubviews() {
         
         self.stackView.translatesAutoresizingMaskIntoConstraints = true

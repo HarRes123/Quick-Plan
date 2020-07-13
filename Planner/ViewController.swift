@@ -12,10 +12,6 @@ import MobileCoreServices
 import UIKit
 import UserNotifications
 
-class Global {
-    static var classNames = Array<String>()
-}
-
 class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate {
     var myAuth: GTMFetcherAuthorizationProtocol?
     private let service = GTLRClassroomService()
@@ -53,6 +49,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     let date = Date()
     var calendar = Calendar.current
+    
+    var classNames = Array<String>()
     
     @IBOutlet var calendarTableView: UITableView!
     @IBOutlet var assignmentTableView: UITableView!
@@ -1149,6 +1147,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         print("YES")
 
         let vc = ManualEntryViewController(nibName: "ManualEntryViewController", bundle: nil)
+        vc.classNames = self.classNames
         vc.modalPresentationStyle = .popover
         let popover: UIPopoverPresentationController = vc.popoverPresentationController!
         popover.barButtonItem = sender
@@ -1205,7 +1204,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             for i in 0 ... assignmentsPerCourse.count - 1 {
                 if assignmentsPerCourse[i].first != nil {
                     classNameAndAssignments.updateValue(assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: assignmentsPerCourse[i].first ?? "no name")
-                    Global.classNames.append(assignmentsPerCourse[i].first!)
+                    self.classNames.append(assignmentsPerCourse[i].first!)
                 }
             }
             for i in 0 ... newAssignmentsPerCourse.count - 1 {
@@ -1213,7 +1212,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     newClassNameAndAssignments.updateValue(newAssignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: newAssignmentsPerCourse[i].first ?? "no name")
                 }
             }
-            print("CLASS NAMES", Global.classNames)
+            print("CLASS NAMES", self.classNames)
         } else {
             let alert = UIAlertController(title: "Unable to Show Info", message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))

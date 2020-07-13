@@ -12,14 +12,13 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ManualEntryViewController" customModule="Planner" customModuleProvider="target">
             <connections>
                 <outlet property="assignmentName" destination="fmW-Mc-zEB" id="q3M-Te-c5t"/>
-                <outlet property="dropDownStackView" destination="L54-wN-N9q" id="C3C-MR-ufU"/>
+                <outlet property="classPicker" destination="aiD-Xk-LfM" id="0kG-oZ-goC"/>
                 <outlet property="dueDate" destination="OgL-x3-9QP" id="PAM-9F-CnP"/>
                 <outlet property="navBar" destination="iZx-Ls-M5e" id="c8T-1d-eDG"/>
                 <outlet property="question1Label" destination="wKm-PN-8ew" id="5PK-re-9lV"/>
                 <outlet property="question2Label" destination="Ibf-1H-9PF" id="2HD-JZ-Z4H"/>
                 <outlet property="question3Label" destination="fTH-Ch-Ceu" id="ARr-Qm-4x8"/>
                 <outlet property="scrollView" destination="apg-FB-847" id="ulX-nI-hXR"/>
-                <outlet property="selectClass" destination="ljJ-Dz-kKn" id="zn9-R3-bao"/>
                 <outlet property="stackView" destination="9bk-IZ-4a2" id="FgY-TP-FlC"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="d8c-qB-eei"/>
             </connections>
@@ -74,24 +73,20 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="L54-wN-N9q">
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Select Class" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aiD-Xk-LfM" customClass="DropDown" customModule="Planner" customModuleProvider="target">
                     <rect key="frame" x="16" y="110" width="350" height="75"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ljJ-Dz-kKn">
-                            <rect key="frame" x="0.0" y="0.0" width="350" height="75"/>
-                            <color key="backgroundColor" systemColor="systemGray4Color"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="75" id="E9K-wP-lwj"/>
-                            </constraints>
-                            <state key="normal" title="Select Class">
-                                <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </state>
-                            <connections>
-                                <action selector="selectClassButton:" destination="-1" eventType="touchUpInside" id="qTW-2r-bOX"/>
-                            </connections>
-                        </button>
-                    </subviews>
-                </stackView>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="75" id="fkE-AG-TzR"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isSearchEnable" value="NO"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="rowHeight">
+                            <real key="value" value="75"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </textField>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" text="Question 2" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ibf-1H-9PF" userLabel="Question 2">
                     <rect key="frame" x="16" y="213" width="350" height="82"/>
                     <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
@@ -101,7 +96,7 @@
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fmW-Mc-zEB">
                     <rect key="frame" x="16" y="323" width="350" height="75"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="75" id="e4p-EL-0dq"/>
+                        <constraint firstAttribute="height" constant="75" id="VtK-E5-a69"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
@@ -115,7 +110,7 @@
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="OgL-x3-9QP">
                     <rect key="frame" x="16" y="536" width="350" height="75"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="75" id="38A-a9-LKR"/>
+                        <constraint firstAttribute="height" constant="75" id="y6O-nR-2nk"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
@@ -125,22 +120,16 @@
             <constraints>
                 <constraint firstItem="Ibf-1H-9PF" firstAttribute="height" secondItem="wKm-PN-8ew" secondAttribute="height" id="D5U-pZ-9UY"/>
                 <constraint firstItem="fTH-Ch-Ceu" firstAttribute="height" secondItem="wKm-PN-8ew" secondAttribute="height" id="E7l-Vw-FPQ"/>
-                <constraint firstItem="Ibf-1H-9PF" firstAttribute="width" secondItem="L54-wN-N9q" secondAttribute="width" id="E8h-bv-vtg"/>
-                <constraint firstItem="OgL-x3-9QP" firstAttribute="width" secondItem="L54-wN-N9q" secondAttribute="width" id="Ej4-2M-wUM"/>
-                <constraint firstItem="fmW-Mc-zEB" firstAttribute="width" secondItem="L54-wN-N9q" secondAttribute="width" id="WIo-iS-98F"/>
-                <constraint firstItem="fTH-Ch-Ceu" firstAttribute="width" secondItem="L54-wN-N9q" secondAttribute="width" id="fO1-RI-lug"/>
-                <constraint firstItem="wKm-PN-8ew" firstAttribute="width" secondItem="L54-wN-N9q" secondAttribute="width" id="kK6-1O-f6z"/>
+                <constraint firstItem="OgL-x3-9QP" firstAttribute="height" secondItem="aiD-Xk-LfM" secondAttribute="height" id="i6X-Il-J9J"/>
+                <constraint firstItem="fmW-Mc-zEB" firstAttribute="height" secondItem="aiD-Xk-LfM" secondAttribute="height" id="qjn-nS-QJ0"/>
             </constraints>
             <edgeInsets key="layoutMargins" top="0.0" left="16" bottom="32" right="16"/>
-            <point key="canvasLocation" x="122" y="-729"/>
+            <point key="canvasLocation" x="103" y="-692"/>
         </stackView>
     </objects>
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGray4Color">
-            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
