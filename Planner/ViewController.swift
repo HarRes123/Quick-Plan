@@ -12,6 +12,10 @@ import MobileCoreServices
 import UIKit
 import UserNotifications
 
+class Global {
+    static var classNames = Array<String>()
+}
+
 class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate {
     var myAuth: GTMFetcherAuthorizationProtocol?
     private let service = GTLRClassroomService()
@@ -1142,7 +1146,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
     
     @IBAction func showManualEntry(_ sender: Any) {
-        
+        print("YES")
         
         let popView = ManualEntryViewController(nibName: "ManualEntryViewController", bundle: nil)
         popView.modalPresentationStyle = .popover
@@ -1196,11 +1200,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     func showInfo() {
         assignmentIndex = 0
-        
+       // var classNames = Array<String>()
         if assignmentsPerCourse.count != 0 {
             for i in 0 ... assignmentsPerCourse.count - 1 {
                 if assignmentsPerCourse[i].first != nil {
                     classNameAndAssignments.updateValue(assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: assignmentsPerCourse[i].first ?? "no name")
+                    Global.classNames.append(assignmentsPerCourse[i].first!)
                 }
             }
             for i in 0 ... newAssignmentsPerCourse.count - 1 {
@@ -1208,6 +1213,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     newClassNameAndAssignments.updateValue(newAssignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: newAssignmentsPerCourse[i].first ?? "no name")
                 }
             }
+            print("CLASS NAMES", Global.classNames)
         } else {
             let alert = UIAlertController(title: "Unable to Show Info", message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))

@@ -168,3 +168,65 @@ extension UIViewController {
         }
     }
 }
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}
+
+extension UIStackView {
+    func addCustomSpacingBefore(top: CGFloat) {
+
+        //If the stack view has just one arrangedView, we add a dummy one
+        if self.arrangedSubviews.count == 1 {
+            self.insertArrangedSubview(UIView(frame: .zero), at: 0)
+        }
+
+        //Getting the second last arrangedSubview and the current one
+        let lastTwoArrangedSubviews = Array(self.arrangedSubviews.suffix(2))
+        let arrSpacing: [CGFloat] = [top, 0]
+
+        //Looping through the two last arrangedSubview to add spacing in each of them
+        for (index, anArrangedSubview) in lastTwoArrangedSubviews.enumerated() {
+
+            //After iOS 11, the stackview has a native method
+            if #available(iOS 11.0, *) {
+                self.setCustomSpacing(arrSpacing[index], after: anArrangedSubview)
+                //Before iOS 11 : Adding dummy separator UIViews
+            } else {
+                guard let arrangedSubviewIndex = arrangedSubviews.firstIndex(of: anArrangedSubview) else {
+                    return
+                }
+
+                let separatorView = UIView(frame: .zero)
+                separatorView.translatesAutoresizingMaskIntoConstraints = false
+
+                //calculate spacing to keep a coherent spacing with the ios11 version
+                let isBetweenExisitingViews = arrangedSubviewIndex != arrangedSubviews.count - 1
+                let existingSpacing = isBetweenExisitingViews ? 2 * spacing : spacing
+                let separatorSize = arrSpacing[index] - existingSpacing
+
+                guard separatorSize > 0 else {
+                    return
+                }
+
+                switch axis {
+                case .horizontal:
+                    separatorView.widthAnchor.constraint(equalToConstant: separatorSize).isActive = true
+                case .vertical:
+                    separatorView.heightAnchor.constraint(equalToConstant: separatorSize).isActive = true
+                @unknown default:
+                    print("FATAL ERROR")
+                }
+
+                insertArrangedSubview(separatorView, at: arrangedSubviewIndex + 1)
+            }
+        }
+    }
+}
