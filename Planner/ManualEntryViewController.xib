@@ -11,7 +11,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ManualEntryViewController" customModule="Planner" customModuleProvider="target">
             <connections>
+                <outlet property="assignmentName" destination="fmW-Mc-zEB" id="q3M-Te-c5t"/>
                 <outlet property="dropDownStackView" destination="L54-wN-N9q" id="C3C-MR-ufU"/>
+                <outlet property="dueDate" destination="OgL-x3-9QP" id="PAM-9F-CnP"/>
                 <outlet property="navBar" destination="iZx-Ls-M5e" id="c8T-1d-eDG"/>
                 <outlet property="question1Label" destination="wKm-PN-8ew" id="5PK-re-9lV"/>
                 <outlet property="question2Label" destination="Ibf-1H-9PF" id="2HD-JZ-Z4H"/>

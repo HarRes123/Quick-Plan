@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ManualEntryViewController: UIViewController, UIScrollViewDelegate {
+class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextFieldDelegate {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var stackView: UIStackView!
@@ -18,12 +18,17 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var question1Label: UILabel!
     @IBOutlet weak var question2Label: UILabel!
     @IBOutlet weak var question3Label: UILabel!
+    @IBOutlet weak var assignmentName: UITextField!
+    @IBOutlet weak var dueDate: UITextField!
+    
     var classesCollection = Array<UIButton>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         scrollView.delegate = self
+        assignmentName.delegate = self
+        dueDate.delegate = self
         
         self.scrollView.addSubview(stackView)
         
@@ -64,6 +69,11 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
+    
     @IBAction func selectClassButton(_ sender: Any) {
         classesCollection.forEach { (button) in
             UIView.animate(withDuration: 0.3) {
@@ -79,10 +89,13 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate {
         
         self.stackView.translatesAutoresizingMaskIntoConstraints = true
         
-//        self.stackView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor).isActive = true
-//        self.stackView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor).isActive = true
-//        self.stackView.topAnchor.constraint(equalTo: self.scrollView.topAnchor).isActive = true
-//        self.stackView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor).isActive = true
+        self.stackView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor).isActive = true
+        self.stackView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor).isActive = true
+        self.stackView.topAnchor.constraint(equalTo: self.scrollView.topAnchor).isActive = true
+        self.stackView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor).isActive = true
+        
+        stackView.center.x = scrollView.center.x
+        stackView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: stackView.frame.height)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
