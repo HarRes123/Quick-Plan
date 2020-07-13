@@ -18,6 +18,7 @@
                 <outlet property="question1Label" destination="wKm-PN-8ew" id="5PK-re-9lV"/>
                 <outlet property="question2Label" destination="Ibf-1H-9PF" id="2HD-JZ-Z4H"/>
                 <outlet property="question3Label" destination="fTH-Ch-Ceu" id="ARr-Qm-4x8"/>
+                <outlet property="saveButton" destination="bHc-Nx-BWX" id="CAt-xH-NYQ"/>
                 <outlet property="scrollView" destination="apg-FB-847" id="ulX-nI-hXR"/>
                 <outlet property="stackView" destination="9bk-IZ-4a2" id="FgY-TP-FlC"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="d8c-qB-eei"/>
@@ -65,7 +66,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Question 1" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wKm-PN-8ew">
-                    <rect key="frame" x="16" y="0.0" width="350" height="82"/>
+                    <rect key="frame" x="16" y="0.0" width="350" height="47.5"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="350" id="5a6-SN-rRJ"/>
                     </constraints>
@@ -73,10 +74,10 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Select Class" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aiD-Xk-LfM" customClass="DropDown" customModule="Planner" customModuleProvider="target">
-                    <rect key="frame" x="16" y="110" width="350" height="75"/>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Select Class" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aiD-Xk-LfM" customClass="DropDown" customModule="Planner" customModuleProvider="target">
+                    <rect key="frame" x="16" y="75.5" width="350" height="75"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="75" id="fkE-AG-TzR"/>
+                        <constraint firstAttribute="height" constant="75" id="G9y-vY-n8M"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                     <textInputTraits key="textInputTraits"/>
@@ -88,40 +89,48 @@
                     </userDefinedRuntimeAttributes>
                 </textField>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" text="Question 2" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ibf-1H-9PF" userLabel="Question 2">
-                    <rect key="frame" x="16" y="213" width="350" height="82"/>
+                    <rect key="frame" x="16" y="178.5" width="350" height="48"/>
                     <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fmW-Mc-zEB">
-                    <rect key="frame" x="16" y="323" width="350" height="75"/>
+                    <rect key="frame" x="16" y="254.5" width="350" height="75"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="75" id="VtK-E5-a69"/>
+                        <constraint firstAttribute="height" constant="75" id="lgD-5n-CzA"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Question 3" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fTH-Ch-Ceu" userLabel="Question 3">
-                    <rect key="frame" x="16" y="426" width="350" height="82"/>
+                    <rect key="frame" x="16" y="357.5" width="350" height="47.5"/>
                     <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="OgL-x3-9QP">
-                    <rect key="frame" x="16" y="536" width="350" height="75"/>
+                    <rect key="frame" x="16" y="433" width="350" height="75"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="75" id="y6O-nR-2nk"/>
+                        <constraint firstAttribute="height" constant="75" id="01F-pV-NN7"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bHc-Nx-BWX">
+                    <rect key="frame" x="16" y="536" width="350" height="75"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="75" id="BMF-nO-o8U"/>
+                    </constraints>
+                    <state key="normal" title="Save"/>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="MPz-EN-x1w"/>
             <constraints>
+                <constraint firstItem="bHc-Nx-BWX" firstAttribute="height" secondItem="aiD-Xk-LfM" secondAttribute="height" id="97B-2P-Y2a"/>
                 <constraint firstItem="Ibf-1H-9PF" firstAttribute="height" secondItem="wKm-PN-8ew" secondAttribute="height" id="D5U-pZ-9UY"/>
                 <constraint firstItem="fTH-Ch-Ceu" firstAttribute="height" secondItem="wKm-PN-8ew" secondAttribute="height" id="E7l-Vw-FPQ"/>
-                <constraint firstItem="OgL-x3-9QP" firstAttribute="height" secondItem="aiD-Xk-LfM" secondAttribute="height" id="i6X-Il-J9J"/>
-                <constraint firstItem="fmW-Mc-zEB" firstAttribute="height" secondItem="aiD-Xk-LfM" secondAttribute="height" id="qjn-nS-QJ0"/>
+                <constraint firstItem="OgL-x3-9QP" firstAttribute="height" secondItem="aiD-Xk-LfM" secondAttribute="height" id="TKv-RT-rRL"/>
+                <constraint firstItem="fmW-Mc-zEB" firstAttribute="height" secondItem="aiD-Xk-LfM" secondAttribute="height" id="US9-WY-k8h"/>
             </constraints>
             <edgeInsets key="layoutMargins" top="0.0" left="16" bottom="32" right="16"/>
             <point key="canvasLocation" x="103" y="-692"/>

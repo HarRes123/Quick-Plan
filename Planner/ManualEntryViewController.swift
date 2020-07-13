@@ -19,6 +19,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
     @IBOutlet weak var question3Label: UILabel!
     @IBOutlet weak var assignmentName: UITextField!
     @IBOutlet weak var dueDate: UITextField!
+    @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var classPicker: DropDown!
     
     var classNames = Array<String>()
@@ -38,16 +39,40 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
             navBar.isUserInteractionEnabled = true
             navBar.isHidden = false
         }
-        
 
         // The the Closure returns Selected Index and String
         classPicker.didSelect{(selectedText , index ,_) in
             if selectedText == "Add Class" {
                 print("USER WANTS TO ADD A CLASS")
+                let alertController = UIAlertController(title: "Add Class", message: "", preferredStyle: UIAlertController.Style.alert)
+                alertController.addTextField { (textField : UITextField!) -> Void in
+                       textField.placeholder = "Enter Class Name"
+                   }
+                let saveAction = UIAlertAction(title: "Save", style: UIAlertAction.Style.default, handler: { alert -> Void in
+                    
+                    let textField = alertController.textFields![0] as UITextField
+                    if textField.text != "" {
+                        self.classPicker.text = textField.text ?? "Add Class"
+                        self.classNames.append(textField.text ?? "Add Class")
+                        self.classPicker.optionArray = self.classNames + ["Add Class"]
+                    }
+
+                   })
+                let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {
+                       (action : UIAlertAction!) -> Void in })
+               
+                   
+                   alertController.addAction(cancelAction)
+                   alertController.addAction(saveAction)
+                   
+                
+                self.present(alertController, animated: true, completion: nil)
             }
             print("Selected String: \(selectedText) \n index: \(index)")
         }
         
+        self.setUpButton(button: saveButton)
+        view.backgroundColor = UIColor(hexFromString: "E8E8E8")
         self.scrollView.addSubview(stackView)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -56,11 +81,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
        // selectClass.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: (selectClass.titleLabel?.font.pointSize)!)
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font : UIFont(name: "AvenirNext-Regular", size: 17)!],for: .normal)
         navBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "AvenirNext-Regular", size: 20)!]
-        
-        //stackView.insertArrangedSubview(dropDownStackView, at: 1)
-        
 
-        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

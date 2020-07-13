@@ -180,6 +180,20 @@ extension UIViewController {
     }
 }
 
+extension UIViewController {
+    func setUpButton(button: UIButton) {
+        button.layer.cornerRadius = 8
+        button.backgroundColor = UIColor(hexFromString: "9eb5e8")
+        button.tintColor = .darkGray
+        button.layer.shadowColor = UIColor.darkGray.cgColor
+        button.layer.shadowOffset = CGSize(width: -3, height: 3)
+        button.layer.shadowOpacity = 1.0
+        button.layer.shadowRadius = 1.5
+        button.layer.borderColor = UIColor.darkGray.cgColor
+        button.layer.borderWidth = 2
+    }
+}
+
 extension UIStackView {
     func addCustomSpacingBefore(top: CGFloat) {
 
