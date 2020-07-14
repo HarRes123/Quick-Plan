@@ -56,7 +56,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
         } else {
             navBar.isUserInteractionEnabled = true
             navBar.isHidden = false
-            stackView.setCustomSpacing(24, after: dummyView)
+            stackView.setCustomSpacing(28, after: dummyView)
         }
 
         // The the Closure returns Selected Index and String
@@ -65,7 +65,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
                 print("USER WANTS TO ADD A CLASS")
                 let alertController = UIAlertController(title: "Add Class", message: "", preferredStyle: UIAlertController.Style.alert)
                 alertController.addTextField { (textField : UITextField!) -> Void in
-                       textField.placeholder = "Enter Class Name"
+                       textField.placeholder = "Enter class name"
                    }
                 let saveAction = UIAlertAction(title: "Save", style: UIAlertAction.Style.default, handler: { alert -> Void in
                     
@@ -170,6 +170,15 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
         self.dismiss(animated: true, completion: nil)
         
     }
+    
+    @IBAction func savePressed(_ sender: Any) {
+        
+        print("Class:", classPicker.text ?? "no text")
+        print("Assignment:", assignmentField.text ?? "no text")
+        print("Due Date:", dueDateField.text ?? "no text")
+        
+    }
+    
     
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {

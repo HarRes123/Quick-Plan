@@ -83,7 +83,7 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Class name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aiD-Xk-LfM" customClass="DropDown" customModule="Planner" customModuleProvider="target">
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Select a class" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aiD-Xk-LfM" customClass="DropDown" customModule="Planner" customModuleProvider="target">
                     <rect key="frame" x="16" y="79" width="350" height="75"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="75" id="G9y-vY-n8M"/>
@@ -108,7 +108,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="75" id="lgD-5n-CzA"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Question 3" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fTH-Ch-Ceu" userLabel="Question 3">
@@ -122,7 +122,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="75" id="01F-pV-NN7"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B0E-ld-dtx">
@@ -140,6 +140,9 @@
                         <constraint firstAttribute="height" constant="75" id="BMF-nO-o8U"/>
                     </constraints>
                     <state key="normal" title="Save"/>
+                    <connections>
+                        <action selector="savePressed:" destination="-1" eventType="touchUpInside" id="xa0-7z-dOY"/>
+                    </connections>
                 </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="MPz-EN-x1w"/>
