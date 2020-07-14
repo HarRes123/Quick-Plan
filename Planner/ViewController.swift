@@ -496,7 +496,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 view.backgroundColor = .clear
                 let button = UIButton(frame: CGRect(x: tableView.bounds.width / 2 - 41.5, y: 0, width: 50, height: 50))
                 button.layer.cornerRadius = 10
-                button.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+                print("TETET:",newAssignmentsPerCourse)
+                if newAssignmentsPerCourse[section].count > 1 {
+                    button.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+                } else {
+                    if arrayHeader[section] == 1 {
+                        button.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
+                    } else {
+                        button.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+                    }
+                }
                 button.backgroundColor = UIColor(hexFromString: "E8E8E8")
                 button.tag = section
                 
@@ -533,6 +542,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         if classNameAndAssignments.count > 0 {
             arrayHeader[sender.tag] = (arrayHeader[sender.tag] == 1) ? 2 : 1
             assignmentTableView.reloadSections([sender.tag], with: .fade)
+            
             print(arrayHeader)
         }
     }
