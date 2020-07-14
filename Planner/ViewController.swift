@@ -491,21 +491,21 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         if tableView == assignmentTableView {
             if classNameAndAssignments.count > 0 {
                 // tableView.frame.size.width/4
-                
+                classes = [String](classNameAndAssignments.keys)
                 let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 50))
                 view.backgroundColor = .clear
                 let button = UIButton(frame: CGRect(x: tableView.bounds.width / 2 - 41.5, y: 0, width: 50, height: 50))
                 button.layer.cornerRadius = 10
-                print("TETET:",newAssignmentsPerCourse)
-                if newAssignmentsPerCourse[section].count > 1 {
+                if newClassNameAndAssignments[classes[section]]!.count > 0 {
                     button.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
                 } else {
-                    if arrayHeader[section] == 1 {
-                        button.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
-                    } else {
+                    if arrayHeader[section] == 2 {
                         button.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+                    } else {
+                        button.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
                     }
                 }
+                
                 button.backgroundColor = UIColor(hexFromString: "E8E8E8")
                 button.tag = section
                 
