@@ -49,9 +49,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     let date = Date()
     var calendar = Calendar.current
-    
-    var classNames = Array<String>()
-    
+        
     @IBOutlet var calendarTableView: UITableView!
     @IBOutlet var assignmentTableView: UITableView!
     
@@ -73,8 +71,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             
             dueDate = assignmentAndDueDate[assignment] ?? ""
         }
+        var string = String()
         
-        let string = tableView == assignmentTableView ? "\(assignment)\n\n\(dueDate)" : calendarItems[indexPath.row]
+        if dueDate != "" {
+            string = tableView == assignmentTableView ? "\(assignment)\n\n\(dueDate)" : calendarItems[indexPath.row]
+        } else {
+            string = tableView == assignmentTableView ? "\(assignment)" : calendarItems[indexPath.row]
+        }
         
         // Attempt to convert the string to a Data object so it can be passed around using drag and drop
         guard let data = string.data(using: .utf8) else { return [] }
@@ -319,6 +322,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
     }
     
+    @objc func popOverDismissed() {
+        
+        print("POPOVER DISMISSED")
+        beginClassImport()
+        
+    }
+    
+    
+    
     @objc func performFetch() {
         print("FETCHING INFO")
         if Auth.auth().currentUser != nil {
@@ -361,13 +373,18 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
     }
     
-    @objc func importClasses(sender _: UIButton) {
+    func beginClassImport() {
+        
         service.authorizer = myAuth
         showSpinner(onView: assignmentTableView)
         assignmentTableView.isUserInteractionEnabled = false
         calendarTableView.isUserInteractionEnabled = false
         
         getInfo()
+    }
+    
+    @objc func importClasses(sender _: UIButton) {
+        beginClassImport()
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection _: Int) -> String? {
@@ -407,15 +424,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                         cellText = classNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
                         dueDate = assignmentAndDueDate[cellText] ?? ""
                     }
-                    
-                    cell.classAssignments.text = "\(cellText)\n\n\(dueDate)"
-                    // print(dueDate)
-                    //                    for assignment in 0...classNameAndAssignments[classes[indexPath.section]]!.count-1 {
-                    //    //
-                    //                        cell.classAssignments.text! += classNameAndAssignments[classes[indexPath.section]]?[assignment] ?? "No assignment"
+                    if dueDate != "" {
+                        cell.classAssignments.text = "\(cellText)\n\n\(dueDate)"
+                    } else {
+                        cell.classAssignments.text = "\(cellText)"
+                    }
+
                 }
-                //
-                //                    }
             }
             
             if calendarItems.contains(cell.classAssignments.text) {
@@ -836,7 +851,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(performFetch), name: Notification.Name("performFetch"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(performFetch), name: Notification.Name("performFetchAuto"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(popOverDismissed), name: Notification.Name("popOverDismissed"), object: nil)
         
         service.authorizer = myAuth
         
@@ -923,10 +939,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        print("APPEAR")
         setUpCalendar()
         setUpInitialNotifications()
     }
+    
     
     func setUpUI(view: UIView) {
         let containerView: UIView = UIView(frame: view.frame)
@@ -1010,6 +1027,22 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
     }
     
+    func getCurrentDate() -> Date {
+        let currentMonth = calendar.component(.month, from: date)
+        let currentDay = calendar.component(.day, from: date)
+        let currentYear = calendar.component(.year, from: date)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = .current
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+        //
+        //                    let date = Date()
+        //                    let calendar = Calendar.current
+        return dateFormatter.date(from: "\(currentMonth)/\(currentDay)/\(currentYear)") ?? Date()
+            
+    }
+    
     @objc func obtainClasses(ticket _: GTLRServiceTicket,
                              finishedWithObject result: GTLRClassroom_ListCourseWorkResponse,
                              error: NSError?) {
@@ -1027,11 +1060,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             newAssignmentsPerCourse.remove(at: assignmentIndex)
             return
         }
-        let currentMonth = calendar.component(.month, from: date)
-        let currentDay = calendar.component(.day, from: date)
-        let currentYear = calendar.component(.year, from: date)
         
-        let currentDate = "\(currentMonth)/\(currentDay)/\(currentYear)"
+        let currentDate = getCurrentDate()
         
         //  for classCount in 0...classNames.count - 1 {
         
@@ -1063,10 +1093,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             dateFormatter.locale = Locale(identifier: "en_US_POSIX")
             dateFormatter.timeZone = .current
             dateFormatter.dateFormat = "MM/dd/yyyy"
-            //
-            //                    let date = Date()
-            //                    let calendar = Calendar.current
-            let currentDate = dateFormatter.date(from: currentDate) ?? Date()
+            
             let dueDate = dateFormatter.date(from: finalDate) ?? Date()
             print(dueDate, currentDate)
             if dueDate > currentDate {
@@ -1078,11 +1105,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         if assignmentIndex + 1 >= assignmentsPerCourse.count {
             print("FINISHED")
-            removeSpinner()
-            assignmentTableView.isUserInteractionEnabled = true
-            calendarTableView.isUserInteractionEnabled = true
+            
             showInfo()
-            assignmentTableView.reloadData()
+          //  assignmentTableView.reloadData()
             
         } else {
             assignmentIndex += 1
@@ -1152,19 +1177,18 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             return 50
         }
     }
-    
+        
     @IBAction func showManualEntry(_ sender: UIBarButtonItem) {
         print("YES")
 
         let vc = ManualEntryViewController(nibName: "ManualEntryViewController", bundle: nil)
-        vc.classNames = self.classNames
+        vc.classNames = [String](classNameAndAssignments.keys)
         vc.modalPresentationStyle = .popover
         let popover: UIPopoverPresentationController = vc.popoverPresentationController!
         popover.barButtonItem = sender
         present(vc, animated: true, completion:nil)
     }
-    
-    
+
     @IBAction func signOut(_: Any) {
         let alert = UIAlertController(title: "Would You Like to Sign Out of Your Account?", message: "", preferredStyle: .alert)
         let yes = UIAlertAction(title: "Yes", style: .default) { (_: UIAlertAction) in
@@ -1207,29 +1231,71 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         fetchCourses()
     }
     
+    func finishedGettingInfo() {
+        print("RELOAD")
+        self.assignmentIndex = 0
+        self.removeSpinner()
+        self.assignmentTableView.isUserInteractionEnabled = true
+        self.calendarTableView.isUserInteractionEnabled = true
+        self.assignmentTableView.reloadData()
+    }
+    
     func showInfo() {
-        assignmentIndex = 0
-       // var classNames = Array<String>()
+        //assignmentIndex = 0
         if assignmentsPerCourse.count != 0 {
-            classNames = Array<String>()
             for i in 0 ... assignmentsPerCourse.count - 1 {
                 if assignmentsPerCourse[i].first != nil {
-                    classNameAndAssignments.updateValue(assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: assignmentsPerCourse[i].first ?? "no name")
-                    self.classNames.append(assignmentsPerCourse[i].first!)
+                    let encodedClass = assignmentsPerCourse[i].first!.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+                    Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").child(encodedClass).observeSingleEvent(of: .value, with: { [self] snapshot in
+                        if snapshot.exists() {
+                            var allAssignments = snapshot.value as! Array<String>
+                            print("VALUEVALUE", allAssignments)
+                            //fix new stuff to check for due date
+                            var allNewAssignments = Array<String>()
+    
+                            let currentDate = self.getCurrentDate()
+
+                            allAssignments.append(contentsOf: self.assignmentsPerCourse[i].arrayWithoutFirstElement())
+                            self.classNameAndAssignments.updateValue(allAssignments, forKey: self.assignmentsPerCourse[i].first ?? "no name")
+                            
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+                            dateFormatter.timeZone = .current
+                            dateFormatter.dateFormat = "MM/dd/yyyy"
+                            
+                            for newAssignment in snapshot.value as! Array<String> {
+                                let nameAndDueDate = newAssignment.components(separatedBy: "\n\nDue: ")
+                                print("NAMENAME", nameAndDueDate)
+                                let dueDate = dateFormatter.date(from: nameAndDueDate[1]) ?? Date()
+                                if dueDate > currentDate {
+                                    allNewAssignments.append(newAssignment)
+                                }
+                            }
+                            
+                            self.newClassNameAndAssignments.updateValue(allNewAssignments, forKey: self.newAssignmentsPerCourse[i].first ?? "no name")
+                            if i >= self.assignmentsPerCourse.count-1 {
+                                self.finishedGettingInfo()
+                            }
+                            
+                        } else {
+                            //check for newly added class
+                            self.classNameAndAssignments.updateValue(self.assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: self.assignmentsPerCourse[i].first ?? "no name")
+                            self.newClassNameAndAssignments.updateValue(self.newAssignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: self.newAssignmentsPerCourse[i].first ?? "no name")
+                            if i >= self.assignmentsPerCourse.count-1 {
+                                self.finishedGettingInfo()
+                            }
+                        }
+                    })
+                    
+
                 }
             }
-            for i in 0 ... newAssignmentsPerCourse.count - 1 {
-                if newAssignmentsPerCourse[i].first != nil {
-                    newClassNameAndAssignments.updateValue(newAssignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: newAssignmentsPerCourse[i].first ?? "no name")
-                }
-            }
-            print("CLASS NAMES", self.classNames)
+
         } else {
             let alert = UIAlertController(title: "Unable to Show Info", message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             present(alert, animated: true)
         }
         
-        assignmentTableView.reloadData()
     }
 }

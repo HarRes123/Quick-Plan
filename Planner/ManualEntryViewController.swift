@@ -38,7 +38,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
         classPicker.optionArray = classNames + ["Add Class"]
         dateError.text = "Please enter a valid date"
         dateError.isHidden = true
-        
+                
         question1Label.text = "What is the name of the class?"
         question2Label.text = "What is the name of the assignment?"
         question3Label.text = "When is the assignment due?"
@@ -189,6 +189,12 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
         self.dismiss(animated: true, completion: nil)
         
     }
+    override func viewDidDisappear(_ animated: Bool) {
+        if isBeingDismissed {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "popOverDismissed"), object: nil)
+        }
+    }
+    
     
     func sendAlert(title: String) {
         let alert = UIAlertController(title: title, message: "", preferredStyle: .alert)
@@ -214,13 +220,13 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
             
             Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").child(encodedClass).observeSingleEvent(of: .value, with: { snapshot in
                 if snapshot.exists() {
+                    
                     var allData = snapshot.value! as! Array<String>
                     
                     if !allData.contains(assignmentAndDueDate) {
                         allData.append(assignmentAndDueDate)
                         self.sendAlert(title: "Assignment Saved")
                     } else {
-                        
                         self.sendAlert(title: "Assignment Already Exists")
                     }
                     
@@ -239,12 +245,11 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
             // self.refResponse.child((Auth.auth().currentUser?.uid)!).child(selectedClass).setValue(assignmentAndDueDate)
         } else {
             sendAlert(title: "Please Answer Each Question")
-            
         }
 
         print("ACTUAL NAME", decodedClass)
     }
-    
+        
     
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
