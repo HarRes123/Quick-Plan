@@ -13,6 +13,7 @@ open class DropDown: UITextField {
     var table: UITableView!
     var shadow: UIView!
     public var selectedIndex: Int?
+    var selectedCell = false
 
     // MARK: IBInspectable
 
@@ -252,9 +253,20 @@ open class DropDown: UITextField {
     }
 
     public func hideList() {
+        
         TableWillDisappearCompletion()
+        
+        let delay: Double = {
+            if self.selectedCell {
+                self.selectedCell = false
+                return 0.5
+            } else {
+                return 0
+            }
+        }()
+
         UIView.animate(withDuration: 1.0,
-                       delay: 0.4,
+                       delay: delay,
                        usingSpringWithDamping: 0.7,
                        initialSpringVelocity: 0.1,
                        options: .curveEaseInOut,
@@ -422,6 +434,7 @@ extension DropDown: UITableViewDelegate {
                            tableView.reloadData()
         })
         if hideOptionsWhenSelect {
+            selectedCell = true
             touchAction()
             endEditing(true)
         }
