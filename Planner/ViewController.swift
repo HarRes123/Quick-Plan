@@ -983,6 +983,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 tableView.deleteRows(at: [indexPath], with: .automatic)
 
                 tableView.reloadData()
+                self.assignmentTableView.reloadData()
 
             })
             deleteAction.backgroundColor = UIColor.red

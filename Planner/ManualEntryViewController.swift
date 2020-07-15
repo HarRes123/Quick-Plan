@@ -233,7 +233,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if view.frame.origin.y == 0 {
-                view.frame.origin.y -= keyboardSize.height
+                view.frame.origin.y -= keyboardSize.height*(5/8)
             }
         }
     }

@@ -228,9 +228,9 @@ open class DropDown: UITextField {
         if height < (keyboardHeight + tableheightX) {
             y = pointToParent.y - tableheightX
         }
-        UIView.animate(withDuration: 0.9,
+        UIView.animate(withDuration: 1.0,
                        delay: 0,
-                       usingSpringWithDamping: 0.4,
+                       usingSpringWithDamping: 0.7,
                        initialSpringVelocity: 0.1,
                        options: .curveEaseInOut,
                        animations: { () -> Void in
@@ -255,7 +255,7 @@ open class DropDown: UITextField {
         TableWillDisappearCompletion()
         UIView.animate(withDuration: 1.0,
                        delay: 0.4,
-                       usingSpringWithDamping: 0.9,
+                       usingSpringWithDamping: 0.7,
                        initialSpringVelocity: 0.1,
                        options: .curveEaseInOut,
                        animations: { () -> Void in
