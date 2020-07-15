@@ -73,11 +73,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
         var string = String()
         
-        //if dueDate != "" {
-            string = tableView == assignmentTableView ? "\(assignment)\n\n\(dueDate)" : calendarItems[indexPath.row]
-       // } else {
-       //     string = tableView == assignmentTableView ? "\(assignment)" : calendarItems[indexPath.row]
-       // }
+        string = tableView == assignmentTableView ? "\(assignment)\n\n\(dueDate)" : calendarItems[indexPath.row]
         
         // Attempt to convert the string to a Data object so it can be passed around using drag and drop
         guard let data = string.data(using: .utf8) else { return [] }
@@ -424,12 +420,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                         cellText = classNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
                         dueDate = assignmentAndDueDate[cellText] ?? ""
                     }
-                   // if dueDate != "" {
-                        cell.classAssignments.text = "\(cellText)\n\n\(dueDate)"
-                  //  } else {
-                     //   cell.classAssignments.text = "\(cellText)"
-                  //  }
-
+                    cell.classAssignments.text = "\(cellText)\n\n\(dueDate)"
+                    
                 }
             }
             
@@ -982,26 +974,31 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let deleteAction = UITableViewRowAction(style: .default, title: "Delete", handler: { _, indexPath in
-            
-            self.getReminderTime(indexPath: indexPath)
-            let notifcationDate = "\(self.notificationDay) \(self.reminderTime)"
-            let assignment = self.calendarItems[indexPath.row]
-            
-            let nameAndDueDate = assignment.components(separatedBy: "\n\nDue: ")
-            
-            self.center.removePendingNotificationRequests(withIdentifiers: ["\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(notifcationDate)"])
-            
-            self.calendarItems.remove(at: indexPath.row)
-            self.addResponse()
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            
-            tableView.reloadData()
-            
-        })
-        deleteAction.backgroundColor = UIColor.red
         
-        return [deleteAction]
+        if tableView == calendarTableView {
+            let deleteAction = UITableViewRowAction(style: .default, title: "Delete", handler: { _, indexPath in
+                
+                self.getReminderTime(indexPath: indexPath)
+                let notifcationDate = "\(self.notificationDay) \(self.reminderTime)"
+                let assignment = self.calendarItems[indexPath.row]
+                
+                let nameAndDueDate = assignment.components(separatedBy: "\n\nDue: ")
+                
+                self.center.removePendingNotificationRequests(withIdentifiers: ["\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(notifcationDate)"])
+                
+                self.calendarItems.remove(at: indexPath.row)
+                self.addResponse()
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                
+                tableView.reloadData()
+                
+            })
+            deleteAction.backgroundColor = UIColor.red
+            
+            return [deleteAction]
+        } else {
+            return nil
+        }
     }
     
     func fetchAssignments() {
@@ -1287,7 +1284,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                             }
                         }
                     })
-                    
 
                 }
             }
