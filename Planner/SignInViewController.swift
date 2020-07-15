@@ -11,32 +11,32 @@ import UIKit
 
 class SignInViewController: UIViewController, FUIAuthDelegate {
     @IBOutlet var logInOutlet: UIButton!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.setUpButton(button: logInOutlet)
+
+        setUpButton(button: logInOutlet)
     }
-    
+
     @IBAction func loginTapped(_: UIButton) {
         let authUI = FUIAuth.defaultAuthUI()
-        
+
         // Check that it isn't nil
         guard authUI != nil else {
             return
         }
-        
+
         // Set delegate and specify sign in options
         authUI?.delegate = self
         authUI?.providers = [FUIEmailAuth(), FUIGoogleAuth()]
-        
+
         // Get the auth view controller and present it
         let authViewController = authUI!.authViewController()
-        
+
         //                let backItem = UIBarButtonItem()
         //                backItem.title = "Back"
         //                self.navigationItem.backBarButtonItem = backItem
-        
+
         present(authViewController, animated: true, completion: nil)
     }
 }

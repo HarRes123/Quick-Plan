@@ -24,14 +24,14 @@ extension UITableViewCell: UITextViewDelegate {
     public func textViewDidChange(_ textView: UITextView) {
         let size = textView.bounds.size
         let newSize = textView.sizeThatFits(CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude))
-        
+
         // Resize the cell only when cell's size is changed
         if size.height != newSize.height {
             UIView.setAnimationsEnabled(false)
             tableView?.beginUpdates()
             tableView?.endUpdates()
             UIView.setAnimationsEnabled(true)
-            
+
             if let thisIndexPath = tableView?.indexPath(for: self) {
                 tableView?.scrollToRow(at: thisIndexPath, at: .bottom, animated: false)
             }
@@ -46,7 +46,7 @@ extension UITableViewCell {
         while !(table is UITableView), table != nil {
             table = table?.superview
         }
-        
+
         return table as? UITableView
     }
 }
@@ -55,7 +55,7 @@ extension Date {
     var startOfDay: Date {
         return Calendar.current.startOfDay(for: self)
     }
-    
+
     func getDate(dayDifference: Int) -> Date {
         var components = DateComponents()
         components.day = dayDifference
@@ -67,15 +67,15 @@ extension UIColor {
     convenience init(hexFromString: String, alpha: CGFloat = 1.0) {
         var cString: String = hexFromString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         var rgbValue: UInt32 = 10_066_329 // color #999999 if string has wrong format
-        
+
         if cString.hasPrefix("#") {
             cString.remove(at: cString.startIndex)
         }
-        
+
         if cString.count == 6 {
             Scanner(string: cString).scanHexInt32(&rgbValue)
         }
-        
+
         self.init(
             red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
             green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
@@ -101,9 +101,9 @@ extension SignInViewController {
         }
         var title = ""
         var messege = ""
-        
+
         // Transition to home
-        
+
         if Auth.auth().currentUser!.isEmailVerified == true {
             print("VERIFIED")
             performSegue(withIdentifier: "goHome", sender: self)
@@ -130,7 +130,7 @@ extension Float {
 extension NSMutableAttributedString {
     func setColorForText(textForAttribute: String, withColor color: UIColor) {
         let range: NSRange = mutableString.range(of: textForAttribute, options: .caseInsensitive)
-        
+
         // Swift 4.2 and above
         addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
     }
@@ -140,27 +140,27 @@ var vSpinner: UIView?
 extension UIViewController {
     func showSpinner(onView: UIView) {
         let spinnerView = UIView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        
+
         let ai = UIActivityIndicatorView(style: .whiteLarge)
         ai.startAnimating()
         ai.center = onView.center
-        
+
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = view.bounds
         blurEffectView.alpha = 0.75
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
+
         spinnerView.addSubview(blurEffectView)
-        
+
         DispatchQueue.main.async {
             spinnerView.addSubview(ai)
             onView.addSubview(spinnerView)
         }
-        
+
         vSpinner = spinnerView
     }
-    
+
     func removeSpinner() {
         DispatchQueue.main.async {
             vSpinner?.removeFromSuperview()
@@ -168,13 +168,14 @@ extension UIViewController {
         }
     }
 }
+
 extension UIViewController {
     func hideKeyboardWhenTappedAround() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
-    
+
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
@@ -196,23 +197,21 @@ extension UIViewController {
 
 extension UIStackView {
     func addCustomSpacingBefore(top: CGFloat) {
-
-        //If the stack view has just one arrangedView, we add a dummy one
-        if self.arrangedSubviews.count == 1 {
-            self.insertArrangedSubview(UIView(frame: .zero), at: 0)
+        // If the stack view has just one arrangedView, we add a dummy one
+        if arrangedSubviews.count == 1 {
+            insertArrangedSubview(UIView(frame: .zero), at: 0)
         }
 
-        //Getting the second last arrangedSubview and the current one
-        let lastTwoArrangedSubviews = Array(self.arrangedSubviews.suffix(2))
+        // Getting the second last arrangedSubview and the current one
+        let lastTwoArrangedSubviews = Array(arrangedSubviews.suffix(2))
         let arrSpacing: [CGFloat] = [top, 0]
 
-        //Looping through the two last arrangedSubview to add spacing in each of them
+        // Looping through the two last arrangedSubview to add spacing in each of them
         for (index, anArrangedSubview) in lastTwoArrangedSubviews.enumerated() {
-
-            //After iOS 11, the stackview has a native method
+            // After iOS 11, the stackview has a native method
             if #available(iOS 11.0, *) {
                 self.setCustomSpacing(arrSpacing[index], after: anArrangedSubview)
-                //Before iOS 11 : Adding dummy separator UIViews
+                // Before iOS 11 : Adding dummy separator UIViews
             } else {
                 guard let arrangedSubviewIndex = arrangedSubviews.firstIndex(of: anArrangedSubview) else {
                     return
@@ -221,7 +220,7 @@ extension UIStackView {
                 let separatorView = UIView(frame: .zero)
                 separatorView.translatesAutoresizingMaskIntoConstraints = false
 
-                //calculate spacing to keep a coherent spacing with the ios11 version
+                // calculate spacing to keep a coherent spacing with the ios11 version
                 let isBetweenExisitingViews = arrangedSubviewIndex != arrangedSubviews.count - 1
                 let existingSpacing = isBetweenExisitingViews ? 2 * spacing : spacing
                 let separatorSize = arrSpacing[index] - existingSpacing
