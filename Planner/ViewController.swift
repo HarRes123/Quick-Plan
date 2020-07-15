@@ -73,11 +73,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
         var string = String()
         
-        if dueDate != "" {
+        //if dueDate != "" {
             string = tableView == assignmentTableView ? "\(assignment)\n\n\(dueDate)" : calendarItems[indexPath.row]
-        } else {
-            string = tableView == assignmentTableView ? "\(assignment)" : calendarItems[indexPath.row]
-        }
+       // } else {
+       //     string = tableView == assignmentTableView ? "\(assignment)" : calendarItems[indexPath.row]
+       // }
         
         // Attempt to convert the string to a Data object so it can be passed around using drag and drop
         guard let data = string.data(using: .utf8) else { return [] }
@@ -424,11 +424,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                         cellText = classNameAndAssignments[classes[indexPath.section]]?[indexPath.row] ?? ""
                         dueDate = assignmentAndDueDate[cellText] ?? ""
                     }
-                    if dueDate != "" {
+                   // if dueDate != "" {
                         cell.classAssignments.text = "\(cellText)\n\n\(dueDate)"
-                    } else {
-                        cell.classAssignments.text = "\(cellText)"
-                    }
+                  //  } else {
+                     //   cell.classAssignments.text = "\(cellText)"
+                  //  }
 
                 }
             }
@@ -1248,31 +1248,32 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     let encodedClass = assignmentsPerCourse[i].first!.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
                     Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").child(encodedClass).observeSingleEvent(of: .value, with: { [self] snapshot in
                         if snapshot.exists() {
-                            var allAssignments = snapshot.value as! Array<String>
-                            print("VALUEVALUE", allAssignments)
-                            //fix new stuff to check for due date
-                            var allNewAssignments = Array<String>()
-    
+                            //var allAssignments = snapshot.value as! Array<String>
+                            var allNewNames = Array<String>()
+                            var allNames = Array<String>()
+                            
                             let currentDate = self.getCurrentDate()
 
-                            allAssignments.append(contentsOf: self.assignmentsPerCourse[i].arrayWithoutFirstElement())
-                            self.classNameAndAssignments.updateValue(allAssignments, forKey: self.assignmentsPerCourse[i].first ?? "no name")
-                            
                             let dateFormatter = DateFormatter()
                             dateFormatter.locale = Locale(identifier: "en_US_POSIX")
                             dateFormatter.timeZone = .current
                             dateFormatter.dateFormat = "MM/dd/yyyy"
                             
-                            for newAssignment in snapshot.value as! Array<String> {
-                                let nameAndDueDate = newAssignment.components(separatedBy: "\n\nDue: ")
-                                print("NAMENAME", nameAndDueDate)
+                            for name in snapshot.value as! Array<String> {
+                                let nameAndDueDate = name.components(separatedBy: "\n\nDue: ")
+                                allNames.append(nameAndDueDate[0])
+                                assignmentAndDueDate.updateValue("Due: \(nameAndDueDate[1])", forKey: nameAndDueDate[0])
                                 let dueDate = dateFormatter.date(from: nameAndDueDate[1]) ?? Date()
                                 if dueDate > currentDate {
-                                    allNewAssignments.append(newAssignment)
+                                    allNewNames.append(nameAndDueDate[0])
                                 }
                             }
                             
-                            self.newClassNameAndAssignments.updateValue(allNewAssignments, forKey: self.newAssignmentsPerCourse[i].first ?? "no name")
+                            allNames.append(contentsOf: self.assignmentsPerCourse[i].arrayWithoutFirstElement())
+                            allNewNames.append(contentsOf: self.newAssignmentsPerCourse[i].arrayWithoutFirstElement())
+                            self.classNameAndAssignments.updateValue(allNames, forKey: self.assignmentsPerCourse[i].first ?? "no name")
+                            self.newClassNameAndAssignments.updateValue(allNewNames, forKey: self.newAssignmentsPerCourse[i].first ?? "no name")
+                            
                             if i >= self.assignmentsPerCourse.count-1 {
                                 self.finishedGettingInfo()
                             }
