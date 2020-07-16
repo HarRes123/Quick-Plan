@@ -196,6 +196,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         return showAllClassInfo(assignmentTableView, cellForRowAt: indexPath)
     }
 
+    var importButtonText = "Import Classes"
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if tableView == assignmentTableView {
             classes = [String](classNameAndAssignments.keys)
@@ -213,7 +214,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
 
             } else {
-                button.setTitle("Import Classes", for: .normal)
+                button.setTitle(importButtonText, for: .normal)
                 button.addTarget(self, action: #selector(importClasses(sender:)), for: .touchUpInside)
             }
 
@@ -344,7 +345,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
             setUpInitialNotifications()
             setUpCalendar()
-            getInfo()
+            if classroomToggle.tintColor == UIColor(hexFromString: "008000") {
+                getInfo()
+            } else {
+                getClassesNoClassroom()
+            }
             assignmentTableView.reloadData()
             calendarTableView.reloadData()
         } else {
@@ -368,15 +373,30 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     func beginClassImport() {
+        
         service.authorizer = myAuth
         showSpinner(onView: assignmentTableView)
         assignmentTableView.isUserInteractionEnabled = false
         calendarTableView.isUserInteractionEnabled = false
-
-        getInfo()
+        self.assignmentsPerCourse = [[String]]()
+        self.newAssignmentsPerCourse = [[String]]()
+        self.assignmentIndex = 0
+        self.classIDAndNameClassroom = [String: String]()
+        self.classNameAndAssignments = [String: [String]]()
+        self.newClassNameAndAssignments = [String: [String]]()
+        if classroomToggle.tintColor == UIColor(hexFromString: "008000") {
+            getInfo()
+        } else {
+            
+            getClassesNoClassroom()
+        }
+        self.assignmentTableView.reloadData()
+        self.calendarTableView.reloadData()
+        
     }
+    
 
-    @objc func importClasses(sender _: UIButton) {
+    @objc func importClasses(sender: UIButton) {
         beginClassImport()
     }
 
@@ -946,6 +966,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: (self.navigationController?.navigationBar.frame.width)!, height: (self.navigationController?.navigationBar.frame.height)!))
 
             titleLabel.numberOfLines = 0
+            titleLabel.textAlignment = .center
             titleLabel.text =  "\(greeting), \(firstName)!"
             titleLabel.font = UIFont(name: "AvenirNext-Regular", size: 22)
             titleLabel.adjustsFontSizeToFitWidth = true
@@ -1149,7 +1170,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         if let error = error {
             print(error.localizedDescription)
 
-            if error.localizedDescription == "Request had insufficient authentication scopes." {
+            if error.localizedDescription.contains("authentication") {
                 GIDSignIn.sharedInstance()?.signIn()
             } else if error.localizedDescription == "@ClassroomDisabled The user is not permitted to access Classroom." {
                 errorNotification()
@@ -1169,7 +1190,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
 
         for course in courses {
-            // if course.courseState == "ACTIVE" {
+            // if course.courseState == "ACTIVE" {RELOAD
             classIDAndNameClassroom.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
             // }
         }
@@ -1194,6 +1215,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     @IBAction func classroomToggleAction(_ sender: Any) {
         
         classroomToggle.tintColor = classroomToggle.tintColor == UIColor(hexFromString: "008000") ? .red : UIColor(hexFromString: "008000")
+        beginClassImport()
     }
     
 
@@ -1253,10 +1275,40 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func finishedGettingInfo() {
         print("RELOAD")
         assignmentIndex = 0
-        removeSpinner()
+  
+        self.removeSpinner()
+        importButtonText = ""
         assignmentTableView.isUserInteractionEnabled = true
         calendarTableView.isUserInteractionEnabled = true
         assignmentTableView.reloadData()
+    }
+    
+    func getClassesNoClassroom() {
+
+        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [] snapshot in
+            
+            if snapshot.exists() {
+//                self.arrayHeader = Array(repeating: 0, count: snapshot.children.allObjects.count)
+                self.assignmentsPerCourse = Array(repeating: [], count: snapshot.children.allObjects.count)
+                self.newAssignmentsPerCourse = Array(repeating: [], count: snapshot.children.allObjects.count)
+//
+//
+                for i in 0...snapshot.children.allObjects.count-1 {
+                    let encodedSnapshot = "\(snapshot.children.allObjects[i])".slice(from: "(", to: ")")!
+                    let className = "\(encodedSnapshot.removingPercentEncoding ?? "")"
+                    print("NAME", className)
+                    self.getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
+
+                    
+                    if i >= snapshot.children.allObjects.count - 1 {
+                        self.finishedGettingInfo()
+                    }
+                }
+            } else {
+                print("NO ADDED ASSIGNMENTS")
+            }
+        })
+        
     }
 
     func getClassesFromFirebase(assignmentsAndDueDate: [String], assignmentsPerCourse: [String], newAsignmentsPerCourse: [String], className: String, classInClassroom: Bool) {
