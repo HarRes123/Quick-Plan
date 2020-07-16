@@ -20,7 +20,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var newAssignmentsPerCourse = [[String]]()
     var assignmentIndex = 0
 
-    var classIDAndName = [String: String]()
+    var classIDAndNameClassroom = [String: String]()
     var classNameAndAssignments = [String: [String]]()
     var newClassNameAndAssignments = [String: [String]]()
 
@@ -996,12 +996,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     func fetchAssignments() {
         print("FETCH")
-        assignmentsPerCourse = Array(repeating: [], count: classIDAndName.count)
-        newAssignmentsPerCourse = Array(repeating: [], count: classIDAndName.count)
+        assignmentsPerCourse = Array(repeating: [], count: classIDAndNameClassroom.count)
+        newAssignmentsPerCourse = Array(repeating: [], count: classIDAndNameClassroom.count)
 
-        for (key, _) in classIDAndName {
-            if classIDAndName != [:] {
-                // let intClassID = Int(classIDAndName[key] ?? "0")
+        for (key, _) in classIDAndNameClassroom {
+            if classIDAndNameClassroom != [:] {
+                // let intClassID = Int(classIDAndNameClassroom[key] ?? "0")
                 let query = GTLRClassroomQuery_CoursesCourseWorkList.query(withCourseId: key)
                 query.pageSize = 100
                 query.executionParameters.shouldFetchNextPages = true
@@ -1071,8 +1071,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             // outputText += "Title: \(assignment.title ?? "No title")\nDue Date: \(dueMonth ?? 0)/\(dueDay ?? 0)/\(dueYear ?? 0)\n"
             if assignmentsPerCourse.count != 0 {
                 if assignmentsPerCourse[assignmentIndex].count == 0 {
-                    assignmentsPerCourse[assignmentIndex].append(classIDAndName[assignment.courseId ?? "0"] ?? "No name")
-                    newAssignmentsPerCourse[assignmentIndex].append(classIDAndName[assignment.courseId ?? "0"] ?? "No name")
+                    assignmentsPerCourse[assignmentIndex].append(classIDAndNameClassroom[assignment.courseId ?? "0"] ?? "No name")
+                    newAssignmentsPerCourse[assignmentIndex].append(classIDAndNameClassroom[assignment.courseId ?? "0"] ?? "No name")
                 }
             }
             assignmentsPerCourse[assignmentIndex].append(assignment.title ?? "No title")
@@ -1146,11 +1146,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         for course in courses {
             // if course.courseState == "ACTIVE" {
-            classIDAndName.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
+            classIDAndNameClassroom.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
             // }
         }
         //    print(outputText)
-        arrayHeader = Array(repeating: 0, count: classIDAndName.count)
+        arrayHeader = Array(repeating: 0, count: classIDAndNameClassroom.count)
         assignmentIndex = 0
         fetchAssignments()
     }
@@ -1184,7 +1184,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
             self.assignmentsPerCourse = [[String]]()
             self.assignmentIndex = 0
-            self.classIDAndName = [String: String]()
+            self.classIDAndNameClassroom = [String: String]()
             self.classNameAndAssignments = [String: [String]]()
 
             self.navigationItem.title = "Planner"
@@ -1232,43 +1232,106 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func showInfo() {
         // assignmentIndex = 0
         if assignmentsPerCourse.count != 0 {
+            classes = [String](classIDAndNameClassroom.values)
+            
             for i in 0 ... assignmentsPerCourse.count - 1 {
                 if assignmentsPerCourse[i].first != nil {
-                    let encodedClass = assignmentsPerCourse[i].first!.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-                    Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").child(encodedClass).observeSingleEvent(of: .value, with: { [self] snapshot in
+                    Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
+                        let encodedClass = assignmentsPerCourse[i].first!.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+                       //print("ENCODEDEDE", encodedClass)
                         if snapshot.exists() {
-                            // var allAssignments = snapshot.value as! Array<String>
-                            var allNewNames = [String]()
-                            var allNames = [String]()
+                            if snapshot.hasChild(encodedClass) {
+                                //print("ENCODEDEDE", encodedClass)
+                                
+                                let currentSnapshot = snapshot.childSnapshot(forPath: encodedClass)
+                                // var allAssignments = snapshot.value as! Array<String>
+                                var allNewNames = [String]()
+                                var allNames = [String]()
 
-                            let currentDate = self.getCurrentDate()
+                                let currentDate = self.getCurrentDate()
 
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-                            dateFormatter.timeZone = .current
-                            dateFormatter.dateFormat = "MM/dd/yyyy"
+                                let dateFormatter = DateFormatter()
+                                dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+                                dateFormatter.timeZone = .current
+                                dateFormatter.dateFormat = "MM/dd/yyyy"
 
-                            for name in snapshot.value as! [String] {
-                                let nameAndDueDate = name.components(separatedBy: "\n\nDue: ")
-                                allNames.append(nameAndDueDate[0])
-                                assignmentAndDueDate.updateValue("Due: \(nameAndDueDate[1])", forKey: nameAndDueDate[0])
-                                let dueDate = dateFormatter.date(from: nameAndDueDate[1]) ?? Date()
-                                if dueDate > currentDate {
-                                    allNewNames.append(nameAndDueDate[0])
+                                for name in currentSnapshot.value as! [String] {
+                                    let nameAndDueDate = name.components(separatedBy: "\n\nDue: ")
+                                    allNames.append(nameAndDueDate[0])
+                                    assignmentAndDueDate.updateValue("Due: \(nameAndDueDate[1])", forKey: nameAndDueDate[0])
+                                    let dueDate = dateFormatter.date(from: nameAndDueDate[1]) ?? Date()
+                                    if dueDate > currentDate {
+                                        allNewNames.append(nameAndDueDate[0])
+                                    }
                                 }
-                            }
 
-                            allNames.append(contentsOf: self.assignmentsPerCourse[i].arrayWithoutFirstElement())
-                            allNewNames.append(contentsOf: self.newAssignmentsPerCourse[i].arrayWithoutFirstElement())
-                            self.classNameAndAssignments.updateValue(allNames, forKey: self.assignmentsPerCourse[i].first ?? "no name")
-                            self.newClassNameAndAssignments.updateValue(allNewNames, forKey: self.newAssignmentsPerCourse[i].first ?? "no name")
+                                allNames.append(contentsOf: self.assignmentsPerCourse[i].arrayWithoutFirstElement())
+                                allNewNames.append(contentsOf: self.newAssignmentsPerCourse[i].arrayWithoutFirstElement())
+                                self.classNameAndAssignments.updateValue(allNames, forKey: self.assignmentsPerCourse[i].first ?? "no name")
+                                self.newClassNameAndAssignments.updateValue(allNewNames, forKey: self.newAssignmentsPerCourse[i].first ?? "no name")
 
-                            if i >= self.assignmentsPerCourse.count - 1 {
-                                self.finishedGettingInfo()
+                                if i >= self.assignmentsPerCourse.count - 1 {
+                                    self.finishedGettingInfo()
+                                }
+                                
+                            } else {
+
+                                for classNum in 0...snapshot.children.allObjects.count-1 {
+                                    
+                                    let className = ("\(snapshot.children.allObjects[classNum])".removingPercentEncoding!.slice(from: "(", to: ")")!)
+                                    if !classes.contains(className) {
+                                        
+                                        var allNewNames = [String]()
+                                        var allNames = [String]()
+                                        
+                                        let assignments = snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String]
+                                        
+                                        let currentDate = self.getCurrentDate()
+
+                                        let dateFormatter = DateFormatter()
+                                        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+                                        dateFormatter.timeZone = .current
+                                        dateFormatter.dateFormat = "MM/dd/yyyy"
+
+                                        for assignment in assignments{
+                                            let nameAndDueDate = assignment.components(separatedBy: "\n\nDue: ")
+                                            allNames.append(nameAndDueDate[0])
+                                            assignmentAndDueDate.updateValue("Due: \(nameAndDueDate[1])", forKey: nameAndDueDate[0])
+                                            let dueDate = dateFormatter.date(from: nameAndDueDate[1]) ?? Date()
+                                            if dueDate > currentDate {
+                                                allNewNames.append(nameAndDueDate[0])
+                                            }
+                                        }
+
+                                        print("DATDAT", className, allNames, allNewNames)
+                                        self.classNameAndAssignments.updateValue(allNames, forKey: className)
+                                        self.newClassNameAndAssignments.updateValue(allNewNames, forKey: className)
+                                        arrayHeader += Array(repeating: 0, count: 1)
+
+                                        if i >= self.assignmentsPerCourse.count - 1 {
+                                            
+                                            self.finishedGettingInfo()
+                                        }
+                                    } else {
+                                        
+                                        self.classNameAndAssignments.updateValue(self.assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: self.assignmentsPerCourse[i].first ?? "no name")
+                                        self.newClassNameAndAssignments.updateValue(self.newAssignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: self.newAssignmentsPerCourse[i].first ?? "no name")
+
+                                        if i >= self.assignmentsPerCourse.count - 1 {
+                                            self.finishedGettingInfo()
+                                        }
+                                        
+                                        
+                                    }
+                                    
+                                    
+                                    
+                                }
+  
                             }
 
                         } else {
-                            // check for newly added class
+
                             self.classNameAndAssignments.updateValue(self.assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: self.assignmentsPerCourse[i].first ?? "no name")
                             self.newClassNameAndAssignments.updateValue(self.newAssignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: self.newAssignmentsPerCourse[i].first ?? "no name")
                             if i >= self.assignmentsPerCourse.count - 1 {

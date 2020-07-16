@@ -194,7 +194,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
         guard let encodedClass = selectedClass.addingPercentEncoding(withAllowedCharacters: .alphanumerics) else { return }
         guard let decodedClass = selectedClass.removingPercentEncoding else { return }
 
-        if encodedClass != "no text", selectedAssignment != "no text", checkValidDate(date: selectedDueDate) {
+        if encodedClass != "no text" && selectedAssignment != "no text" && checkValidDate(date: selectedDueDate) {
             if selectedDueDate.first == "0" {
                 selectedDueDate = String(selectedDueDate.dropFirst())
             }
