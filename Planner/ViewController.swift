@@ -50,6 +50,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     let date = Date()
     var calendar = Calendar.current
 
+    @IBOutlet weak var classroomToggle: UIBarButtonItem!
+    
     @IBOutlet var calendarTableView: UITableView!
     @IBOutlet var assignmentTableView: UITableView!
 
@@ -827,6 +829,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 
         center.requestAuthorization(options: [.alert, .badge, .sound]) {
             granted, _ in
@@ -836,6 +839,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 print("No")
             }
         }
+        
+        classroomToggle.tintColor = UIColor(hexFromString: "008000")
 
         NotificationCenter.default.addObserver(self, selector: #selector(performFetch), name: Notification.Name("performFetchAuto"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(popOverDismissed), name: Notification.Name("popOverDismissed"), object: nil)
@@ -881,33 +886,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         let nibCalendar = UINib(nibName: "CalendarTableViewCell", bundle: nil)
         calendarTableView.register(nibCalendar, forCellReuseIdentifier: "calendarCell")
 
-        var firstName = Auth.auth().currentUser?.displayName ?? "User"
-        var greeting = String()
-
-        if let dotRange = firstName.range(of: " ") {
-            firstName.removeSubrange(dotRange.lowerBound ..< firstName.endIndex)
-        }
-
-        let now = NSDate()
-        let nowDateValue = now as Date
-
-        let midnight1 = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nowDateValue)
-        let midnight2 = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: nowDateValue)
-        let sixAM = calendar.date(bySettingHour: 6, minute: 0, second: 0, of: nowDateValue)
-        let noon = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: nowDateValue)
-        let sixPM = calendar.date(bySettingHour: 18, minute: 0, second: 0, of: nowDateValue)
-
-        if nowDateValue >= midnight1!, nowDateValue <= sixAM! {
-            greeting = "Good Evening"
-        } else if nowDateValue >= sixAM!, nowDateValue <= noon! {
-            greeting = "Good Morning"
-        } else if nowDateValue >= noon!, nowDateValue <= sixPM! {
-            greeting = "Good Afternoon"
-        } else if nowDateValue >= sixPM!, nowDateValue <= midnight2! {
-            greeting = "Good Evening"
-        }
-
-        navigationItem.title = "\(greeting), \(firstName)!"
+       
+      //  navigationItem.title = "\(greeting), \(firstName)!"
+        
+        //navigationItem.title = "LONGLONGLONGLONGLONGLONGLONGLONGLON"
+        configureTitleView()
+     //   navigationItem.titleView.string
 
         setUpUI(view: assignmentTableView)
         setUpUI(view: calendarTableView)
@@ -929,6 +913,46 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         setUpCalendar()
         setUpInitialNotifications()
     }
+
+
+        func configureTitleView() {
+            
+            var firstName = Auth.auth().currentUser?.displayName ?? "User"
+            var greeting = String()
+
+            if let dotRange = firstName.range(of: " ") {
+                firstName.removeSubrange(dotRange.lowerBound ..< firstName.endIndex)
+            }
+
+            let now = NSDate()
+            let nowDateValue = now as Date
+
+            let midnight1 = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nowDateValue)
+            let midnight2 = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: nowDateValue)
+            let sixAM = calendar.date(bySettingHour: 6, minute: 0, second: 0, of: nowDateValue)
+            let noon = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: nowDateValue)
+            let sixPM = calendar.date(bySettingHour: 18, minute: 0, second: 0, of: nowDateValue)
+
+            if nowDateValue >= midnight1!, nowDateValue <= sixAM! {
+                greeting = "Good Evening"
+            } else if nowDateValue >= sixAM!, nowDateValue <= noon! {
+                greeting = "Good Morning"
+            } else if nowDateValue >= noon!, nowDateValue <= sixPM! {
+                greeting = "Good Afternoon"
+            } else if nowDateValue >= sixPM!, nowDateValue <= midnight2! {
+                greeting = "Good Evening"
+            }
+
+            let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: (self.navigationController?.navigationBar.frame.width)!, height: (self.navigationController?.navigationBar.frame.height)!))
+
+            titleLabel.numberOfLines = 0
+            titleLabel.text =  "\(greeting), \(firstName)!"
+            titleLabel.font = UIFont(name: "AvenirNext-Regular", size: 22)
+            titleLabel.adjustsFontSizeToFitWidth = true
+            
+            navigationItem.titleView = titleLabel
+        }
+
 
     func setUpUI(view: UIView) {
         let containerView: UIView = UIView(frame: view.frame)
@@ -1166,6 +1190,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             return 50
         }
     }
+    
+    @IBAction func classroomToggleAction(_ sender: Any) {
+        
+        classroomToggle.tintColor = classroomToggle.tintColor == UIColor(hexFromString: "008000") ? .red : UIColor(hexFromString: "008000")
+    }
+    
 
     @IBAction func showManualEntry(_ sender: UIBarButtonItem) {
         print("YES")

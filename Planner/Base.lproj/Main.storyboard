@@ -76,16 +76,25 @@
                                 <action selector="signOut:" destination="zcv-In-QdX" id="GOL-7S-W2a"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="uL9-6Q-7Wv">
-                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <connections>
-                                <action selector="showManualEntry:" destination="zcv-In-QdX" id="NdO-q5-052"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="uL9-6Q-7Wv">
+                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <action selector="showManualEntry:" destination="zcv-In-QdX" id="NdO-q5-052"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Classroom Toggle" image="classroom" id="1cz-1x-os9">
+                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <action selector="classroomToggleAction:" destination="zcv-In-QdX" id="wXg-I8-d1n"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="assignmentTableView" destination="Hlr-ja-OiJ" id="OYZ-Bq-LMN"/>
                         <outlet property="calendarTableView" destination="CKD-gs-1pZ" id="acB-3U-zKS"/>
+                        <outlet property="classroomToggle" destination="1cz-1x-os9" id="Z93-J9-qXg"/>
                         <segue destination="BA2-jE-DmS" kind="presentation" identifier="logOut" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="0n5-jj-Dax"/>
                     </connections>
                 </viewController>
@@ -162,6 +171,7 @@
     </scenes>
     <resources>
         <image name="app_logo.png" width="626" height="626"/>
+        <image name="classroom" width="30" height="30"/>
         <image name="logout" width="30" height="30"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
