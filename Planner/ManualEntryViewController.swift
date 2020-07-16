@@ -194,7 +194,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
         guard let encodedClass = selectedClass.addingPercentEncoding(withAllowedCharacters: .alphanumerics) else { return }
         guard let decodedClass = selectedClass.removingPercentEncoding else { return }
 
-        if encodedClass != "no text" && selectedAssignment != "no text" && checkValidDate(date: selectedDueDate) {
+        if encodedClass != "no text", selectedAssignment != "no text", checkValidDate(date: selectedDueDate) {
             if selectedDueDate.first == "0" {
                 selectedDueDate = String(selectedDueDate.dropFirst())
             }
@@ -233,7 +233,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if view.frame.origin.y == 0 {
-                view.frame.origin.y -= keyboardSize.height*(5/8)
+                view.frame.origin.y -= keyboardSize.height * (5 / 8)
             }
         }
     }

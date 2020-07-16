@@ -1229,111 +1229,87 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         assignmentTableView.reloadData()
     }
 
+    func getClassesFromFirebase(assignmentsAndDueDate: [String], assignmentsPerCourse: [String], newAsignmentsPerCourse: [String], className: String, classInClassroom: Bool) {
+        var allNewNames = [String]()
+        var allNames = [String]()
+
+        let currentDate = getCurrentDate()
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = .current
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+
+        for name in assignmentsAndDueDate {
+            let nameAndDueDate = name.components(separatedBy: "\n\nDue: ")
+            allNames.append(nameAndDueDate[0])
+            assignmentAndDueDate.updateValue("Due: \(nameAndDueDate[1])", forKey: nameAndDueDate[0])
+            let dueDate = dateFormatter.date(from: nameAndDueDate[1]) ?? Date()
+            if dueDate > currentDate {
+                allNewNames.append(nameAndDueDate[0])
+            }
+        }
+
+        if classInClassroom {
+            allNames.append(contentsOf: assignmentsPerCourse.arrayWithoutFirstElement())
+            allNewNames.append(contentsOf: newAsignmentsPerCourse.arrayWithoutFirstElement())
+        }
+
+        classNameAndAssignments.updateValue(allNames, forKey: className)
+        newClassNameAndAssignments.updateValue(allNewNames, forKey: className)
+    }
+
+    func classroomOnlyFetch(assignmentsPerCourse: [String], newAssignmentsPerCourse: [String]) {
+        classNameAndAssignments.updateValue(assignmentsPerCourse.arrayWithoutFirstElement(), forKey: assignmentsPerCourse.first ?? "no name")
+        newClassNameAndAssignments.updateValue(newAssignmentsPerCourse.arrayWithoutFirstElement(), forKey: newAssignmentsPerCourse.first ?? "no name")
+    }
+
     func showInfo() {
         // assignmentIndex = 0
         if assignmentsPerCourse.count != 0 {
             classes = [String](classIDAndNameClassroom.values)
-            
+
             for i in 0 ... assignmentsPerCourse.count - 1 {
                 if assignmentsPerCourse[i].first != nil {
                     Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
                         let encodedClass = assignmentsPerCourse[i].first!.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-                       //print("ENCODEDEDE", encodedClass)
+                        // print("ENCODEDEDE", encodedClass)
                         if snapshot.exists() {
                             if snapshot.hasChild(encodedClass) {
-                                //print("ENCODEDEDE", encodedClass)
-                                
-                                let currentSnapshot = snapshot.childSnapshot(forPath: encodedClass)
-                                // var allAssignments = snapshot.value as! Array<String>
-                                var allNewNames = [String]()
-                                var allNames = [String]()
+                                // print("ENCODEDEDE", encodedClass)
 
-                                let currentDate = self.getCurrentDate()
-
-                                let dateFormatter = DateFormatter()
-                                dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-                                dateFormatter.timeZone = .current
-                                dateFormatter.dateFormat = "MM/dd/yyyy"
-
-                                for name in currentSnapshot.value as! [String] {
-                                    let nameAndDueDate = name.components(separatedBy: "\n\nDue: ")
-                                    allNames.append(nameAndDueDate[0])
-                                    assignmentAndDueDate.updateValue("Due: \(nameAndDueDate[1])", forKey: nameAndDueDate[0])
-                                    let dueDate = dateFormatter.date(from: nameAndDueDate[1]) ?? Date()
-                                    if dueDate > currentDate {
-                                        allNewNames.append(nameAndDueDate[0])
-                                    }
-                                }
-
-                                allNames.append(contentsOf: self.assignmentsPerCourse[i].arrayWithoutFirstElement())
-                                allNewNames.append(contentsOf: self.newAssignmentsPerCourse[i].arrayWithoutFirstElement())
-                                self.classNameAndAssignments.updateValue(allNames, forKey: self.assignmentsPerCourse[i].first ?? "no name")
-                                self.newClassNameAndAssignments.updateValue(allNewNames, forKey: self.newAssignmentsPerCourse[i].first ?? "no name")
+                                getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: encodedClass).value as! [String], assignmentsPerCourse: assignmentsPerCourse[i], newAsignmentsPerCourse: newAssignmentsPerCourse[i], className: self.assignmentsPerCourse[i].first!, classInClassroom: true)
 
                                 if i >= self.assignmentsPerCourse.count - 1 {
                                     self.finishedGettingInfo()
                                 }
-                                
+
                             } else {
-
-                                for classNum in 0...snapshot.children.allObjects.count-1 {
-                                    
+                                for classNum in 0 ... snapshot.children.allObjects.count - 1 {
                                     let className = ("\(snapshot.children.allObjects[classNum])".removingPercentEncoding!.slice(from: "(", to: ")")!)
+
                                     if !classes.contains(className) {
-                                        
-                                        var allNewNames = [String]()
-                                        var allNames = [String]()
-                                        
-                                        let assignments = snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String]
-                                        
-                                        let currentDate = self.getCurrentDate()
+                                        getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
 
-                                        let dateFormatter = DateFormatter()
-                                        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-                                        dateFormatter.timeZone = .current
-                                        dateFormatter.dateFormat = "MM/dd/yyyy"
-
-                                        for assignment in assignments{
-                                            let nameAndDueDate = assignment.components(separatedBy: "\n\nDue: ")
-                                            allNames.append(nameAndDueDate[0])
-                                            assignmentAndDueDate.updateValue("Due: \(nameAndDueDate[1])", forKey: nameAndDueDate[0])
-                                            let dueDate = dateFormatter.date(from: nameAndDueDate[1]) ?? Date()
-                                            if dueDate > currentDate {
-                                                allNewNames.append(nameAndDueDate[0])
-                                            }
-                                        }
-
-                                        print("DATDAT", className, allNames, allNewNames)
-                                        self.classNameAndAssignments.updateValue(allNames, forKey: className)
-                                        self.newClassNameAndAssignments.updateValue(allNewNames, forKey: className)
-                                        arrayHeader += Array(repeating: 0, count: 1)
+                                        arrayHeader.append(0)
 
                                         if i >= self.assignmentsPerCourse.count - 1 {
-                                            
                                             self.finishedGettingInfo()
                                         }
+
                                     } else {
-                                        
-                                        self.classNameAndAssignments.updateValue(self.assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: self.assignmentsPerCourse[i].first ?? "no name")
-                                        self.newClassNameAndAssignments.updateValue(self.newAssignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: self.newAssignmentsPerCourse[i].first ?? "no name")
+                                        classroomOnlyFetch(assignmentsPerCourse: assignmentsPerCourse[i], newAssignmentsPerCourse: newAssignmentsPerCourse[i])
 
                                         if i >= self.assignmentsPerCourse.count - 1 {
                                             self.finishedGettingInfo()
                                         }
-                                        
-                                        
                                     }
-                                    
-                                    
-                                    
                                 }
-  
                             }
 
                         } else {
+                            classroomOnlyFetch(assignmentsPerCourse: assignmentsPerCourse[i], newAssignmentsPerCourse: newAssignmentsPerCourse[i])
 
-                            self.classNameAndAssignments.updateValue(self.assignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: self.assignmentsPerCourse[i].first ?? "no name")
-                            self.newClassNameAndAssignments.updateValue(self.newAssignmentsPerCourse[i].arrayWithoutFirstElement(), forKey: self.newAssignmentsPerCourse[i].first ?? "no name")
                             if i >= self.assignmentsPerCourse.count - 1 {
                                 self.finishedGettingInfo()
                             }

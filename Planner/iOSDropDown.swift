@@ -253,9 +253,8 @@ open class DropDown: UITextField {
     }
 
     public func hideList() {
-        
         TableWillDisappearCompletion()
-        
+
         let delay: Double = {
             if self.selectedCell {
                 self.selectedCell = false
