@@ -861,6 +861,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
         }
         
+        getClassesNoClassroom()
+        
         classroomToggle.tintColor = UIColor(hexFromString: "008000")
 
         NotificationCenter.default.addObserver(self, selector: #selector(performFetch), name: Notification.Name("performFetchAuto"), object: nil)
@@ -1382,6 +1384,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                 if i >= self.assignmentsPerCourse.count - 1 {
                                     self.finishedGettingInfo()
                                 }
+                                
 
                             } else {
                                 for classNum in 0 ... snapshot.children.allObjects.count - 1 {
@@ -1389,9 +1392,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                     let className = ("\(snapshot.children.allObjects[classNum])".removingPercentEncoding!.slice(from: "(", to: ")")!)
                                     
                                     if !classes.contains(className) {
-                                        print("NAMENAME", className)
-                                        print("YESYES1")
-                                        
                                         getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
 //
                                         if i >= self.assignmentsPerCourse.count - 1 {
@@ -1399,9 +1399,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                         }
 
                                     }
+                                    
                                 }
                                 
-                                classroomOnlyFetch(assignmentsPerCourse: assignmentsPerCourse[i], newAssignmentsPerCourse: newAssignmentsPerCourse[i])
+                                if classNameAndAssignments[assignmentsPerCourse[i].first!] == nil {
+                                    classroomOnlyFetch(assignmentsPerCourse: assignmentsPerCourse[i], newAssignmentsPerCourse: newAssignmentsPerCourse[i])
+                                }
+                                
                                 if i >= self.assignmentsPerCourse.count - 1 {
                                     self.finishedGettingInfo()
                                 }
