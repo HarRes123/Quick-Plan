@@ -23,6 +23,8 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
     @IBOutlet var dueDateField: UITextField!
     @IBOutlet var dateError: UILabel!
     @IBOutlet var dummyView: UIView!
+    
+    var savePressed = false
 
     var refResponse: DatabaseReference!
 
@@ -177,7 +179,9 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
 
     override func viewDidDisappear(_: Bool) {
         if isBeingDismissed {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "popOverDismissed"), object: nil)
+            if savePressed {
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "popOverDismissed"), object: nil)
+            }
         }
     }
 
@@ -208,6 +212,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
                     if !allData.contains(assignmentAndDueDate) {
                         allData.append(assignmentAndDueDate)
                         self.sendAlert(title: "Assignment Saved")
+                        self.savePressed = true
                     } else {
                         self.sendAlert(title: "Assignment Already Exists")
                     }
@@ -219,6 +224,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
                 } else {
                     self.refResponse.child((Auth.auth().currentUser?.uid)!).child("Added Assignments").child(encodedClass).setValue([assignmentAndDueDate])
                     self.sendAlert(title: "Assignment Saved")
+                    self.savePressed = true
                 }
             })
 

@@ -160,7 +160,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == assignmentTableView {
             classes = [String](classNameAndAssignments.keys)
-            if classNameAndAssignments.count > 0 {
+            if arrayHeader.count > 0 {
                 // return classNameAndAssignments[classes[section]]?.count ?? 1
                 if arrayHeader[section] == 0 {
                     return 0
@@ -369,30 +369,31 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         if classNameAndAssignments.count > 0 {
             arrayHeader[sender.tag] = (arrayHeader[sender.tag] == 0) ? 1 : 0
             assignmentTableView.reloadSections([sender.tag], with: .fade)
+            print(arrayHeader)
         }
     }
+    
 
     func beginClassImport() {
+        
         
         service.authorizer = myAuth
         showSpinner(onView: assignmentTableView)
         assignmentTableView.isUserInteractionEnabled = false
         calendarTableView.isUserInteractionEnabled = false
-        self.assignmentsPerCourse = [[String]]()
-        self.newAssignmentsPerCourse = [[String]]()
-        self.assignmentIndex = 0
-        self.classIDAndNameClassroom = [String: String]()
-        self.classNameAndAssignments = [String: [String]]()
-        self.newClassNameAndAssignments = [String: [String]]()
+
         if classroomToggle.tintColor == UIColor(hexFromString: "008000") {
             getInfo()
         } else {
-            
+            self.classNameAndAssignments = [String: [String]]()
+            self.newClassNameAndAssignments = [String: [String]]()
             getClassesNoClassroom()
         }
+        
         self.assignmentTableView.reloadData()
         self.calendarTableView.reloadData()
         
+
     }
     
 
@@ -1169,13 +1170,17 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                               error: NSError?) {
         if let error = error {
             print(error.localizedDescription)
-
-            if error.localizedDescription.contains("authentication") {
+            
+            if (GIDSignIn.sharedInstance()?.hasPreviousSignIn()) != nil {
+                if error.localizedDescription == "Request had insufficient authentication scopes." {
+                    GIDSignIn.sharedInstance()?.signIn()
+                } else if error.localizedDescription == "@ClassroomDisabled The user is not permitted to access Classroom." {
+                    self.errorNotification()
+                } else {
+                    GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+                }
+            } else if error.localizedDescription.contains("authentication") {
                 GIDSignIn.sharedInstance()?.signIn()
-            } else if error.localizedDescription == "@ClassroomDisabled The user is not permitted to access Classroom." {
-                errorNotification()
-            } else if (GIDSignIn.sharedInstance()?.hasPreviousSignIn()) != nil {
-                GIDSignIn.sharedInstance()?.restorePreviousSignIn()
             } else {
                 errorNotification()
             }
@@ -1195,7 +1200,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             // }
         }
         //    print(outputText)
-        arrayHeader = Array(repeating: 0, count: classIDAndNameClassroom.count)
         assignmentIndex = 0
         fetchAssignments()
     }
@@ -1212,12 +1216,27 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
     }
     
-    @IBAction func classroomToggleAction(_ sender: Any) {
-        
-        classroomToggle.tintColor = classroomToggle.tintColor == UIColor(hexFromString: "008000") ? .red : UIColor(hexFromString: "008000")
-        beginClassImport()
+    func noAssignmentsAlert() {
+        print("NO ADDED ASSIGNMENTS")
+        let alert = UIAlertController(title: "No Assignments", message: "Please create a new assignment", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true)
     }
     
+    @IBAction func classroomToggleAction(_ sender: Any) {
+        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
+     //   print("SNAPSNAP", snapshot)
+            self.classroomToggle.tintColor = classroomToggle.tintColor == UIColor(hexFromString: "008000") ? .red : UIColor(hexFromString: "008000")
+            if snapshot.exists() || classroomToggle.tintColor == UIColor(hexFromString: "008000") {
+                self.beginClassImport()
+            } else {
+                
+                noAssignmentsAlert()
+            }
+        })
+        
+    }
+ 
 
     @IBAction func showManualEntry(_ sender: UIBarButtonItem) {
         print("YES")
@@ -1238,6 +1257,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             self.assignmentIndex = 0
             self.classIDAndNameClassroom = [String: String]()
             self.classNameAndAssignments = [String: [String]]()
+            self.newClassNameAndAssignments = [String: [String]]()
 
             self.navigationItem.title = "Planner"
 
@@ -1275,38 +1295,37 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func finishedGettingInfo() {
         print("RELOAD")
         assignmentIndex = 0
-  
+        arrayHeader = Array(repeating: 0, count: classNameAndAssignments.count)
+        print("COUNTCOUNT", arrayHeader.count)
         self.removeSpinner()
         importButtonText = ""
         assignmentTableView.isUserInteractionEnabled = true
         calendarTableView.isUserInteractionEnabled = true
-        assignmentTableView.reloadData()
+        
+        self.assignmentTableView.reloadData()
+        
     }
     
     func getClassesNoClassroom() {
 
-        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [] snapshot in
-            
-            if snapshot.exists() {
-//                self.arrayHeader = Array(repeating: 0, count: snapshot.children.allObjects.count)
-                self.assignmentsPerCourse = Array(repeating: [], count: snapshot.children.allObjects.count)
-                self.newAssignmentsPerCourse = Array(repeating: [], count: snapshot.children.allObjects.count)
-//
-//
-                for i in 0...snapshot.children.allObjects.count-1 {
-                    let encodedSnapshot = "\(snapshot.children.allObjects[i])".slice(from: "(", to: ")")!
-                    let className = "\(encodedSnapshot.removingPercentEncoding ?? "")"
-                    print("NAME", className)
-                    self.getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
+        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
+        
+            self.assignmentsPerCourse = Array(repeating: [], count: snapshot.children.allObjects.count)
+            self.newAssignmentsPerCourse = Array(repeating: [], count: snapshot.children.allObjects.count)
+           // self.arrayHeader = Array(repeating: 0, count: snapshot.children.allObjects.count)
 
-                    
-                    if i >= snapshot.children.allObjects.count - 1 {
-                        self.finishedGettingInfo()
-                    }
+            for i in 0...snapshot.children.allObjects.count-1 {
+                let encodedSnapshot = "\(snapshot.children.allObjects[i])".slice(from: "(", to: ")")!
+                let className = "\(encodedSnapshot.removingPercentEncoding ?? "")"
+                print("NAME", className)
+                self.getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
+
+                
+                if i >= snapshot.children.allObjects.count - 1 {
+                    self.finishedGettingInfo()
                 }
-            } else {
-                print("NO ADDED ASSIGNMENTS")
             }
+       
         })
         
     }
@@ -1336,7 +1355,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             allNames.append(contentsOf: assignmentsPerCourse.arrayWithoutFirstElement())
             allNewNames.append(contentsOf: newAsignmentsPerCourse.arrayWithoutFirstElement())
         }
-
+        
         classNameAndAssignments.updateValue(allNames, forKey: className)
         newClassNameAndAssignments.updateValue(allNewNames, forKey: className)
     }
@@ -1349,7 +1368,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func showInfo() {
         // assignmentIndex = 0
         if assignmentsPerCourse.count != 0 {
-            classes = [String](classIDAndNameClassroom.values)
 
             for i in 0 ... assignmentsPerCourse.count - 1 {
                 if assignmentsPerCourse[i].first != nil {
@@ -1358,38 +1376,40 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                         // print("ENCODEDEDE", encodedClass)
                         if snapshot.exists() {
                             if snapshot.hasChild(encodedClass) {
-                                // print("ENCODEDEDE", encodedClass)
-
+ 
                                 getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: encodedClass).value as! [String], assignmentsPerCourse: assignmentsPerCourse[i], newAsignmentsPerCourse: newAssignmentsPerCourse[i], className: self.assignmentsPerCourse[i].first!, classInClassroom: true)
-
+                               
                                 if i >= self.assignmentsPerCourse.count - 1 {
                                     self.finishedGettingInfo()
                                 }
 
                             } else {
                                 for classNum in 0 ... snapshot.children.allObjects.count - 1 {
+                                    
                                     let className = ("\(snapshot.children.allObjects[classNum])".removingPercentEncoding!.slice(from: "(", to: ")")!)
-
+                                    
                                     if !classes.contains(className) {
+                                        print("NAMENAME", className)
+                                        print("YESYES1")
+                                        
                                         getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
-
-                                        arrayHeader.append(0)
-
+//
                                         if i >= self.assignmentsPerCourse.count - 1 {
                                             self.finishedGettingInfo()
                                         }
 
-                                    } else {
-                                        classroomOnlyFetch(assignmentsPerCourse: assignmentsPerCourse[i], newAssignmentsPerCourse: newAssignmentsPerCourse[i])
-
-                                        if i >= self.assignmentsPerCourse.count - 1 {
-                                            self.finishedGettingInfo()
-                                        }
                                     }
                                 }
+                                
+                                classroomOnlyFetch(assignmentsPerCourse: assignmentsPerCourse[i], newAssignmentsPerCourse: newAssignmentsPerCourse[i])
+                                if i >= self.assignmentsPerCourse.count - 1 {
+                                    self.finishedGettingInfo()
+                                }
+                                
                             }
 
                         } else {
+                            
                             classroomOnlyFetch(assignmentsPerCourse: assignmentsPerCourse[i], newAssignmentsPerCourse: newAssignmentsPerCourse[i])
 
                             if i >= self.assignmentsPerCourse.count - 1 {
