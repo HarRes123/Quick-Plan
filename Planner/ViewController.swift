@@ -1384,6 +1384,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                 getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: encodedClass).value as! [String], assignmentsPerCourse: assignmentsPerCourse[i], newAsignmentsPerCourse: newAssignmentsPerCourse[i], className: self.assignmentsPerCourse[i].first!, classInClassroom: true)
                                
                             } else {
+                                
                                 for classNum in 0 ... snapshot.children.allObjects.count - 1 {
                                     
                                     let className = ("\(snapshot.children.allObjects[classNum])".removingPercentEncoding!.slice(from: "(", to: ")")!)
@@ -1391,8 +1392,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                     if !classes.contains(className) {
                                        
                                         if classNameAndAssignments[className] == nil  {
-                                            
-                                            getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as? [String] ?? ["Could not load assignments\n\nDue: Could not load due date"], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
+
+                                            getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as? [String] ?? ["Could not load assignments\n\nDue: Could not load due dates"], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
                                         }
       
                                     }
