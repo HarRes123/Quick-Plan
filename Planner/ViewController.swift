@@ -649,7 +649,18 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         calendarTableView.reloadData()
         assignmentTableView.reloadData()
     }
-
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if tableView == calendarTableView {
+            if checkTimeIsValid(from: calendarItems[indexPath.row]) {
+                return false
+            } else {
+                return true
+            }
+        }
+        return false
+    }
+    
     func tableView(_: UITableView, editingStyleForRowAt _: IndexPath) -> UITableViewCell.EditingStyle {
         return .none
     }
