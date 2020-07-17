@@ -381,12 +381,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         showSpinner(onView: assignmentTableView)
         assignmentTableView.isUserInteractionEnabled = false
         calendarTableView.isUserInteractionEnabled = false
+        self.classNameAndAssignments = [String: [String]]()
+        self.newClassNameAndAssignments = [String: [String]]()
 
         if classroomToggle.tintColor == UIColor(hexFromString: "008000") {
             getInfo()
         } else {
-            self.classNameAndAssignments = [String: [String]]()
-            self.newClassNameAndAssignments = [String: [String]]()
+            
             getClassesNoClassroom()
         }
         
@@ -1318,7 +1319,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 let encodedSnapshot = "\(snapshot.children.allObjects[i])".slice(from: "(", to: ")")!
                 let className = "\(encodedSnapshot.removingPercentEncoding ?? "")"
                 print("NAME", className)
-                self.getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
+                if classNameAndAssignments[className] == nil  {
+                    self.getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
+                }
 
                 
                 if i >= snapshot.children.allObjects.count - 1 {
@@ -1356,7 +1359,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             allNames.append(contentsOf: assignmentsPerCourse.arrayWithoutFirstElement())
             allNewNames.append(contentsOf: newAsignmentsPerCourse.arrayWithoutFirstElement())
         }
-        
+        print("TESTING", allNames)
         classNameAndAssignments.updateValue(allNames, forKey: className)
         newClassNameAndAssignments.updateValue(allNewNames, forKey: className)
     }
@@ -1377,7 +1380,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                         // print("ENCODEDEDE", encodedClass)
                         if snapshot.exists() {
                             if snapshot.hasChild(encodedClass) {
-                                
+                                print("CLASS", encodedClass)
                                 getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: encodedClass).value as! [String], assignmentsPerCourse: assignmentsPerCourse[i], newAsignmentsPerCourse: newAssignmentsPerCourse[i], className: self.assignmentsPerCourse[i].first!, classInClassroom: true)
                                
                             } else {
@@ -1386,8 +1389,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                     let className = ("\(snapshot.children.allObjects[classNum])".removingPercentEncoding!.slice(from: "(", to: ")")!)
                                     
                                     if !classes.contains(className) {
-                                        //Something is wrong here... doesnt all pull classroom courses
-                                        getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
+                                       
+                                        if classNameAndAssignments[className] == nil  {
+                                            
+                                            //sometimes crashes here
+                                            getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
+                                        }
       
                                     }
                                     
