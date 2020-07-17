@@ -13,6 +13,7 @@ import UIKit
 import UserNotifications
 
 class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate {
+    
     var myAuth: GTMFetcherAuthorizationProtocol?
     private let service = GTLRClassroomService()
 
@@ -32,8 +33,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var reminderTime = String()
 
     var notificationDay = String()
-
-    var expandAssignments = 0
 
     var assignmentCellWidth = CGFloat()
 
@@ -381,9 +380,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         showSpinner(onView: assignmentTableView)
         assignmentTableView.isUserInteractionEnabled = false
         calendarTableView.isUserInteractionEnabled = false
+        arrayHeader = Array(repeating: 0, count: arrayHeader.count)
         self.classNameAndAssignments = [String: [String]]()
         self.newClassNameAndAssignments = [String: [String]]()
-
         if classroomToggle.tintColor == UIColor(hexFromString: "008000") {
             getInfo()
         } else {
@@ -1387,12 +1386,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                 
                                 for classNum in 0 ... snapshot.children.allObjects.count - 1 {
                                     
-                                    let className = ("\(snapshot.children.allObjects[classNum])".removingPercentEncoding!.slice(from: "(", to: ")")!)
+                                    let className = ("\(snapshot.children.allObjects[classNum])".removingPercentEncoding!.slice(from: "(", to: ")")!) //issue if class name ends in parens
                                     
                                     if !classes.contains(className) {
                                        
                                         if classNameAndAssignments[className] == nil  {
-
+                                            
+                                            //This is a little glitchy
                                             getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as? [String] ?? ["Could not load assignments\n\nDue: Could not load due dates"], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
                                         }
       
