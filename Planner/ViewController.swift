@@ -1392,8 +1392,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                        
                                         if classNameAndAssignments[className] == nil  {
                                             
-                                            //sometimes crashes here
-                                            getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
+                                            getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as? [String] ?? ["Could not load assignments\n\nDue: Could not load due date"], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
                                         }
       
                                     }
