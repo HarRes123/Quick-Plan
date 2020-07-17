@@ -373,7 +373,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
     }
     
-
+    
     func beginClassImport() {
         
         
@@ -860,8 +860,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 print("No")
             }
         }
-        
-        getClassesNoClassroom()
         
         classroomToggle.tintColor = UIColor(hexFromString: "008000")
 
@@ -1354,6 +1352,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
 
         if classInClassroom {
+            
             allNames.append(contentsOf: assignmentsPerCourse.arrayWithoutFirstElement())
             allNewNames.append(contentsOf: newAsignmentsPerCourse.arrayWithoutFirstElement())
         }
@@ -1378,26 +1377,18 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                         // print("ENCODEDEDE", encodedClass)
                         if snapshot.exists() {
                             if snapshot.hasChild(encodedClass) {
- 
+                                
                                 getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: encodedClass).value as! [String], assignmentsPerCourse: assignmentsPerCourse[i], newAsignmentsPerCourse: newAssignmentsPerCourse[i], className: self.assignmentsPerCourse[i].first!, classInClassroom: true)
                                
-                                if i >= self.assignmentsPerCourse.count - 1 {
-                                    self.finishedGettingInfo()
-                                }
-                                
-
                             } else {
                                 for classNum in 0 ... snapshot.children.allObjects.count - 1 {
                                     
                                     let className = ("\(snapshot.children.allObjects[classNum])".removingPercentEncoding!.slice(from: "(", to: ")")!)
                                     
                                     if !classes.contains(className) {
+                                        //Something is wrong here... doesnt all pull classroom courses
                                         getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
-//
-                                        if i >= self.assignmentsPerCourse.count - 1 {
-                                            self.finishedGettingInfo()
-                                        }
-
+      
                                     }
                                     
                                 }
@@ -1405,11 +1396,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                 if classNameAndAssignments[assignmentsPerCourse[i].first!] == nil {
                                     classroomOnlyFetch(assignmentsPerCourse: assignmentsPerCourse[i], newAssignmentsPerCourse: newAssignmentsPerCourse[i])
                                 }
-                                
-                                if i >= self.assignmentsPerCourse.count - 1 {
-                                    self.finishedGettingInfo()
-                                }
-                                
+         
+                            }
+                            
+                            if i >= self.assignmentsPerCourse.count - 1 {
+                                self.finishedGettingInfo()
                             }
 
                         } else {
