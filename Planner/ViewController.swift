@@ -434,6 +434,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             if snapshot.exists() || isClassroomEnabled {
             
                 beginClassImport()
+                importButtonText = ""
             } else {
                 noAssignmentsAlert()
             }
@@ -886,11 +887,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func application(_: UIApplication, open url: URL, options _: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
         return GIDSignIn.sharedInstance().handle(url)
     }
-
+    
     func sign(_: GIDSignIn!, didSignInFor _: GIDGoogleUser!,
               withError error: Error!) {
         print("SIGN IN")
-
+        
         if let error = error {
             if (error as NSError).code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue {
                 print("The user has not signed in before or they have since signed out.")
@@ -900,9 +901,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 assignmentTableView.isUserInteractionEnabled = true
                 calendarTableView.isUserInteractionEnabled = true
                 toggleView.isUserInteractionEnabled = true
+                importButtonText = "Import Classes"
+                assignmentTableView.reloadData()
+                calendarTableView.reloadData()
                 removeSpinner()
             }
-
         } else {
             getInfo()
         }
@@ -1339,6 +1342,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         assignmentTableView.reloadData()
         calendarTableView.reloadData()
         print("NO ADDED ASSIGNMENTS")
+        importButtonText = "Import Classes"
         let alert = UIAlertController(title: "No Classes", message: "Please create a new class", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         self.present(alert, animated: true)
