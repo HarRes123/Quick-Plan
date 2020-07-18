@@ -21,6 +21,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var assignmentsPerCourse = [[String]]()
     var newAssignmentsPerCourse = [[String]]()
     var assignmentIndex = 0
+    
+    var importButtonText = ""
 
     var classIDAndNameClassroom = [String: String]()
     var classNameAndAssignments = [String: [String]]()
@@ -201,7 +203,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         return showAllClassInfo(assignmentTableView, cellForRowAt: indexPath)
     }
 
-    var importButtonText = "Import Classes"
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if tableView == assignmentTableView {
             classes = [String](classNameAndAssignments.keys)
@@ -291,6 +292,26 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 return nil
             }
         }
+    }
+    
+    func addCalendarSwipe() {
+        let directions: [UISwipeGestureRecognizer.Direction] = [.left, .right]
+        for direction in directions {
+            let gesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(sender:)))
+            gesture.direction = direction
+            calendarTableView.addGestureRecognizer(gesture)
+        }
+    }
+
+    @objc func handleSwipe(sender: UISwipeGestureRecognizer) {
+        if loadCalendar == false {
+            if sender.direction == .left {
+                changeDays(sign: 1)
+            } else {
+                changeDays(sign: -1)
+            }
+        }
+        
     }
 
     func tableView(_: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath _: IndexPath?) -> UITableViewDropProposal {
@@ -886,6 +907,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             getInfo()
         }
     }
+    
+    func userAlreadyExist(kUsernameKey: String) -> Bool {
+        return UserDefaults.standard.object(forKey: kUsernameKey) != nil
+    }
 
     func sign(_: GIDSignIn!, didDisconnectWith _: GIDGoogleUser!,
               withError _: Error!) {}
@@ -893,6 +918,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if userAlreadyExist(kUsernameKey: "isClassroomEnabled") {
+            isClassroomEnabled = UserDefaults.standard.bool(forKey: "isClassroomEnabled")
+        } else {
+            isClassroomEnabled = true
+        }
 
         center.requestAuthorization(options: [.alert, .badge, .sound]) {
             granted, _ in
@@ -949,10 +979,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         let nibCalendar = UINib(nibName: "CalendarTableViewCell", bundle: nil)
         calendarTableView.register(nibCalendar, forCellReuseIdentifier: "calendarCell")
 
-       
-      //  navigationItem.title = "\(greeting), \(firstName)!"
-        
-        //navigationItem.title = "LONGLONGLONGLONGLONGLONGLONGLONGLON"
         configureTitleView()
 
         setUpUI(view: assignmentTableView)
@@ -964,17 +990,32 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         enabledImageView.frame = CGRect(x: toggleView.frame.width/4 - 20, y: toggleView.frame.height/2 - 20, width: 40, height: 40)
         
         enabledImageView.image = enabledImageView.image?.withRenderingMode(.alwaysTemplate)
-        enabledImageView.tintColor = .black
         enabledImageView.isUserInteractionEnabled = false
       
         disabledImageView.frame = CGRect(x: toggleView.frame.width*(3/4) - 20, y: toggleView.frame.height/2 - 20, width: 40, height: 40)
         
         disabledImageView.image = disabledImageView.image?.withRenderingMode(.alwaysTemplate)
-        disabledImageView.tintColor = .red
+       
         disabledImageView.isUserInteractionEnabled = false
 
         toggleView.addSubview(enabledImageView)
         toggleView.addSubview(disabledImageView)
+
+        if isClassroomEnabled {
+            toggleView.setIndex(0)
+            importButtonText = "Import Classes"
+            disabledImageView.tintColor = .red
+            enabledImageView.tintColor = .black
+            toggleView.indicatorViewBackgroundColor = UIColor(hexFromString: "008000")
+        } else {
+            toggleView.setIndex(1)
+            importButtonText = ""
+            disabledImageView.tintColor = .black
+            enabledImageView.tintColor = UIColor(hexFromString: "008000")
+            toggleView.indicatorViewBackgroundColor = .red
+        }
+        
+        addCalendarSwipe()
         
         navigationController?.navigationBar.transparentNavigationBar()
         
@@ -1066,6 +1107,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 enabledImageView.tintColor = UIColor(hexFromString: "008000")
                 disabledImageView.tintColor = .black
             }
+            UserDefaults.standard.set(isClassroomEnabled, forKey: "isClassroomEnabled")
             if snapshot.exists() || isClassroomEnabled {
                 self.beginClassImport()
             } else {
@@ -1291,7 +1333,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     func noAssignmentsAlert() {
         print("NO ADDED ASSIGNMENTS")
-        let alert = UIAlertController(title: "No Assignments", message: "Please create a new assignment", preferredStyle: .alert)
+        let alert = UIAlertController(title: "No Classes", message: "Please create a new class", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         self.present(alert, animated: true)
     }

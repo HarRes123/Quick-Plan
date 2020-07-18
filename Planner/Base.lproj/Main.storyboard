@@ -70,7 +70,7 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="indicatorViewInset">
                                         <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="alwaysAnnouncesValue" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="alwaysAnnouncesValue" value="NO"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
