@@ -128,7 +128,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 }
                 let notifcationDate = "\(self.notificationDay) \(self.reminderTime)"
 
-                let identifier = "\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(notifcationDate)"
+                let identifier = "\(nameAndDueDate[0])\(nameAndDueDate[1])\(notifcationDate)"
 
                 self.setUpNotificationsFirebase(identifer: identifier)
 
@@ -398,7 +398,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
 
     @objc func importClasses(sender: UIButton) {
-        beginClassImport()
+        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
+            
+            if snapshot.exists() || classroomToggle.tintColor == UIColor(hexFromString: "008000") {
+            
+                beginClassImport()
+            } else {
+                noAssignmentsAlert()
+            }
+        })
+    
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection _: Int) -> String? {
@@ -687,9 +696,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         let oldNotifcationDate = "\(notificationDay) \(oldReminderTime)"
         let newNotifcationDate = "\(notificationDay) \(reminderTime)"
-        let identifier = "\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(newNotifcationDate)"
+        let identifier = "\(nameAndDueDate[0])\(nameAndDueDate[1])\(newNotifcationDate)"
 
-        center.removePendingNotificationRequests(withIdentifiers: ["\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(oldNotifcationDate)"])
+        center.removePendingNotificationRequests(withIdentifiers: ["\(nameAndDueDate[0])\(nameAndDueDate[1])\(oldNotifcationDate)"])
 
         setUpNotificationsFirebase(identifer: identifier)
 
@@ -765,7 +774,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func setUpNotificationsFirebase(identifer: String) {
         let content = UNMutableNotificationContent()
 
-        let notificationComponents = identifer.components(separatedBy: "___")
+        let notificationComponents = identifer.components(separatedBy: "")
         let name = notificationComponents[0]
         let dueDate = notificationComponents[1]
         let notificationDate = notificationComponents[2]
@@ -1033,7 +1042,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
                 let nameAndDueDate = assignment.components(separatedBy: "\n\nDue: ")
 
-                self.center.removePendingNotificationRequests(withIdentifiers: ["\(nameAndDueDate[0])___\(nameAndDueDate[1])___\(notifcationDate)"])
+                self.center.removePendingNotificationRequests(withIdentifiers: ["\(nameAndDueDate[0])\(nameAndDueDate[1])\(notifcationDate)"])
 
                 self.calendarItems.remove(at: indexPath.row)
                 self.addResponse()
@@ -1326,11 +1335,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
            // self.arrayHeader = Array(repeating: 0, count: snapshot.children.allObjects.count)
 
             for i in 0...snapshot.children.allObjects.count-1 {
-                let encodedSnapshot = "\(snapshot.children.allObjects[i])".slice(from: "(", to: ")")!
-                let className = "\(encodedSnapshot.removingPercentEncoding ?? "")"
+                let encodedSnapshot = "\(snapshot.children.allObjects[i])"
+                let className = "\(encodedSnapshot.removingPercentEncoding ?? "")".slice(from: "(", to: ")")!
+                let classNameWithDivider = "\(className)"
                 print("NAME", className)
                 if classNameAndAssignments[className] == nil  {
-                    self.getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
+                    self.getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: classNameWithDivider.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
                 }
 
                 
@@ -1386,7 +1396,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             for i in 0 ... assignmentsPerCourse.count - 1 {
                 if assignmentsPerCourse[i].first != nil {
                     Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
-                        let encodedClass = assignmentsPerCourse[i].first!.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+                        let encodedClass = "%EF%A3%BF\(assignmentsPerCourse[i].first!.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)%EF%A3%BF"
                         // print("ENCODEDEDE", encodedClass)
                         if snapshot.exists() {
                             if snapshot.hasChild(encodedClass) {
@@ -1397,14 +1407,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                 
                                 for classNum in 0 ... snapshot.children.allObjects.count - 1 {
                                     
-                                    let className = ("\(snapshot.children.allObjects[classNum])".removingPercentEncoding!.slice(from: "(", to: ")")!) //issue if class name ends in parens
-                                    
+                                    let className = ("\(snapshot.children.allObjects[classNum])".removingPercentEncoding!.slice(from: "(", to: ")")!)
+       
+                                    let classNameWithDivider = "\(className)"
+                                                
                                     if !classes.contains(className) {
                                        
                                         if classNameAndAssignments[className] == nil  {
                                             
-                                            //This is a little glitchy
-                                            getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: className.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as? [String] ?? ["Could not load assignments\n\nDue: Could not load due dates"], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
+                                            getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: classNameWithDivider.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
                                         }
       
                                     }

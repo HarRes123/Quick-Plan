@@ -192,7 +192,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
     }
 
     @IBAction func savePressed(_: Any) {
-        let selectedClass = classPicker.text ?? "no text"
+        let selectedClass = "\(classPicker.text ?? "no text")"
         let selectedAssignment = assignmentField.text ?? "no text"
         var selectedDueDate = dueDateField.text ?? "no text"
         guard let encodedClass = selectedClass.addingPercentEncoding(withAllowedCharacters: .alphanumerics) else { return }
