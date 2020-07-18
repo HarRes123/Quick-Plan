@@ -22,8 +22,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var newAssignmentsPerCourse = [[String]]()
     var assignmentIndex = 0
     
-    var importButtonText = ""
-
     var classIDAndNameClassroom = [String: String]()
     var classNameAndAssignments = [String: [String]]()
     var newClassNameAndAssignments = [String: [String]]()
@@ -46,6 +44,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     let center = UNUserNotificationCenter.current()
 
     var loadCalendar = true
+    
+    var importButtonText = "Import Classes"
 
     var assignmentAndDueDate = [String: String]()
 
@@ -202,7 +202,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         // print("test")
         return showAllClassInfo(assignmentTableView, cellForRowAt: indexPath)
     }
-
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if tableView == assignmentTableView {
             classes = [String](classNameAndAssignments.keys)
@@ -933,7 +933,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
         }
         
-    //    classroomToggle.tintColor = UIColor(hexFromString: "008000")
+    //    classroomToggle.tintColor = .adjustedGreen
 
         NotificationCenter.default.addObserver(self, selector: #selector(performFetch), name: Notification.Name("performFetchAuto"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(popOverDismissed), name: Notification.Name("popOverDismissed"), object: nil)
@@ -1003,16 +1003,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         if isClassroomEnabled {
             toggleView.setIndex(0)
-            importButtonText = "Import Classes"
             disabledImageView.tintColor = .red
             enabledImageView.tintColor = .black
-            toggleView.indicatorViewBackgroundColor = UIColor(hexFromString: "008000")
+            toggleView.indicatorViewBackgroundColor = .adjustedGreen
+            importButtonText = "Import Classes"
         } else {
             toggleView.setIndex(1)
-            importButtonText = ""
             disabledImageView.tintColor = .black
-            enabledImageView.tintColor = UIColor(hexFromString: "008000")
+            enabledImageView.tintColor = .adjustedGreen
             toggleView.indicatorViewBackgroundColor = .red
+            importButtonText = ""
         }
         
         addCalendarSwipe()
@@ -1097,14 +1097,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             if sender.index == 0 {
                 print("Enabled")
                 isClassroomEnabled = true
-                sender.indicatorViewBackgroundColor = UIColor(hexFromString: "008000")
+                sender.indicatorViewBackgroundColor = .adjustedGreen
                 enabledImageView.tintColor = .black
                 disabledImageView.tintColor = .red
+                importButtonText = ""
             } else {
                 print("Disabled")
                 isClassroomEnabled = false
                 sender.indicatorViewBackgroundColor = .red
-                enabledImageView.tintColor = UIColor(hexFromString: "008000")
+                enabledImageView.tintColor = .adjustedGreen
                 disabledImageView.tintColor = .black
             }
             UserDefaults.standard.set(isClassroomEnabled, forKey: "isClassroomEnabled")
@@ -1332,6 +1333,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
     
     func noAssignmentsAlert() {
+        arrayHeader = Array(repeating: 0, count: arrayHeader.count)
+        self.classNameAndAssignments = [String: [String]]()
+        self.newClassNameAndAssignments = [String: [String]]()
+        assignmentTableView.reloadData()
+        calendarTableView.reloadData()
         print("NO ADDED ASSIGNMENTS")
         let alert = UIAlertController(title: "No Classes", message: "Please create a new class", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
@@ -1396,10 +1402,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func finishedGettingInfo() {
         print("RELOAD")
         assignmentIndex = 0
+        importButtonText = "Import Classes"
         arrayHeader = Array(repeating: 0, count: classNameAndAssignments.count)
         print("COUNTCOUNT", arrayHeader.count)
         self.removeSpinner()
-        importButtonText = ""
         assignmentTableView.isUserInteractionEnabled = true
         calendarTableView.isUserInteractionEnabled = true
         toggleView.isUserInteractionEnabled = true

@@ -268,3 +268,7 @@ extension NSMutableAttributedString {
         endEditing()
     }
 }
+
+extension UIColor {
+    static let adjustedGreen = UIColor(hexFromString: "008000")
+}
