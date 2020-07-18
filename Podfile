@@ -11,6 +11,7 @@ target 'Planner' do
     pod 'FirebaseUI/Email'
     pod 'FirebaseUI/Google'
     pod 'Firebase/Database'
+    pod 'BetterSegmentedControl'
 
   # Pods for Planner
 

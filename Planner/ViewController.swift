@@ -11,6 +11,7 @@ import GoogleSignIn
 import MobileCoreServices
 import UIKit
 import UserNotifications
+import BetterSegmentedControl
 
 class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate {
     
@@ -27,6 +28,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     var classes = [String]()
     var arrayHeader = [Int]()
+    
+    var isClassroomEnabled = true
 
     var calendarItems = [String]()
 
@@ -46,18 +49,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     var daysFromToday = 0
 
-    @IBOutlet weak var toggleView: UIView!
+    @IBOutlet weak var toggleView: BetterSegmentedControl!
     
     let date = Date()
     var calendar = Calendar.current
-
-    @IBOutlet weak var classroomToggle: UIBarButtonItem!
-    
-    @IBOutlet weak var enableClassroom: UIButton!
-    @IBOutlet weak var disableClassroom: UIButton!
-    
-    @IBOutlet weak var switcherStack: UIStackView!
-    
     
     @IBOutlet var calendarTableView: UITableView!
     @IBOutlet var assignmentTableView: UITableView!
@@ -243,26 +238,27 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 var button = UIButton()
                 let leftButton = UIButton(type: .custom)
                 let rightButton = UIButton(type: .custom)
-                leftButton.frame = CGRect(x: 5, y: 5, width: 30, height: 40)
-                rightButton.frame = CGRect(x: tableView.frame.width - 35, y: 5, width: 30, height: 40)
-
+                //button.center = view.center
+                leftButton.frame = CGRect(x: 5, y: 5, width: 30, height: 65)
+                rightButton.frame = CGRect(x: tableView.frame.width - 35, y: 5, width: 30, height: 65)
+                calendarTableView.backgroundColor = UIColor(hexFromString: "E8E8E8")
+                view.backgroundColor = UIColor(hexFromString: "E8E8E8")
+                
                 if loadCalendar == false {
                     buttonWidth = 110
-                    button = UIButton(frame: CGRect(x: buttonX - buttonWidth / 2, y: 5, width: buttonWidth, height: 40))
+                    button = UIButton(frame: CGRect(x: buttonX - buttonWidth / 2, y: 5, width: buttonWidth, height: 65))
                     button.setTitle(notificationDay, for: .normal)
                     button.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
                     // label.removeTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
                     assignmentTableView.dragInteractionEnabled = true
-                    calendarTableView.backgroundColor = UIColor(hexFromString: "E8E8E8")
-                    view.backgroundColor = UIColor(hexFromString: "E8E8E8")
+                    calendarTableView.separatorStyle = .singleLine
                     view.addSubview(leftButton)
                     view.addSubview(rightButton)
                 } else {
-                    button = UIButton(frame: CGRect(x: buttonX - buttonWidth / 2, y: 5, width: buttonWidth, height: 80))
+                    button = UIButton(frame: CGRect(x: buttonX - buttonWidth / 2, y: 5, width: buttonWidth, height: 65))
                     button.setTitle("Import Calendar", for: .normal)
                     button.addTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
-                    calendarTableView.backgroundColor = .white
-                    view.backgroundColor = .white
+                    calendarTableView.separatorStyle = .none
                     assignmentTableView.dragInteractionEnabled = false
                 }
 
@@ -317,6 +313,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         showSpinner(onView: calendarTableView)
         calendarTableView.isUserInteractionEnabled = false
         assignmentTableView.isUserInteractionEnabled = false
+        toggleView.isUserInteractionEnabled = false
         setUpCalendar()
         //    setUpInitialNotifications()
 
@@ -324,6 +321,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             self.setUpCalendar()
             self.calendarTableView.isUserInteractionEnabled = true
             self.assignmentTableView.isUserInteractionEnabled = true
+            self.toggleView.isUserInteractionEnabled = true
             self.removeSpinner()
         }
     }
@@ -352,7 +350,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
             setUpInitialNotifications()
             setUpCalendar()
-            if classroomToggle.tintColor == UIColor(hexFromString: "008000") {
+            if isClassroomEnabled {
                 getInfo()
             } else {
                 getClassesNoClassroom()
@@ -388,10 +386,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         showSpinner(onView: assignmentTableView)
         assignmentTableView.isUserInteractionEnabled = false
         calendarTableView.isUserInteractionEnabled = false
+        toggleView.isUserInteractionEnabled = false
         arrayHeader = Array(repeating: 0, count: arrayHeader.count)
         self.classNameAndAssignments = [String: [String]]()
         self.newClassNameAndAssignments = [String: [String]]()
-        if classroomToggle.tintColor == UIColor(hexFromString: "008000") {
+     //  if toggleView.segments[0].selectedView.
+        if isClassroomEnabled {
             getInfo()
         } else {
             
@@ -401,14 +401,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         self.assignmentTableView.reloadData()
         self.calendarTableView.reloadData()
         
-
     }
     
 
     @objc func importClasses(sender: UIButton) {
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
             
-            if snapshot.exists() || classroomToggle.tintColor == UIColor(hexFromString: "008000") {
+            if snapshot.exists() || isClassroomEnabled {
             
                 beginClassImport()
             } else {
@@ -496,15 +495,20 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 } else {
                     fixedTime = calendarItems[indexPath.row]
                 }
+                
             }
 
             cell.calendarEventText.text = fixedTime
-
+            
             if checkTimeIsValid(from: cell.calendarEventText.text) {
                 cell.backgroundColor = UIColor(hexFromString: "f5bc49")
                 cell.isUserInteractionEnabled = false
             } else {
-                cell.backgroundColor = .white
+                if loadCalendar {
+                    cell.backgroundColor = .clear
+                } else {
+                    cell.backgroundColor = .white
+                }
                 cell.isUserInteractionEnabled = true
             }
 
@@ -725,28 +729,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     @objc func checkAction(sender : UITapGestureRecognizer) {
         print("PRESSED")
     }
-      
-    @IBAction func classroomSwitcher(_ sender: UIButton) {
-        if sender.tag == 1 {
-            enableClassroom.backgroundColor = UIColor(hexFromString: "008000")
-            enableClassroom.setTitleColor(.white, for: .normal)
-            disableClassroom.backgroundColor = .white
-            disableClassroom.setTitleColor(.black, for: .normal)
-        } else {
-            enableClassroom.backgroundColor = .white
-            enableClassroom.setTitleColor(.black, for: .normal)
-            disableClassroom.backgroundColor = .red
-            disableClassroom.setTitleColor(.white, for: .normal)
-        }
-    }
-
-    
-
+  
     @objc func loadCal(sender _: UIButton) {
         loadCalendar = false
         showSpinner(onView: calendarTableView)
         calendarTableView.isUserInteractionEnabled = false
         assignmentTableView.isUserInteractionEnabled = false
+        toggleView.isUserInteractionEnabled = false
         setUpCalendar()
         setUpInitialNotifications()
 
@@ -754,6 +743,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             self.setUpCalendar()
             self.calendarTableView.isUserInteractionEnabled = true
             self.assignmentTableView.isUserInteractionEnabled = true
+            self.toggleView.isUserInteractionEnabled = true
             self.removeSpinner()
         }
     }
@@ -885,6 +875,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 print("\(error.localizedDescription)")
                 assignmentTableView.isUserInteractionEnabled = true
                 calendarTableView.isUserInteractionEnabled = true
+                toggleView.isUserInteractionEnabled = true
                 removeSpinner()
             }
 
@@ -909,7 +900,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
         }
         
-        classroomToggle.tintColor = UIColor(hexFromString: "008000")
+    //    classroomToggle.tintColor = UIColor(hexFromString: "008000")
 
         NotificationCenter.default.addObserver(self, selector: #selector(performFetch), name: Notification.Name("performFetchAuto"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(popOverDismissed), name: Notification.Name("popOverDismissed"), object: nil)
@@ -960,21 +951,20 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         
         //navigationItem.title = "LONGLONGLONGLONGLONGLONGLONGLONGLON"
         configureTitleView()
-     //   navigationItem.titleView.string
 
         setUpUI(view: assignmentTableView)
         setUpUI(view: calendarTableView)
         setUpUI(view: toggleView)
+        toggleView.addTarget(self, action: #selector(controlValueChanged(_:)), for: .valueChanged)
+        toggleView.segments = LabelSegment.segments(withTitles: ["Enable", "Disable"],
+                                                  normalFont: UIFont(name: "AvenirNext-Regular", size: 15.0)!,
+                                                  normalTextColor: .black,
+                                                  selectedFont: UIFont(name: "AvenirNext-Regular", size: 15.0)!,
+                                                  selectedTextColor: .white)
        
-        // self.navigationController?.navigationBar.tex.lineBreakMode = .ByCharWrapping
-
         navigationController?.navigationBar.transparentNavigationBar()
         view.backgroundColor = UIColor(hexFromString: "9eb5e8")
-        //        self.navigationController?.navigationBar.layer.shadowColor = UIColor.darkGray.cgColor
-        //        self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 3)
-        //        self.navigationController?.navigationBar.layer.shadowRadius = 1.5
-        //        self.navigationController?.navigationBar.layer.shadowOpacity = 1.0
-        //        self.navigationController?.navigationBar.layer.masksToBounds = false
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -1039,26 +1029,32 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         view.layer.cornerRadius = 15
         view.layer.masksToBounds = true
 
-        if view == toggleView {
-            view.addSubview(switcherStack)
-            switcherStack.addArrangedSubview(enableClassroom)
-            switcherStack.addArrangedSubview(disableClassroom)
-        }
-        
         self.view.addSubview(containerView)
         containerView.addSubview(view)
     
     }
-
-    //    func dayView(dayView: DayView, didTapTimelineAt date: Date) {
-    //        let format = DateFormatter()
-    //        format.timeZone = .current
-    //        format.dateFormat = "MMM d, yyyy; h:mm a"
-    //        let dateString = format.string(from: date)
-    //
-    //        print(dateString)
-    //        textViewTest.text = "Selected Date: \(dateString)"
-    //    }
+    
+    
+    @objc func controlValueChanged(_ sender: BetterSegmentedControl) {
+        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
+            if sender.index == 0 {
+                print("Enabled")
+                isClassroomEnabled = true
+                sender.indicatorViewBackgroundColor = UIColor(hexFromString: "008000")
+                
+            } else {
+                print("Disabled")
+                isClassroomEnabled = false
+                sender.indicatorViewBackgroundColor = .red
+            }
+            if snapshot.exists() || isClassroomEnabled {
+                self.beginClassImport()
+            } else {
+                noAssignmentsAlert()
+            }
+        })
+      
+    }
 
     func fetchCourses() {
         let query = GTLRClassroomQuery_CoursesList.query()
@@ -1263,13 +1259,14 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
         if tableView == assignmentTableView {
-            if classNameAndAssignments.count > 0 {
+            if arrayHeader.count > 0 {
                 return 125
             } else {
                 return 100
             }
         } else {
-            return 50
+                return 75
+           // }
         }
     }
     
@@ -1280,20 +1277,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         self.present(alert, animated: true)
     }
    
-    @IBAction func classroomToggleAction(_ sender: Any) {
-        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
-     //   print("SNAPSNAP", snapshot)
-            self.classroomToggle.tintColor = classroomToggle.tintColor == UIColor(hexFromString: "008000") ? .red : UIColor(hexFromString: "008000")
-            if snapshot.exists() || classroomToggle.tintColor == UIColor(hexFromString: "008000") {
-                self.beginClassImport()
-            } else {
-                
-                noAssignmentsAlert()
-            }
-        })
-        
-    }
- 
 
     @IBAction func showManualEntry(_ sender: UIBarButtonItem) {
         print("YES")
@@ -1358,6 +1341,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         importButtonText = ""
         assignmentTableView.isUserInteractionEnabled = true
         calendarTableView.isUserInteractionEnabled = true
+        toggleView.isUserInteractionEnabled = true
         
         self.assignmentTableView.reloadData()
         

@@ -4,6 +4,7 @@ PODS:
     - AppAuth/ExternalUserAgent (= 1.4.0)
   - AppAuth/Core (1.4.0)
   - AppAuth/ExternalUserAgent (1.4.0)
+  - BetterSegmentedControl (1.3.0)
   - Firebase/Analytics (6.27.0):
     - Firebase/Core
   - Firebase/Auth (6.27.0):
@@ -111,6 +112,7 @@ PODS:
   - PromisesObjC (1.2.9)
 
 DEPENDENCIES:
+  - BetterSegmentedControl
   - Firebase/Analytics
   - Firebase/Core
   - Firebase/Database
@@ -123,6 +125,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AppAuth
+    - BetterSegmentedControl
     - Firebase
     - FirebaseAnalytics
     - FirebaseAuth
@@ -145,6 +148,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
+  BetterSegmentedControl: 85d1b0343a09603b098884d527f550dfc8e6cdd9
   Firebase: fc4cbf6f1592636431821ef9a3c557e4dfd9f268
   FirebaseAnalytics: 0ea640473474f036cabbc2576e20c2d63671c92f
   FirebaseAuth: b85c064e0ac60f82486728d50a4803f235687302
@@ -165,6 +169,6 @@ SPEC CHECKSUMS:
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   PromisesObjC: b48e0338dbbac2207e611750777895f7a5811b75
 
-PODFILE CHECKSUM: cba8e702afbaeca94207670f237f55301022fea3
+PODFILE CHECKSUM: caf7bc1b15994ef2aa871fdc943d4e11740f70e0
 
 COCOAPODS: 1.9.3

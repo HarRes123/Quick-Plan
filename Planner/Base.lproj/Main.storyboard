@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Hlr-ja-OiJ">
-                                <rect key="frame" x="11" y="121" width="142" height="896"/>
+                                <rect key="frame" x="11" y="150" width="142" height="867"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="142" id="CqN-Fa-BGw"/>
                                 </constraints>
@@ -56,61 +56,33 @@
                                     <outlet property="delegate" destination="zcv-In-QdX" id="BmR-Sg-eBL"/>
                                 </connections>
                             </tableView>
-                            <view multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TqU-26-kE8">
-                                <rect key="frame" x="11" y="63" width="142" height="50"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="zx4-pJ-UoP">
-                                        <rect key="frame" x="0.0" y="0.0" width="142" height="50"/>
-                                        <subviews>
-                                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1VA-9Q-Sbb">
-                                                <rect key="frame" x="0.0" y="0.0" width="71" height="50"/>
-                                                <color key="backgroundColor" red="0.0" green="0.50196078431372548" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <state key="normal" title="Enable">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="classroomSwitcher:" destination="zcv-In-QdX" eventType="touchUpInside" id="TJ2-39-0A9"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qkg-zf-dlF">
-                                                <rect key="frame" x="71" y="0.0" width="71" height="50"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <state key="normal" title="Disable">
-                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="classroomSwitcher:" destination="zcv-In-QdX" eventType="touchUpInside" id="2HP-5Q-2gS"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                        <constraints>
-                                            <constraint firstItem="qkg-zf-dlF" firstAttribute="height" secondItem="zx4-pJ-UoP" secondAttribute="height" id="9hT-MM-wVf"/>
-                                            <constraint firstAttribute="width" constant="142" id="F7r-P0-q2v"/>
-                                            <constraint firstAttribute="height" constant="50" id="auu-8S-jS6"/>
-                                            <constraint firstItem="1VA-9Q-Sbb" firstAttribute="height" secondItem="zx4-pJ-UoP" secondAttribute="height" id="b0T-ki-ULL"/>
-                                        </constraints>
-                                    </stackView>
-                                </subviews>
+                            <view multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TqU-26-kE8" customClass="BetterSegmentedControl" customModule="BetterSegmentedControl">
+                                <rect key="frame" x="11" y="63" width="142" height="75"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="zx4-pJ-UoP" secondAttribute="bottom" id="35v-7l-nDQ"/>
-                                    <constraint firstAttribute="height" constant="50" id="ULN-RH-IHL"/>
-                                    <constraint firstItem="zx4-pJ-UoP" firstAttribute="top" secondItem="TqU-26-kE8" secondAttribute="top" id="eNF-4j-Q19"/>
-                                    <constraint firstItem="zx4-pJ-UoP" firstAttribute="leading" secondItem="TqU-26-kE8" secondAttribute="leading" id="nEz-oF-GPR"/>
+                                    <constraint firstAttribute="height" constant="75" id="ULN-RH-IHL"/>
                                     <constraint firstAttribute="width" constant="142" id="rEY-Kn-mAq"/>
-                                    <constraint firstAttribute="trailing" secondItem="zx4-pJ-UoP" secondAttribute="trailing" id="zjB-oW-ULx"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="indicatorViewBackgroundColor">
+                                        <color key="value" red="0.0" green="0.50196078430000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="indicatorViewInset">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="alwaysAnnouncesValue" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="OSv-cR-nIE"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="CKD-gs-1pZ" firstAttribute="leading" secondItem="TqU-26-kE8" secondAttribute="trailing" constant="13" id="Bvc-wa-qhs"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="CKD-gs-1pZ" secondAttribute="top" constant="58" id="CgK-0t-fCd"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="CKD-gs-1pZ" secondAttribute="top" constant="87" id="CgK-0t-fCd"/>
                             <constraint firstItem="Hlr-ja-OiJ" firstAttribute="bottom" secondItem="CKD-gs-1pZ" secondAttribute="bottom" id="UHH-dM-3To"/>
                             <constraint firstItem="OSv-cR-nIE" firstAttribute="trailing" secondItem="CKD-gs-1pZ" secondAttribute="trailing" constant="9" id="ffn-Oz-8zU"/>
                             <constraint firstAttribute="bottomMargin" secondItem="Hlr-ja-OiJ" secondAttribute="bottom" constant="-13" id="gXS-8c-Wfw"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" constant="71" id="mN0-Rw-jiS"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" constant="100" id="mN0-Rw-jiS"/>
                             <constraint firstItem="TqU-26-kE8" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" constant="11" id="qXv-sL-QgO"/>
                             <constraint firstItem="Hlr-ja-OiJ" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" constant="11" id="tS4-go-Dqb"/>
                             <constraint firstItem="TqU-26-kE8" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" constant="13" id="tVn-yY-9Pt"/>
@@ -124,28 +96,16 @@
                                 <action selector="signOut:" destination="zcv-In-QdX" id="GOL-7S-W2a"/>
                             </connections>
                         </barButtonItem>
-                        <rightBarButtonItems>
-                            <barButtonItem systemItem="add" id="uL9-6Q-7Wv">
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <connections>
-                                    <action selector="showManualEntry:" destination="zcv-In-QdX" id="NdO-q5-052"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Classroom Toggle" image="classroom" id="1cz-1x-os9">
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <connections>
-                                    <action selector="classroomToggleAction:" destination="zcv-In-QdX" id="wXg-I8-d1n"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="uL9-6Q-7Wv">
+                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="showManualEntry:" destination="zcv-In-QdX" id="NdO-q5-052"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="assignmentTableView" destination="Hlr-ja-OiJ" id="OYZ-Bq-LMN"/>
                         <outlet property="calendarTableView" destination="CKD-gs-1pZ" id="acB-3U-zKS"/>
-                        <outlet property="classroomToggle" destination="1cz-1x-os9" id="Z93-J9-qXg"/>
-                        <outlet property="disableClassroom" destination="qkg-zf-dlF" id="GAM-jw-XTD"/>
-                        <outlet property="enableClassroom" destination="1VA-9Q-Sbb" id="NvJ-r0-G88"/>
-                        <outlet property="switcherStack" destination="zx4-pJ-UoP" id="55I-4Q-Yih"/>
                         <outlet property="toggleView" destination="TqU-26-kE8" id="7dt-BG-dyq"/>
                         <segue destination="BA2-jE-DmS" kind="presentation" identifier="logOut" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="0n5-jj-Dax"/>
                     </connections>
@@ -163,10 +123,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="app_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="xDb-H3-Jhn">
-                                <rect key="frame" x="0.0" y="86" width="1366" height="343.5"/>
+                                <rect key="frame" x="0.0" y="86" width="1366" height="313"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vKl-YD-PrK">
-                                <rect key="frame" x="633" y="492.5" width="100" height="39"/>
+                                <rect key="frame" x="633" y="462" width="100" height="100"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="3qR-tM-6E6"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="djE-qZ-Nvl"/>
@@ -223,7 +183,6 @@
     </scenes>
     <resources>
         <image name="app_logo.png" width="626" height="626"/>
-        <image name="classroom" width="30" height="30"/>
         <image name="logout" width="30" height="30"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
