@@ -18,16 +18,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Hlr-ja-OiJ">
-                                <rect key="frame" x="11" y="63" width="142" height="954"/>
+                                <rect key="frame" x="11" y="121" width="142" height="896"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="142" id="CqN-Fa-BGw"/>
                                 </constraints>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="assignmentCell" id="cP5-iY-NZ1" customClass="AssignmentTableViewCell" customModule="Planner" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="73.5" width="110" height="51.5"/>
+                                        <rect key="frame" x="16" y="73.5" width="110" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cP5-iY-NZ1" id="UJJ-vd-gfP">
-                                            <rect key="frame" x="0.0" y="0.0" width="110" height="51.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="110" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -56,16 +56,64 @@
                                     <outlet property="delegate" destination="zcv-In-QdX" id="BmR-Sg-eBL"/>
                                 </connections>
                             </tableView>
+                            <view multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TqU-26-kE8">
+                                <rect key="frame" x="11" y="63" width="142" height="50"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="zx4-pJ-UoP">
+                                        <rect key="frame" x="0.0" y="0.0" width="142" height="50"/>
+                                        <subviews>
+                                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1VA-9Q-Sbb">
+                                                <rect key="frame" x="0.0" y="0.0" width="71" height="50"/>
+                                                <color key="backgroundColor" red="0.0" green="0.50196078431372548" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <state key="normal" title="Enable">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="classroomSwitcher:" destination="zcv-In-QdX" eventType="touchUpInside" id="TJ2-39-0A9"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qkg-zf-dlF">
+                                                <rect key="frame" x="71" y="0.0" width="71" height="50"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" title="Disable">
+                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="classroomSwitcher:" destination="zcv-In-QdX" eventType="touchUpInside" id="2HP-5Q-2gS"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="qkg-zf-dlF" firstAttribute="height" secondItem="zx4-pJ-UoP" secondAttribute="height" id="9hT-MM-wVf"/>
+                                            <constraint firstAttribute="width" constant="142" id="F7r-P0-q2v"/>
+                                            <constraint firstAttribute="height" constant="50" id="auu-8S-jS6"/>
+                                            <constraint firstItem="1VA-9Q-Sbb" firstAttribute="height" secondItem="zx4-pJ-UoP" secondAttribute="height" id="b0T-ki-ULL"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="zx4-pJ-UoP" secondAttribute="bottom" id="35v-7l-nDQ"/>
+                                    <constraint firstAttribute="height" constant="50" id="ULN-RH-IHL"/>
+                                    <constraint firstItem="zx4-pJ-UoP" firstAttribute="top" secondItem="TqU-26-kE8" secondAttribute="top" id="eNF-4j-Q19"/>
+                                    <constraint firstItem="zx4-pJ-UoP" firstAttribute="leading" secondItem="TqU-26-kE8" secondAttribute="leading" id="nEz-oF-GPR"/>
+                                    <constraint firstAttribute="width" constant="142" id="rEY-Kn-mAq"/>
+                                    <constraint firstAttribute="trailing" secondItem="zx4-pJ-UoP" secondAttribute="trailing" id="zjB-oW-ULx"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="OSv-cR-nIE"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="CKD-gs-1pZ" secondAttribute="top" id="CgK-0t-fCd"/>
+                            <constraint firstItem="CKD-gs-1pZ" firstAttribute="leading" secondItem="TqU-26-kE8" secondAttribute="trailing" constant="13" id="Bvc-wa-qhs"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="CKD-gs-1pZ" secondAttribute="top" constant="58" id="CgK-0t-fCd"/>
                             <constraint firstItem="Hlr-ja-OiJ" firstAttribute="bottom" secondItem="CKD-gs-1pZ" secondAttribute="bottom" id="UHH-dM-3To"/>
                             <constraint firstItem="OSv-cR-nIE" firstAttribute="trailing" secondItem="CKD-gs-1pZ" secondAttribute="trailing" constant="9" id="ffn-Oz-8zU"/>
                             <constraint firstAttribute="bottomMargin" secondItem="Hlr-ja-OiJ" secondAttribute="bottom" constant="-13" id="gXS-8c-Wfw"/>
-                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" constant="13" id="mN0-Rw-jiS"/>
+                            <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" constant="71" id="mN0-Rw-jiS"/>
+                            <constraint firstItem="TqU-26-kE8" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" constant="11" id="qXv-sL-QgO"/>
                             <constraint firstItem="Hlr-ja-OiJ" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" constant="11" id="tS4-go-Dqb"/>
+                            <constraint firstItem="TqU-26-kE8" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" constant="13" id="tVn-yY-9Pt"/>
                             <constraint firstItem="CKD-gs-1pZ" firstAttribute="leading" secondItem="Hlr-ja-OiJ" secondAttribute="trailing" constant="13" id="x7v-TD-ISk"/>
                         </constraints>
                     </view>
@@ -95,12 +143,16 @@
                         <outlet property="assignmentTableView" destination="Hlr-ja-OiJ" id="OYZ-Bq-LMN"/>
                         <outlet property="calendarTableView" destination="CKD-gs-1pZ" id="acB-3U-zKS"/>
                         <outlet property="classroomToggle" destination="1cz-1x-os9" id="Z93-J9-qXg"/>
+                        <outlet property="disableClassroom" destination="qkg-zf-dlF" id="GAM-jw-XTD"/>
+                        <outlet property="enableClassroom" destination="1VA-9Q-Sbb" id="NvJ-r0-G88"/>
+                        <outlet property="switcherStack" destination="zx4-pJ-UoP" id="55I-4Q-Yih"/>
+                        <outlet property="toggleView" destination="TqU-26-kE8" id="7dt-BG-dyq"/>
                         <segue destination="BA2-jE-DmS" kind="presentation" identifier="logOut" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="0n5-jj-Dax"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oen-GF-wRZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2081" y="-224"/>
+            <point key="canvasLocation" x="2080.6734992679353" y="-224.41406249999997"/>
         </scene>
         <!--Sign In View Controller-->
         <scene sceneID="9rw-gh-k6r">

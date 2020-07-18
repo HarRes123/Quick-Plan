@@ -46,10 +46,18 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     var daysFromToday = 0
 
+    @IBOutlet weak var toggleView: UIView!
+    
     let date = Date()
     var calendar = Calendar.current
 
     @IBOutlet weak var classroomToggle: UIBarButtonItem!
+    
+    @IBOutlet weak var enableClassroom: UIButton!
+    @IBOutlet weak var disableClassroom: UIButton!
+    
+    @IBOutlet weak var switcherStack: UIStackView!
+    
     
     @IBOutlet var calendarTableView: UITableView!
     @IBOutlet var assignmentTableView: UITableView!
@@ -713,6 +721,26 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     @objc func pressedOnDate(sender _: UIButton) {
         changeDays(sign: -daysFromToday)
     }
+    
+    @objc func checkAction(sender : UITapGestureRecognizer) {
+        print("PRESSED")
+    }
+      
+    @IBAction func classroomSwitcher(_ sender: UIButton) {
+        if sender.tag == 1 {
+            enableClassroom.backgroundColor = UIColor(hexFromString: "008000")
+            enableClassroom.setTitleColor(.white, for: .normal)
+            disableClassroom.backgroundColor = .white
+            disableClassroom.setTitleColor(.black, for: .normal)
+        } else {
+            enableClassroom.backgroundColor = .white
+            enableClassroom.setTitleColor(.black, for: .normal)
+            disableClassroom.backgroundColor = .red
+            disableClassroom.setTitleColor(.white, for: .normal)
+        }
+    }
+
+    
 
     @objc func loadCal(sender _: UIButton) {
         loadCalendar = false
@@ -936,7 +964,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         setUpUI(view: assignmentTableView)
         setUpUI(view: calendarTableView)
-
+        setUpUI(view: toggleView)
+       
         // self.navigationController?.navigationBar.tex.lineBreakMode = .ByCharWrapping
 
         navigationController?.navigationBar.transparentNavigationBar()
@@ -955,48 +984,48 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         setUpInitialNotifications()
     }
 
+    func configureTitleView() {
+        
+        var firstName = Auth.auth().currentUser?.displayName ?? "User"
+        var greeting = String()
 
-        func configureTitleView() {
-            
-            var firstName = Auth.auth().currentUser?.displayName ?? "User"
-            var greeting = String()
-
-            if let dotRange = firstName.range(of: " ") {
-                firstName.removeSubrange(dotRange.lowerBound ..< firstName.endIndex)
-            }
-
-            let now = NSDate()
-            let nowDateValue = now as Date
-
-            let midnight1 = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nowDateValue)
-            let midnight2 = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: nowDateValue)
-            let sixAM = calendar.date(bySettingHour: 6, minute: 0, second: 0, of: nowDateValue)
-            let noon = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: nowDateValue)
-            let sixPM = calendar.date(bySettingHour: 18, minute: 0, second: 0, of: nowDateValue)
-
-            if nowDateValue >= midnight1!, nowDateValue <= sixAM! {
-                greeting = "Good Evening"
-            } else if nowDateValue >= sixAM!, nowDateValue <= noon! {
-                greeting = "Good Morning"
-            } else if nowDateValue >= noon!, nowDateValue <= sixPM! {
-                greeting = "Good Afternoon"
-            } else if nowDateValue >= sixPM!, nowDateValue <= midnight2! {
-                greeting = "Good Evening"
-            }
-
-            let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: (self.navigationController?.navigationBar.frame.width)!, height: (self.navigationController?.navigationBar.frame.height)!))
-
-            titleLabel.numberOfLines = 0
-            titleLabel.textAlignment = .center
-            titleLabel.text =  "\(greeting), \(firstName)!"
-            titleLabel.font = UIFont(name: "AvenirNext-Regular", size: 22)
-            titleLabel.adjustsFontSizeToFitWidth = true
-            
-            navigationItem.titleView = titleLabel
+        if let dotRange = firstName.range(of: " ") {
+            firstName.removeSubrange(dotRange.lowerBound ..< firstName.endIndex)
         }
+
+        let now = NSDate()
+        let nowDateValue = now as Date
+
+        let midnight1 = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: nowDateValue)
+        let midnight2 = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: nowDateValue)
+        let sixAM = calendar.date(bySettingHour: 6, minute: 0, second: 0, of: nowDateValue)
+        let noon = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: nowDateValue)
+        let sixPM = calendar.date(bySettingHour: 18, minute: 0, second: 0, of: nowDateValue)
+
+        if nowDateValue >= midnight1!, nowDateValue <= sixAM! {
+            greeting = "Good Evening"
+        } else if nowDateValue >= sixAM!, nowDateValue <= noon! {
+            greeting = "Good Morning"
+        } else if nowDateValue >= noon!, nowDateValue <= sixPM! {
+            greeting = "Good Afternoon"
+        } else if nowDateValue >= sixPM!, nowDateValue <= midnight2! {
+            greeting = "Good Evening"
+        }
+
+        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: (self.navigationController?.navigationBar.frame.width)!, height: (self.navigationController?.navigationBar.frame.height)!))
+
+        titleLabel.numberOfLines = 0
+        titleLabel.textAlignment = .center
+        titleLabel.text =  "\(greeting), \(firstName)!"
+        titleLabel.font = UIFont(name: "AvenirNext-Regular", size: 22)
+        titleLabel.adjustsFontSizeToFitWidth = true
+        
+        navigationItem.titleView = titleLabel
+    }
 
 
     func setUpUI(view: UIView) {
+        
         let containerView: UIView = UIView(frame: view.frame)
         containerView.backgroundColor = UIColor.clear
         containerView.layer.shadowColor = UIColor.darkGray.cgColor
@@ -1009,8 +1038,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         view.layer.cornerRadius = 15
         view.layer.masksToBounds = true
+
+        if view == toggleView {
+            view.addSubview(switcherStack)
+            switcherStack.addArrangedSubview(enableClassroom)
+            switcherStack.addArrangedSubview(disableClassroom)
+        }
+        
         self.view.addSubview(containerView)
         containerView.addSubview(view)
+    
     }
 
     //    func dayView(dayView: DayView, didTapTimelineAt date: Date) {
@@ -1242,7 +1279,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         self.present(alert, animated: true)
     }
-    
+   
     @IBAction func classroomToggleAction(_ sender: Any) {
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
      //   print("SNAPSNAP", snapshot)
