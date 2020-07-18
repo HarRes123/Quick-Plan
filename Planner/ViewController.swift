@@ -51,6 +51,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     @IBOutlet weak var toggleView: BetterSegmentedControl!
     
+    let enabledImageView = UIImageView(image: UIImage(named: "classroom")!)
+    let disabledImageView = UIImageView(image: UIImage(named: "classroom_disabled")!)
+    
     let date = Date()
     var calendar = Calendar.current
     
@@ -956,13 +959,25 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         setUpUI(view: calendarTableView)
         setUpUI(view: toggleView)
         toggleView.addTarget(self, action: #selector(controlValueChanged(_:)), for: .valueChanged)
-        toggleView.segments = LabelSegment.segments(withTitles: ["Enable", "Disable"],
-                                                  normalFont: UIFont(name: "AvenirNext-Regular", size: 15.0)!,
-                                                  normalTextColor: .black,
-                                                  selectedFont: UIFont(name: "AvenirNext-Regular", size: 15.0)!,
-                                                  selectedTextColor: .white)
-       
+        toggleView.segments = LabelSegment.segments(withTitles: ["", ""])
+
+        enabledImageView.frame = CGRect(x: toggleView.frame.width/4 - 20, y: toggleView.frame.height/2 - 20, width: 40, height: 40)
+        
+        enabledImageView.image = enabledImageView.image?.withRenderingMode(.alwaysTemplate)
+        enabledImageView.tintColor = .black
+        enabledImageView.isUserInteractionEnabled = false
+      
+        disabledImageView.frame = CGRect(x: toggleView.frame.width*(3/4) - 20, y: toggleView.frame.height/2 - 20, width: 40, height: 40)
+        
+        disabledImageView.image = disabledImageView.image?.withRenderingMode(.alwaysTemplate)
+        disabledImageView.tintColor = .red
+        disabledImageView.isUserInteractionEnabled = false
+
+        toggleView.addSubview(enabledImageView)
+        toggleView.addSubview(disabledImageView)
+        
         navigationController?.navigationBar.transparentNavigationBar()
+        
         view.backgroundColor = UIColor(hexFromString: "9eb5e8")
 
     }
@@ -1037,15 +1052,19 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     
     @objc func controlValueChanged(_ sender: BetterSegmentedControl) {
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
+            
             if sender.index == 0 {
                 print("Enabled")
                 isClassroomEnabled = true
                 sender.indicatorViewBackgroundColor = UIColor(hexFromString: "008000")
-                
+                enabledImageView.tintColor = .black
+                disabledImageView.tintColor = .red
             } else {
                 print("Disabled")
                 isClassroomEnabled = false
                 sender.indicatorViewBackgroundColor = .red
+                enabledImageView.tintColor = UIColor(hexFromString: "008000")
+                disabledImageView.tintColor = .black
             }
             if snapshot.exists() || isClassroomEnabled {
                 self.beginClassImport()

@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "classroom_filled@1x.png",
+      "filename" : "classroom_disabled@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "classroom_filled@2x.png",
+      "filename" : "classroom_disabled@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "classroom_filled@3x.png",
+      "filename" : "classroom_disabled@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
