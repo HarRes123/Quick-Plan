@@ -9,22 +9,25 @@ import UIKit
 
 open class IconSegment: BetterSegmentedControlSegment {
     // MARK: Constants
+
     private struct DefaultValues {
         static let normalBackgroundColor: UIColor = .clear
         static let selectedBackgroundColor: UIColor = .clear
     }
-    
+
     // MARK: Properties
+
     public var icon: UIImage
     public var iconSize: CGSize
-    
+
     public var normalIconTintColor: UIColor
     public var normalBackgroundColor: UIColor
-    
+
     public var selectedIconTintColor: UIColor
     public var selectedBackgroundColor: UIColor
-    
+
     // MARK: Lifecycle
+
     public init(icon: UIImage,
                 iconSize: CGSize,
                 normalBackgroundColor: UIColor? = nil,
@@ -38,20 +41,23 @@ open class IconSegment: BetterSegmentedControlSegment {
         self.selectedBackgroundColor = selectedBackgroundColor ?? DefaultValues.selectedBackgroundColor
         self.selectedIconTintColor = selectedIconTintColor
     }
-    
+
     // MARK: BetterSegmentedControlSegment
+
     public lazy var normalView: UIView = {
-        return createView(withIcon: icon,
-                          iconSize: iconSize,
-                          backgroundColor: normalBackgroundColor,
-                          iconTintColor: normalIconTintColor)
+        createView(withIcon: icon,
+                   iconSize: iconSize,
+                   backgroundColor: normalBackgroundColor,
+                   iconTintColor: normalIconTintColor)
     }()
+
     public lazy var selectedView: UIView = {
-       return createView(withIcon: icon,
-                         iconSize: iconSize,
-                         backgroundColor: selectedBackgroundColor,
-                         iconTintColor: selectedIconTintColor)
+        createView(withIcon: icon,
+                   iconSize: iconSize,
+                   backgroundColor: selectedBackgroundColor,
+                   iconTintColor: selectedIconTintColor)
     }()
+
     private func createView(withIcon icon: UIImage,
                             iconSize: CGSize,
                             backgroundColor: UIColor,

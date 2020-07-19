@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Hlr-ja-OiJ">
-                                <rect key="frame" x="11" y="150" width="142" height="867"/>
+                                <rect key="frame" x="11" y="150" width="142" height="861"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="142" id="CqN-Fa-BGw"/>
                                 </constraints>
@@ -38,7 +38,7 @@
                                 </connections>
                             </tableView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="50" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="CKD-gs-1pZ">
-                                <rect key="frame" x="166" y="63" width="1191" height="954"/>
+                                <rect key="frame" x="166" y="63" width="1191" height="948"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="calendarCell" id="5Ig-Vz-FBa" customClass="CalendarTableViewCell" customModule="Planner" customModuleProvider="target">
@@ -80,8 +80,9 @@
                             <constraint firstItem="CKD-gs-1pZ" firstAttribute="leading" secondItem="TqU-26-kE8" secondAttribute="trailing" constant="13" id="Bvc-wa-qhs"/>
                             <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="CKD-gs-1pZ" secondAttribute="top" constant="87" id="CgK-0t-fCd"/>
                             <constraint firstItem="Hlr-ja-OiJ" firstAttribute="bottom" secondItem="CKD-gs-1pZ" secondAttribute="bottom" id="UHH-dM-3To"/>
+                            <constraint firstAttribute="bottom" secondItem="Hlr-ja-OiJ" secondAttribute="bottom" constant="13" id="dJu-Gr-PcG"/>
                             <constraint firstItem="OSv-cR-nIE" firstAttribute="trailing" secondItem="CKD-gs-1pZ" secondAttribute="trailing" constant="9" id="ffn-Oz-8zU"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="Hlr-ja-OiJ" secondAttribute="bottom" constant="-13" id="gXS-8c-Wfw"/>
+                            <constraint firstAttribute="bottom" secondItem="CKD-gs-1pZ" secondAttribute="bottom" constant="13" id="hY1-KV-Bgy"/>
                             <constraint firstItem="Hlr-ja-OiJ" firstAttribute="top" secondItem="OSv-cR-nIE" secondAttribute="top" constant="100" id="mN0-Rw-jiS"/>
                             <constraint firstItem="TqU-26-kE8" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" constant="11" id="qXv-sL-QgO"/>
                             <constraint firstItem="Hlr-ja-OiJ" firstAttribute="leading" secondItem="OSv-cR-nIE" secondAttribute="leading" constant="11" id="tS4-go-Dqb"/>
@@ -123,10 +124,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="app_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="xDb-H3-Jhn">
-                                <rect key="frame" x="0.0" y="86" width="1366" height="343.5"/>
+                                <rect key="frame" x="0.0" y="86" width="1366" height="313"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vKl-YD-PrK">
-                                <rect key="frame" x="633" y="492.5" width="100" height="39"/>
+                                <rect key="frame" x="633" y="462" width="100" height="100"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="3qR-tM-6E6"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="djE-qZ-Nvl"/>

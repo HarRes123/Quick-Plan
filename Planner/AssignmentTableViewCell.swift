@@ -36,6 +36,7 @@ class AssignmentTableViewCell: UITableViewCell {
 
         classAssignments.isScrollEnabled = false
         classAssignments.delegate = self
+        self.frame = CGRect(x: 0, y: 0, width: 119, height: self.frame.height)
 
         //        classAssignments.numberOfLines = 10
 

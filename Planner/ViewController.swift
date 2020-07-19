@@ -6,29 +6,28 @@
 //  Copyright © 2020 Harrison Resnick. All rights reserved.
 //
 
+import BetterSegmentedControl
 import Firebase
 import GoogleSignIn
 import MobileCoreServices
 import UIKit
 import UserNotifications
-import BetterSegmentedControl
 
 class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate {
-    
     var myAuth: GTMFetcherAuthorizationProtocol?
     private let service = GTLRClassroomService()
 
     var assignmentsPerCourse = [[String]]()
     var newAssignmentsPerCourse = [[String]]()
     var assignmentIndex = 0
-    
+
     var classIDAndNameClassroom = [String: String]()
     var classNameAndAssignments = [String: [String]]()
     var newClassNameAndAssignments = [String: [String]]()
 
     var classes = [String]()
     var arrayHeader = [Int]()
-    
+
     var isClassroomEnabled = true
 
     var calendarItems = [String]()
@@ -44,21 +43,21 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     let center = UNUserNotificationCenter.current()
 
     var loadCalendar = true
-    
-    var importButtonText = "Import Classes"
+
+    var importButtonText = "Import\nClasses"
 
     var assignmentAndDueDate = [String: String]()
 
     var daysFromToday = 0
 
-    @IBOutlet weak var toggleView: BetterSegmentedControl!
-    
+    @IBOutlet var toggleView: BetterSegmentedControl!
+
     let enabledImageView = UIImageView(image: UIImage(named: "classroom")!)
     let disabledImageView = UIImageView(image: UIImage(named: "classroom_disabled")!)
-    
+
     let date = Date()
     var calendar = Calendar.current
-    
+
     @IBOutlet var calendarTableView: UITableView!
     @IBOutlet var assignmentTableView: UITableView!
 
@@ -202,7 +201,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         // print("test")
         return showAllClassInfo(assignmentTableView, cellForRowAt: indexPath)
     }
-    
+
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if tableView == assignmentTableView {
             classes = [String](classNameAndAssignments.keys)
@@ -242,13 +241,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 var button = UIButton()
                 let leftButton = UIButton(type: .custom)
                 let rightButton = UIButton(type: .custom)
-                //button.center = view.center
+                // button.center = view.center
                 leftButton.frame = CGRect(x: 5, y: 5, width: 30, height: 65)
                 rightButton.frame = CGRect(x: tableView.frame.width - 35, y: 5, width: 30, height: 65)
                 calendarTableView.backgroundColor = UIColor(hexFromString: "E8E8E8")
                 view.backgroundColor = UIColor(hexFromString: "E8E8E8")
-                
-                if loadCalendar == false {
+
+                if !loadCalendar {
                     buttonWidth = 110
                     button = UIButton(frame: CGRect(x: buttonX - buttonWidth / 2, y: 5, width: buttonWidth, height: 65))
                     button.setTitle(notificationDay, for: .normal)
@@ -293,7 +292,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
         }
     }
-    
+
     func addCalendarSwipe() {
         let directions: [UISwipeGestureRecognizer.Direction] = [.left, .right]
         for direction in directions {
@@ -304,14 +303,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     @objc func handleSwipe(sender: UISwipeGestureRecognizer) {
-        if loadCalendar == false {
+        if !loadCalendar {
             if sender.direction == .left {
                 changeDays(sign: 1)
             } else {
                 changeDays(sign: -1)
             }
         }
-        
     }
 
     func tableView(_: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath _: IndexPath?) -> UITableViewDropProposal {
@@ -401,45 +399,37 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             print(arrayHeader)
         }
     }
-    
-    
+
     func beginClassImport() {
-        
-        
         service.authorizer = myAuth
         showSpinner(onView: assignmentTableView)
         assignmentTableView.isUserInteractionEnabled = false
         calendarTableView.isUserInteractionEnabled = false
         toggleView.isUserInteractionEnabled = false
         arrayHeader = Array(repeating: 0, count: arrayHeader.count)
-        self.classNameAndAssignments = [String: [String]]()
-        self.newClassNameAndAssignments = [String: [String]]()
-     //  if toggleView.segments[0].selectedView.
+        classNameAndAssignments = [String: [String]]()
+        newClassNameAndAssignments = [String: [String]]()
+        //  if toggleView.segments[0].selectedView.
         if isClassroomEnabled {
             getInfo()
         } else {
-            
             getClassesNoClassroom()
         }
-        
-        self.assignmentTableView.reloadData()
-        self.calendarTableView.reloadData()
-        
-    }
-    
 
-    @objc func importClasses(sender: UIButton) {
+        assignmentTableView.reloadData()
+        calendarTableView.reloadData()
+    }
+
+    @objc func importClasses(sender _: UIButton) {
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
-            
-            if snapshot.exists() || isClassroomEnabled {
-            
-                beginClassImport()
-                importButtonText = ""
+
+            if snapshot.exists() || self.isClassroomEnabled {
+                self.beginClassImport()
+                self.importButtonText = ""
             } else {
-                noAssignmentsAlert()
+                self.noAssignmentsAlert()
             }
         })
-    
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection _: Int) -> String? {
@@ -454,8 +444,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func showAllClassInfo(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "assignmentCell", for: indexPath) as! AssignmentTableViewCell
 
+        
         assignmentCellWidth = cell.bounds.width
-
+        assignmentTableView.bounds.size.width = 142
+   //     cell.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: cell.frame.size.height)
+ 
         classes = [String](classNameAndAssignments.keys)
         // let assignments: Array<Array<String>> = Array<Array<String>>(classNameAndAssignments.values)
         cell.backgroundColor = .white
@@ -483,7 +476,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 }
             }
 
-            if calendarItems.contains(cell.classAssignments.text) {
+            if calendarItems.contains(cell.classAssignments.text), !loadCalendar {
                 cell.classAssignments.textColor = .lightGray
             } else {
                 cell.classAssignments.textColor = .black
@@ -507,6 +500,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         if tableView == assignmentTableView {
             return showAllClassInfo(tableView, cellForRowAt: indexPath)
         } else {
@@ -514,17 +508,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             var fixedTime = ""
             cell.selectionStyle = .none
 
-            if loadCalendar == false {
+            if !loadCalendar {
                 if calendarItems[indexPath.row].first == "0" {
                     fixedTime = String(calendarItems[indexPath.row].dropFirst())
                 } else {
                     fixedTime = calendarItems[indexPath.row]
                 }
-                
             }
 
             cell.calendarEventText.text = fixedTime
-            
+
             if checkTimeIsValid(from: cell.calendarEventText.text) {
                 cell.backgroundColor = UIColor(hexFromString: "f5bc49")
                 cell.isUserInteractionEnabled = false
@@ -545,7 +538,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         if tableView == assignmentTableView {
             if classNameAndAssignments.count > 0 {
                 if arrayHeader[section] == 1 || arrayHeader[section] == 2 {
-                    return 75
+                    return 50
                 } else {
                     return 0
                 }
@@ -562,10 +555,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             if classNameAndAssignments.count > 0 {
                 // tableView.frame.size.width/4
                 classes = [String](classNameAndAssignments.keys)
-                let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 50))
+                let view = UIView()
                 view.backgroundColor = .clear
-                let button = UIButton(frame: CGRect(x: tableView.bounds.width / 2 - 41.5, y: 0, width: 50, height: 50))
+                let button = UIButton()
+
                 button.layer.cornerRadius = 10
+                
                 if newClassNameAndAssignments[classes[section]]!.count > 0 {
                     button.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
                 } else {
@@ -580,9 +575,14 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 button.tag = section
 
                 button.addTarget(self, action: #selector(showAllClasses(sender:)), for: .touchUpInside)
-                // view.layoutMargins = UIEdgeInsets(top: 25, left: 0, bottom: 25, right: 0)
-                //  view.frame = view.frame.inset(by: UIEdgeInsets(top: 25, left: 0, bottom: 25, right: 0))
+
                 view.addSubview(button)
+                button.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+                button.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+                button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25).isActive = true
+                button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
+                button.translatesAutoresizingMaskIntoConstraints = false
+                
                 if arrayHeader[section] == 1 {
                     let plusImage = UIImage(named: "plus")
                     button.setImage(plusImage, for: .normal)
@@ -695,7 +695,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         calendarTableView.reloadData()
         assignmentTableView.reloadData()
     }
-    
+
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if tableView == calendarTableView {
             if checkTimeIsValid(from: calendarItems[indexPath.row]) {
@@ -706,7 +706,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
         return false
     }
-    
+
     func tableView(_: UITableView, editingStyleForRowAt _: IndexPath) -> UITableViewCell.EditingStyle {
         return .none
     }
@@ -750,11 +750,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     @objc func pressedOnDate(sender _: UIButton) {
         changeDays(sign: -daysFromToday)
     }
-    
-    @objc func checkAction(sender : UITapGestureRecognizer) {
-        print("PRESSED")
-    }
-  
+
     @objc func loadCal(sender _: UIButton) {
         loadCalendar = false
         showSpinner(onView: calendarTableView)
@@ -887,11 +883,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func application(_: UIApplication, open url: URL, options _: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
         return GIDSignIn.sharedInstance().handle(url)
     }
-    
+
     func sign(_: GIDSignIn!, didSignInFor _: GIDGoogleUser!,
               withError error: Error!) {
         print("SIGN IN")
-        
+
         if let error = error {
             if (error as NSError).code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue {
                 print("The user has not signed in before or they have since signed out.")
@@ -901,7 +897,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 assignmentTableView.isUserInteractionEnabled = true
                 calendarTableView.isUserInteractionEnabled = true
                 toggleView.isUserInteractionEnabled = true
-                importButtonText = "Import Classes"
+                importButtonText = "Import\nClasses"
                 assignmentTableView.reloadData()
                 calendarTableView.reloadData()
                 removeSpinner()
@@ -910,7 +906,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             getInfo()
         }
     }
-    
+
     func userAlreadyExist(kUsernameKey: String) -> Bool {
         return UserDefaults.standard.object(forKey: kUsernameKey) != nil
     }
@@ -920,7 +916,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         if userAlreadyExist(kUsernameKey: "isClassroomEnabled") {
             isClassroomEnabled = UserDefaults.standard.bool(forKey: "isClassroomEnabled")
         } else {
@@ -935,8 +931,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 print("No")
             }
         }
-        
-    //    classroomToggle.tintColor = .adjustedGreen
+
+        //    classroomToggle.tintColor = .adjustedGreen
 
         NotificationCenter.default.addObserver(self, selector: #selector(performFetch), name: Notification.Name("performFetchAuto"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(popOverDismissed), name: Notification.Name("popOverDismissed"), object: nil)
@@ -990,15 +986,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         toggleView.addTarget(self, action: #selector(controlValueChanged(_:)), for: .valueChanged)
         toggleView.segments = LabelSegment.segments(withTitles: ["", ""])
 
-        enabledImageView.frame = CGRect(x: toggleView.frame.width/4 - 20, y: toggleView.frame.height/2 - 20, width: 40, height: 40)
-        
+        enabledImageView.frame = CGRect(x: toggleView.frame.width / 4 - 20, y: toggleView.frame.height / 2 - 20, width: 40, height: 40)
+
         enabledImageView.image = enabledImageView.image?.withRenderingMode(.alwaysTemplate)
         enabledImageView.isUserInteractionEnabled = false
-      
-        disabledImageView.frame = CGRect(x: toggleView.frame.width*(3/4) - 20, y: toggleView.frame.height/2 - 20, width: 40, height: 40)
-        
+
+        disabledImageView.frame = CGRect(x: toggleView.frame.width * (3 / 4) - 20, y: toggleView.frame.height / 2 - 20, width: 40, height: 40)
+
         disabledImageView.image = disabledImageView.image?.withRenderingMode(.alwaysTemplate)
-       
+
         disabledImageView.isUserInteractionEnabled = false
 
         toggleView.addSubview(enabledImageView)
@@ -1009,7 +1005,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             disabledImageView.tintColor = .red
             enabledImageView.tintColor = .black
             toggleView.indicatorViewBackgroundColor = .adjustedGreen
-            importButtonText = "Import Classes"
+            importButtonText = "Import\nClasses"
         } else {
             toggleView.setIndex(1)
             disabledImageView.tintColor = .black
@@ -1017,13 +1013,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             toggleView.indicatorViewBackgroundColor = .red
             importButtonText = ""
         }
-        
-        addCalendarSwipe()
-        
-        navigationController?.navigationBar.transparentNavigationBar()
-        
-        view.backgroundColor = UIColor(hexFromString: "9eb5e8")
 
+        addCalendarSwipe()
+
+        navigationController?.navigationBar.transparentNavigationBar()
+
+        view.backgroundColor = UIColor(hexFromString: "9eb5e8")
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -1034,7 +1029,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     func configureTitleView() {
-        
         var firstName = Auth.auth().currentUser?.displayName ?? "User"
         var greeting = String()
 
@@ -1061,17 +1055,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             greeting = "Good Evening"
         }
 
-        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: (self.navigationController?.navigationBar.frame.width)!, height: (self.navigationController?.navigationBar.frame.height)!))
+        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: (navigationController?.navigationBar.frame.width)!, height: (navigationController?.navigationBar.frame.height)!))
 
         titleLabel.numberOfLines = 0
         titleLabel.textAlignment = .center
-        titleLabel.text =  "\(greeting), \(firstName)!"
+        titleLabel.text = "\(greeting), \(firstName)!"
         titleLabel.font = UIFont(name: "AvenirNext-Regular", size: 22)
         titleLabel.adjustsFontSizeToFitWidth = true
-        
+
         navigationItem.titleView = titleLabel
     }
-
 
     func setUpUI(view: UIView) {
         
@@ -1090,35 +1083,32 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         self.view.addSubview(containerView)
         containerView.addSubview(view)
-    
     }
-    
-    
+
     @objc func controlValueChanged(_ sender: BetterSegmentedControl) {
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
-            
+
             if sender.index == 0 {
                 print("Enabled")
-                isClassroomEnabled = true
+                self.isClassroomEnabled = true
                 sender.indicatorViewBackgroundColor = .adjustedGreen
-                enabledImageView.tintColor = .black
-                disabledImageView.tintColor = .red
-                importButtonText = ""
+                self.enabledImageView.tintColor = .black
+                self.disabledImageView.tintColor = .red
+                self.importButtonText = ""
             } else {
                 print("Disabled")
-                isClassroomEnabled = false
+                self.isClassroomEnabled = false
                 sender.indicatorViewBackgroundColor = .red
-                enabledImageView.tintColor = .adjustedGreen
-                disabledImageView.tintColor = .black
+                self.enabledImageView.tintColor = .adjustedGreen
+                self.disabledImageView.tintColor = .black
             }
-            UserDefaults.standard.set(isClassroomEnabled, forKey: "isClassroomEnabled")
-            if snapshot.exists() || isClassroomEnabled {
+            UserDefaults.standard.set(self.isClassroomEnabled, forKey: "isClassroomEnabled")
+            if snapshot.exists() || self.isClassroomEnabled {
                 self.beginClassImport()
             } else {
-                noAssignmentsAlert()
+                self.noAssignmentsAlert()
             }
         })
-      
     }
 
     func fetchCourses() {
@@ -1190,10 +1180,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.timeZone = .current
         dateFormatter.dateFormat = "MM/dd/yyyy"
-        //
-        //                    let date = Date()
-        //                    let calendar = Calendar.current
+
         return dateFormatter.date(from: "\(currentMonth)/\(currentDay)/\(currentYear)") ?? Date()
+    }
+    
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
     }
 
     @objc func obtainClasses(ticket _: GTLRServiceTicket,
@@ -1288,12 +1280,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                               error: NSError?) {
         if let error = error {
             print(error.localizedDescription)
-            
+
             if (GIDSignIn.sharedInstance()?.hasPreviousSignIn()) != nil {
                 if error.localizedDescription == "Request had insufficient authentication scopes." {
                     GIDSignIn.sharedInstance()?.signIn()
                 } else if error.localizedDescription == "@ClassroomDisabled The user is not permitted to access Classroom." {
-                    self.errorNotification()
+                    errorNotification()
                 } else {
                     GIDSignIn.sharedInstance()?.restorePreviousSignIn()
                 }
@@ -1330,24 +1322,23 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 return 100
             }
         } else {
-                return 75
-           // }
+            return 75
+            // }
         }
     }
-    
+
     func noAssignmentsAlert() {
         arrayHeader = Array(repeating: 0, count: arrayHeader.count)
-        self.classNameAndAssignments = [String: [String]]()
-        self.newClassNameAndAssignments = [String: [String]]()
+        classNameAndAssignments = [String: [String]]()
+        newClassNameAndAssignments = [String: [String]]()
         assignmentTableView.reloadData()
         calendarTableView.reloadData()
         print("NO ADDED ASSIGNMENTS")
-        importButtonText = "Import Classes"
+        importButtonText = "Import\nClasses"
         let alert = UIAlertController(title: "No Classes", message: "Please create a new class", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        self.present(alert, animated: true)
+        present(alert, animated: true)
     }
-   
 
     @IBAction func showManualEntry(_ sender: UIBarButtonItem) {
         print("YES")
@@ -1404,45 +1395,42 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     func finishedGettingInfo() {
+        
         print("RELOAD")
         assignmentIndex = 0
-        importButtonText = "Import Classes"
+        importButtonText = "Import\nClasses"
         arrayHeader = Array(repeating: 0, count: classNameAndAssignments.count)
         print("COUNTCOUNT", arrayHeader.count)
-        self.removeSpinner()
+        removeSpinner()
         assignmentTableView.isUserInteractionEnabled = true
         calendarTableView.isUserInteractionEnabled = true
         toggleView.isUserInteractionEnabled = true
-        
-        self.assignmentTableView.reloadData()
-        
-    }
-    
-    func getClassesNoClassroom() {
 
+        assignmentTableView.reloadData()
+    }
+
+    func getClassesNoClassroom() {
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
-        
+
             self.assignmentsPerCourse = Array(repeating: [], count: snapshot.children.allObjects.count)
             self.newAssignmentsPerCourse = Array(repeating: [], count: snapshot.children.allObjects.count)
-           // self.arrayHeader = Array(repeating: 0, count: snapshot.children.allObjects.count)
+            // self.arrayHeader = Array(repeating: 0, count: snapshot.children.allObjects.count)
 
-            for i in 0...snapshot.children.allObjects.count-1 {
+            for i in 0 ... snapshot.children.allObjects.count - 1 {
                 let encodedSnapshot = "\(snapshot.children.allObjects[i])"
                 let className = "\(encodedSnapshot.removingPercentEncoding ?? "")".slice(from: "(", to: ")")!
                 let classNameWithDivider = "\(className)"
                 print("NAME", className)
-                if classNameAndAssignments[className] == nil  {
+                if self.classNameAndAssignments[className] == nil {
                     self.getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: classNameWithDivider.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
                 }
 
-                
                 if i >= snapshot.children.allObjects.count - 1 {
                     self.finishedGettingInfo()
                 }
             }
-       
+
         })
-        
     }
 
     func getClassesFromFirebase(assignmentsAndDueDate: [String], assignmentsPerCourse: [String], newAsignmentsPerCourse: [String], className: String, classInClassroom: Bool) {
@@ -1467,10 +1455,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
 
         if classInClassroom {
-            
             allNames.append(contentsOf: assignmentsPerCourse.arrayWithoutFirstElement())
             allNewNames.append(contentsOf: newAsignmentsPerCourse.arrayWithoutFirstElement())
         }
+        
         print("TESTING", allNames)
         classNameAndAssignments.updateValue(allNames, forKey: className)
         newClassNameAndAssignments.updateValue(allNewNames, forKey: className)
@@ -1482,51 +1470,42 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     func showInfo() {
-        // assignmentIndex = 0
-        if assignmentsPerCourse.count != 0 {
 
+        if assignmentsPerCourse.count != 0 {
             for i in 0 ... assignmentsPerCourse.count - 1 {
                 if assignmentsPerCourse[i].first != nil {
                     Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
-                        let encodedClass = "%EF%A3%BF\(assignmentsPerCourse[i].first!.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)%EF%A3%BF"
+                        let encodedClass = "%EF%A3%BF\(self.assignmentsPerCourse[i].first!.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)%EF%A3%BF"
                         // print("ENCODEDEDE", encodedClass)
                         if snapshot.exists() {
                             if snapshot.hasChild(encodedClass) {
                                 print("CLASS", encodedClass)
-                                getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: encodedClass).value as! [String], assignmentsPerCourse: assignmentsPerCourse[i], newAsignmentsPerCourse: newAssignmentsPerCourse[i], className: self.assignmentsPerCourse[i].first!, classInClassroom: true)
-                               
+                                self.getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: encodedClass).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: self.assignmentsPerCourse[i].first!, classInClassroom: true)
+
                             } else {
-                                
                                 for classNum in 0 ... snapshot.children.allObjects.count - 1 {
-                                    
                                     let className = ("\(snapshot.children.allObjects[classNum])".removingPercentEncoding!.slice(from: "(", to: ")")!)
-       
+
                                     let classNameWithDivider = "\(className)"
-                                                
-                                    if !classes.contains(className) {
-                                       
-                                        if classNameAndAssignments[className] == nil  {
-                                            
-                                            getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: classNameWithDivider.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
+
+                                    if !self.classes.contains(className) {
+                                        if self.classNameAndAssignments[className] == nil {
+                                            self.getClassesFromFirebase(assignmentsAndDueDate: snapshot.childSnapshot(forPath: classNameWithDivider.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!).value as! [String], assignmentsPerCourse: self.assignmentsPerCourse[i], newAsignmentsPerCourse: self.newAssignmentsPerCourse[i], className: className, classInClassroom: false)
                                         }
-      
                                     }
-                                    
                                 }
-                                
-                                if classNameAndAssignments[assignmentsPerCourse[i].first!] == nil {
-                                    classroomOnlyFetch(assignmentsPerCourse: assignmentsPerCourse[i], newAssignmentsPerCourse: newAssignmentsPerCourse[i])
+
+                                if self.classNameAndAssignments[self.assignmentsPerCourse[i].first!] == nil {
+                                    self.classroomOnlyFetch(assignmentsPerCourse: self.assignmentsPerCourse[i], newAssignmentsPerCourse: self.newAssignmentsPerCourse[i])
                                 }
-         
                             }
-                            
+
                             if i >= self.assignmentsPerCourse.count - 1 {
                                 self.finishedGettingInfo()
                             }
 
                         } else {
-                            
-                            classroomOnlyFetch(assignmentsPerCourse: assignmentsPerCourse[i], newAssignmentsPerCourse: newAssignmentsPerCourse[i])
+                            self.classroomOnlyFetch(assignmentsPerCourse: self.assignmentsPerCourse[i], newAssignmentsPerCourse: self.newAssignmentsPerCourse[i])
 
                             if i >= self.assignmentsPerCourse.count - 1 {
                                 self.finishedGettingInfo()

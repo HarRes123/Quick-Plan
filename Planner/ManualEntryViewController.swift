@@ -23,7 +23,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
     @IBOutlet var dueDateField: UITextField!
     @IBOutlet var dateError: UILabel!
     @IBOutlet var dummyView: UIView!
-    
+
     var savePressed = false
 
     var refResponse: DatabaseReference!
