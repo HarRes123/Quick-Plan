@@ -750,19 +750,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         changeDays(sign: -daysFromToday)
     }
 
-    override func viewDidLayoutSubviews() {
-        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
-
-            if snapshot.exists() || self.isClassroomEnabled {
-                self.beginClassImport()
-                self.importButtonText = "Loading..."
-            } else {
-                self.noAssignmentsAlert()
-            }
-            self.loadCal()
-        })
-    }
-
     func loadCal() {
         calendarTableView.isUserInteractionEnabled = false
         assignmentTableView.isUserInteractionEnabled = false
@@ -913,6 +900,17 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         } else {
             isClassroomEnabled = true
         }
+        
+        Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
+
+            if snapshot.exists() || self.isClassroomEnabled {
+                self.beginClassImport()
+                self.importButtonText = "Loading..."
+            } else {
+                self.noAssignmentsAlert()
+            }
+            self.loadCal()
+        })
 
         center.requestAuthorization(options: [.alert, .badge, .sound]) {
             granted, _ in
