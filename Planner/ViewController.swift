@@ -332,11 +332,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         calendarTableView.isUserInteractionEnabled = false
         assignmentTableView.isUserInteractionEnabled = false
         toggleView.isUserInteractionEnabled = false
-        setUpCalendar(reload: false)
+        setUpCalendar()
         //    setUpInitialNotifications()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.setUpCalendar(reload: true)
+            self.setUpCalendar()
             self.calendarTableView.isUserInteractionEnabled = true
             self.assignmentTableView.isUserInteractionEnabled = true
             self.toggleView.isUserInteractionEnabled = true
@@ -367,7 +367,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             //              })
 
             setUpInitialNotifications()
-            setUpCalendar(reload: true)
+            setUpCalendar()
             if isClassroomEnabled {
                 getInfo()
             } else {
@@ -650,7 +650,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         assignmentTableView.reloadData()
     }
 
-    func setUpCalendar(reload: Bool) {
+    func setUpCalendar() {
         // print("DATA", Database.database().reference().child((Auth.auth().currentUser?.displayName)!).value(forKey: getViewedDate()) as! [String])
 
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child(getViewedDate()).observe(.value, with: { snapshot in
@@ -689,10 +689,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }) { error in
             print(error.localizedDescription)
         }
-        if reload {
-            calendarTableView.reloadData()
-            assignmentTableView.reloadData()
-        }
+      
+        calendarTableView.reloadData()
+        assignmentTableView.reloadData()
+        
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -738,8 +738,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         setUpNotificationsFirebase(identifer: identifier)
 
-        // addResponse()
-
         addResponse()
 
         calendarTableView.reloadData()
@@ -754,12 +752,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         calendarTableView.isUserInteractionEnabled = false
         assignmentTableView.isUserInteractionEnabled = false
         toggleView.isUserInteractionEnabled = false
-        setUpCalendar(reload: false)
+        setUpCalendar()
         setUpInitialNotifications()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.loadCalendar = false
-            self.setUpCalendar(reload: true)
+            self.setUpCalendar()
         }
     }
 
@@ -909,8 +907,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             } else {
                 self.noAssignmentsAlert()
             }
-            self.loadCal()
+           
         })
+        
+        self.loadCal()
 
         center.requestAuthorization(options: [.alert, .badge, .sound]) {
             granted, _ in
@@ -1301,7 +1301,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
         if tableView == assignmentTableView {
-            if arrayHeader.count > 0 {
+            if classNameAndAssignments.count > 0 {
                 return 125
             } else {
                 return 100
