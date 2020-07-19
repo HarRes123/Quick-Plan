@@ -11,14 +11,6 @@ import UIKit
 class AssignmentTableViewCell: UITableViewCell {
     @IBOutlet var classAssignments: UITextView!
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-
     var textString: String {
         get {
             return classAssignments.text
@@ -36,7 +28,7 @@ class AssignmentTableViewCell: UITableViewCell {
 
         classAssignments.isScrollEnabled = false
         classAssignments.delegate = self
-        self.frame = CGRect(x: 0, y: 0, width: 119, height: self.frame.height)
+        frame = CGRect(x: 0, y: 0, width: 119, height: frame.height)
 
         //        classAssignments.numberOfLines = 10
 
