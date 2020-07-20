@@ -16,6 +16,16 @@ class SignInViewController: UIViewController, FUIAuthDelegate {
         super.viewDidLoad()
 
         setUpButton(button: logInOutlet, darkTint: UIColor.gray.cgColor)
+        
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) {
+            granted, _ in
+            if granted {
+                print("yes")
+            } else {
+                print("No")
+            }
+
+        }
     }
 
     @IBAction func loginTapped(_: UIButton) {

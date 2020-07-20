@@ -45,6 +45,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var loadCalendar = true
 
     var importButtonText = "Loading..."
+    
+    var hasSignedIn = false
 
     var assignmentAndDueDate = [String: String]()
 
@@ -858,6 +860,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func application(_: UIApplication, open url: URL, options _: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
         return GIDSignIn.sharedInstance().handle(url)
     }
+    
+    func handleSignInError() {
+        assignmentTableView.isUserInteractionEnabled = true
+        calendarTableView.isUserInteractionEnabled = true
+        toggleView.isUserInteractionEnabled = true
+        importButtonText = "Import\nClasses"
+        assignmentTableView.reloadData()
+        calendarTableView.reloadData()
+    }
 
     func sign(_: GIDSignIn!, didSignInFor _: GIDGoogleUser!,
               withError error: Error!) {
@@ -868,13 +879,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 print("The user has not signed in before or they have since signed out.")
                 GIDSignIn.sharedInstance()?.signIn()
             } else {
-                print("\(error.localizedDescription)")
-                assignmentTableView.isUserInteractionEnabled = true
-                calendarTableView.isUserInteractionEnabled = true
-                toggleView.isUserInteractionEnabled = true
-                importButtonText = "Import\nClasses"
-                assignmentTableView.reloadData()
-                calendarTableView.reloadData()
+                handleSignInError()
                 removeSpinner()
             }
         } else {
@@ -897,6 +902,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         } else {
             isClassroomEnabled = true
         }
+        
+        if userAlreadyExist(kUsernameKey: "hasSignedIn") {
+            hasSignedIn = UserDefaults.standard.bool(forKey: "hasSignedIn")
+        } else {
+            hasSignedIn = false
+        }
 
         if #available(iOS 13.0, *) {
             self.overrideUserInterfaceStyle = .light
@@ -905,8 +916,30 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
 
             if snapshot.exists() || self.isClassroomEnabled {
-                self.beginClassImport()
-                self.importButtonText = "Loading..."
+                if !hasSignedIn {
+                    let alert = UIAlertController(title: "Welcome to Integrated Student Planner!", message: "Would you like to connect your Google Classroom account?", preferredStyle: .alert)
+
+                    let yes = UIAlertAction(title: "Yes", style: .default) { [] (_: UIAlertAction) in
+
+                        self.beginClassImport()
+                        self.importButtonText = "Loading..."
+                    }
+                    let no = UIAlertAction(title: "No", style: .cancel) { (_: UIAlertAction) in
+                        alert.dismiss(animated: true, completion: nil)
+                        handleSignInError()
+                    
+                    }
+
+                    alert.addAction(no)
+                    alert.addAction(yes)
+
+                    self.present(alert, animated: true)
+
+                } else {
+                    self.beginClassImport()
+                    self.importButtonText = "Loading..."
+                }
+                
             } else {
                 self.noAssignmentsAlert()
             }
@@ -914,15 +947,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         })
 
         loadCal()
-
-        center.requestAuthorization(options: [.alert, .badge, .sound]) {
-            granted, _ in
-            if granted {
-                print("yes")
-            } else {
-                print("No")
-            }
-        }
 
         //    classroomToggle.tintColor = .customGreen
 
@@ -1279,10 +1303,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 }
             } else if error.localizedDescription.contains("authentication") {
                 GIDSignIn.sharedInstance()?.signIn()
-            } else {
-                errorNotification()
             }
-
+            
             return
         }
 
@@ -1362,6 +1384,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
             self.assignmentTableView.reloadData()
             try! Auth.auth().signOut()
+            UserDefaults.standard.set(true, forKey: "isClassroomEnabled")
+            UserDefaults.standard.set(false, forKey: "hasSignedIn")
             self.performSegue(withIdentifier: "logOut", sender: self)
         }
 
@@ -1512,5 +1536,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             present(alert, animated: true)
         }
+        UserDefaults.standard.set(true, forKey: "hasSignedIn")
     }
 }
