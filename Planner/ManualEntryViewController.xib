@@ -14,6 +14,7 @@
                 <outlet property="assignmentField" destination="fmW-Mc-zEB" id="F2K-qv-k10"/>
                 <outlet property="classPicker" destination="aiD-Xk-LfM" id="0kG-oZ-goC"/>
                 <outlet property="dateError" destination="B0E-ld-dtx" id="IBf-TG-Fkg"/>
+                <outlet property="dismissButton" destination="Zs0-gt-wiz" id="ufF-J2-j0l"/>
                 <outlet property="dueDateField" destination="OgL-x3-9QP" id="W0O-wv-nSY"/>
                 <outlet property="dummyView" destination="4Y6-6I-iWA" id="ysC-r6-tvj"/>
                 <outlet property="navBar" destination="iZx-Ls-M5e" id="c8T-1d-eDG"/>

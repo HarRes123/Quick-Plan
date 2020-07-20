@@ -23,7 +23,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
     @IBOutlet var dueDateField: UITextField!
     @IBOutlet var dateError: UILabel!
     @IBOutlet var dummyView: UIView!
-
+    @IBOutlet var dismissButton: UIBarButtonItem!
     var savePressed = false
 
     var refResponse: DatabaseReference!
@@ -94,8 +94,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
             print("Selected String: \(selectedText) \n index: \(index)")
         }
 
-        setUpButton(button: saveButton)
-        view.backgroundColor = UIColor(hexFromString: "E8E8E8")
+        setUpButton(button: saveButton, darkTint: UIColor.black.cgColor)
         scrollView.addSubview(stackView)
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -109,6 +108,23 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
     func textFieldShouldReturn(_: UITextField) -> Bool {
         view.endEditing(true)
         return false
+    }
+
+    override func traitCollectionDidChange(_: UITraitCollection?) {
+        if traitCollection.userInterfaceStyle == .light {
+            view.backgroundColor = .customGray
+            dismissButton.tintColor = .darkGray
+            classPicker.attributedPlaceholder = NSAttributedString(string: classPicker.placeholder!, attributes: [NSAttributedString.Key.foregroundColor: UIColor.darkGray])
+            assignmentField.attributedPlaceholder = NSAttributedString(string: assignmentField.placeholder!, attributes: [NSAttributedString.Key.foregroundColor: UIColor.darkGray])
+            dueDateField.attributedPlaceholder = NSAttributedString(string: dueDateField.placeholder!, attributes: [NSAttributedString.Key.foregroundColor: UIColor.darkGray])
+
+        } else {
+            view.backgroundColor = .darkGray
+            dismissButton.tintColor = .customGray
+            classPicker.attributedPlaceholder = NSAttributedString(string: classPicker.placeholder!, attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
+            assignmentField.attributedPlaceholder = NSAttributedString(string: assignmentField.placeholder!, attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
+            dueDateField.attributedPlaceholder = NSAttributedString(string: dueDateField.placeholder!, attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
+        }
     }
 
     func checkValidDate(date: String) -> Bool {

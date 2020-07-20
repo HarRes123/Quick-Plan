@@ -19,11 +19,28 @@ open class DropDown: UITextField {
 
     @IBInspectable public var rowHeight: CGFloat = 30
     @IBInspectable public var rowBackgroundColor: UIColor = .white
-    @IBInspectable public var selectedRowColor: UIColor = .cyan
+    @IBInspectable public var selectedRowColor: UIColor = .customBlue
     @IBInspectable public var hideOptionsWhenSelect = true
     @IBInspectable public var isSearchEnable: Bool = true {
         didSet {
             addGesture()
+        }
+    }
+
+    override open func traitCollectionDidChange(_: UITraitCollection?) {
+        if #available(iOS 13.0, *) {
+            rowBackgroundColor = .systemBackground
+        } else {
+            if traitCollection.userInterfaceStyle == .light {
+                rowBackgroundColor = .white
+            } else {
+                rowBackgroundColor = .black
+            }
+        }
+        if traitCollection.userInterfaceStyle == .light {
+            arrowColor = .black
+        } else {
+            arrowColor = .white
         }
     }
 

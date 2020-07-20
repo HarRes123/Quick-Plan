@@ -242,8 +242,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 // button.center = view.center
                 leftButton.frame = CGRect(x: 5, y: 5, width: 30, height: 65)
                 rightButton.frame = CGRect(x: tableView.frame.width - 35, y: 5, width: 30, height: 65)
-                calendarTableView.backgroundColor = UIColor(hexFromString: "E8E8E8")
-                view.backgroundColor = UIColor(hexFromString: "E8E8E8")
+                calendarTableView.backgroundColor = .customGray
+                view.backgroundColor = .customGray
                 button = UIButton(frame: CGRect(x: buttonX - buttonWidth / 2, y: 5, width: buttonWidth, height: 65))
                 if !loadCalendar {
                     buttonWidth = 110
@@ -517,7 +517,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             cell.calendarEventText.text = fixedTime
 
             if checkTimeIsValid(from: cell.calendarEventText.text) {
-                cell.backgroundColor = UIColor(hexFromString: "f5bc49")
+                cell.backgroundColor = .customOrange
                 cell.isUserInteractionEnabled = false
             } else {
                 if loadCalendar {
@@ -569,7 +569,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     }
                 }
 
-                button.backgroundColor = UIColor(hexFromString: "E8E8E8")
+                button.backgroundColor = .customGray
                 button.tag = section
 
                 button.addTarget(self, action: #selector(showAllClasses(sender:)), for: .touchUpInside)
@@ -689,10 +689,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }) { error in
             print(error.localizedDescription)
         }
-      
+
         calendarTableView.reloadData()
         assignmentTableView.reloadData()
-        
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -898,7 +897,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         } else {
             isClassroomEnabled = true
         }
-        
+
+        if #available(iOS 13.0, *) {
+            self.overrideUserInterfaceStyle = .light
+        }
+
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
 
             if snapshot.exists() || self.isClassroomEnabled {
@@ -907,10 +910,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             } else {
                 self.noAssignmentsAlert()
             }
-           
+
         })
-        
-        self.loadCal()
+
+        loadCal()
 
         center.requestAuthorization(options: [.alert, .badge, .sound]) {
             granted, _ in
@@ -921,7 +924,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
         }
 
-        //    classroomToggle.tintColor = .adjustedGreen
+        //    classroomToggle.tintColor = .customGreen
 
         NotificationCenter.default.addObserver(self, selector: #selector(performFetch), name: Notification.Name("performFetchAuto"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(popOverDismissed), name: Notification.Name("popOverDismissed"), object: nil)
@@ -944,7 +947,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         assignmentTableView.separatorInset = UIEdgeInsets(top: .zero, left: 15, bottom: .zero, right: 15)
         calendarTableView.separatorInset = UIEdgeInsets(top: .zero, left: 15, bottom: .zero, right: 15)
 
-        assignmentTableView.backgroundColor = UIColor(hexFromString: "5FD7EC")
+        assignmentTableView.backgroundColor = .customBlue
 
         assignmentTableView.estimatedRowHeight = 250.0 // Replace with your actual estimation
         // Automatic dimensions to tell the table view to use dynamic height
@@ -993,11 +996,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             toggleView.setIndex(0)
             disabledImageView.tintColor = .red
             enabledImageView.tintColor = .black
-            toggleView.indicatorViewBackgroundColor = .adjustedGreen
+            toggleView.indicatorViewBackgroundColor = .customGreen
         } else {
             toggleView.setIndex(1)
             disabledImageView.tintColor = .black
-            enabledImageView.tintColor = .adjustedGreen
+            enabledImageView.tintColor = .customGreen
             toggleView.indicatorViewBackgroundColor = .red
         }
 
@@ -1005,7 +1008,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         navigationController?.navigationBar.transparentNavigationBar()
 
-        view.backgroundColor = UIColor(hexFromString: "9eb5e8")
+        view.backgroundColor = .customPurple
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -1076,7 +1079,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             if sender.index == 0 {
                 print("Enabled")
                 self.isClassroomEnabled = true
-                sender.indicatorViewBackgroundColor = .adjustedGreen
+                sender.indicatorViewBackgroundColor = .customGreen
                 self.enabledImageView.tintColor = .black
                 self.disabledImageView.tintColor = .red
                 self.importButtonText = "Loading..."
@@ -1084,7 +1087,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 print("Disabled")
                 self.isClassroomEnabled = false
                 sender.indicatorViewBackgroundColor = .red
-                self.enabledImageView.tintColor = .adjustedGreen
+                self.enabledImageView.tintColor = .customGreen
                 self.disabledImageView.tintColor = .black
             }
             UserDefaults.standard.set(self.isClassroomEnabled, forKey: "isClassroomEnabled")
@@ -1316,12 +1319,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         arrayHeader = Array(repeating: 0, count: arrayHeader.count)
         classNameAndAssignments = [String: [String]]()
         newClassNameAndAssignments = [String: [String]]()
-        assignmentTableView.reloadData()
-        calendarTableView.reloadData()
         print("NO ADDED ASSIGNMENTS")
         importButtonText = "Import\nClasses"
         let alert = UIAlertController(title: "No Classes", message: "Please create a new class", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        assignmentTableView.isUserInteractionEnabled = true
+        calendarTableView.isUserInteractionEnabled = true
+        toggleView.isUserInteractionEnabled = true
+        assignmentTableView.reloadData()
+        calendarTableView.reloadData()
         present(alert, animated: true)
     }
 

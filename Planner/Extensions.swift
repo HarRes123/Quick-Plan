@@ -90,6 +90,10 @@ extension UINavigationBar {
         setBackgroundImage(UIImage(), for: .default)
         shadowImage = UIImage()
         isTranslucent = true
+
+        if #available(iOS 13.0, *) {
+            self.overrideUserInterfaceStyle = .light
+        }
     }
 }
 
@@ -182,16 +186,28 @@ extension UIViewController {
 }
 
 extension UIViewController {
-    func setUpButton(button: UIButton) {
+    func setUpButton(button: UIButton, darkTint: CGColor) {
         button.layer.cornerRadius = 8
         button.backgroundColor = UIColor(hexFromString: "9eb5e8")
         button.tintColor = .darkGray
-        button.layer.shadowColor = UIColor.darkGray.cgColor
+
         button.layer.shadowOffset = CGSize(width: -3, height: 3)
         button.layer.shadowOpacity = 1.0
         button.layer.shadowRadius = 1.5
-        button.layer.borderColor = UIColor.darkGray.cgColor
         button.layer.borderWidth = 2
+
+        if #available(iOS 13.0, *) {
+            if self.traitCollection.userInterfaceStyle == .light {
+                button.layer.borderColor = UIColor.darkGray.cgColor
+                button.layer.shadowColor = UIColor.darkGray.cgColor
+            } else {
+                button.layer.borderColor = darkTint
+                button.layer.shadowColor = darkTint
+            }
+        } else {
+            button.layer.borderColor = UIColor.darkGray.cgColor
+            button.layer.shadowColor = UIColor.darkGray.cgColor
+        }
     }
 }
 
@@ -270,5 +286,19 @@ extension NSMutableAttributedString {
 }
 
 extension UIColor {
-    static let adjustedGreen = UIColor(hexFromString: "008000")
+    static let customGreen = UIColor(hexFromString: "008000")
+    static let customGray = UIColor(hexFromString: "E8E8E8")
+    static let customBlue = UIColor(hexFromString: "5FD7EC")
+    static let customOrange = UIColor(hexFromString: "F5BC49")
+    static let customPurple = UIColor(hexFromString: "9EB5E8")
+}
+
+extension UINavigationController {
+    override open var preferredStatusBarStyle: UIStatusBarStyle {
+        if #available(iOS 13.0, *) {
+            return .darkContent
+        } else {
+            return .default
+        }
+    }
 }

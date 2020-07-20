@@ -15,7 +15,7 @@ class SignInViewController: UIViewController, FUIAuthDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setUpButton(button: logInOutlet)
+        setUpButton(button: logInOutlet, darkTint: UIColor.gray.cgColor)
     }
 
     @IBAction func loginTapped(_: UIButton) {
