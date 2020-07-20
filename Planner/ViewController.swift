@@ -310,12 +310,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
     }
 
-    func tableView(_: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath _: IndexPath?) -> UITableViewDropProposal {
+    func tableView(_: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath : IndexPath?) -> UITableViewDropProposal {
         if session.localDragSession != nil { // Drag originated from the same app.
-            return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+            if withDestinationIndexPath?.row == 0 {
+                return UITableViewDropProposal(operation: .forbidden)
+            } else {
+                return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+            }
         }
 
-        return UITableViewDropProposal(operation: .cancel, intent: .unspecified)
+        return UITableViewDropProposal(operation: .forbidden)
     }
 
     func getViewedDate() -> String {
@@ -916,7 +920,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         Database.database().reference().child("users").child((Auth.auth().currentUser?.uid) ?? "").child("Added Assignments").observeSingleEvent(of: .value, with: { [self] snapshot in
 
             if snapshot.exists() || self.isClassroomEnabled {
-                if !hasSignedIn {
+                if !self.hasSignedIn {
                     let alert = UIAlertController(title: "Welcome to Integrated Student Planner!", message: "Would you like to connect your Google Classroom account?", preferredStyle: .alert)
 
                     let yes = UIAlertAction(title: "Yes", style: .default) { [] (_: UIAlertAction) in
@@ -926,7 +930,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     }
                     let no = UIAlertAction(title: "No", style: .cancel) { (_: UIAlertAction) in
                         alert.dismiss(animated: true, completion: nil)
-                        handleSignInError()
+                        self.handleSignInError()
                     
                     }
 
@@ -1204,7 +1208,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                              finishedWithObject result: GTLRClassroom_ListCourseWorkResponse,
                              error: NSError?) {
         if let error = error {
+            //THIS IS CAUSING AN ERROR WHEN SIGNED IN WITH A TEACHER ACCOUNT
             print(error.localizedDescription)
+            print("CATCHING")
             //  GIDSignIn.sharedInstance()?.signIn()
             errorNotification()
 
@@ -1291,20 +1297,19 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                               finishedWithObject result: GTLRClassroom_ListCoursesResponse,
                               error: NSError?) {
         if let error = error {
+            print("ERRORERRORO")
             print(error.localizedDescription)
-
-            if (GIDSignIn.sharedInstance()?.hasPreviousSignIn()) != nil {
-                if error.localizedDescription == "Request had insufficient authentication scopes." {
-                    GIDSignIn.sharedInstance()?.signIn()
-                } else if error.localizedDescription == "@ClassroomDisabled The user is not permitted to access Classroom." {
-                    errorNotification()
-                } else {
-                    GIDSignIn.sharedInstance()?.restorePreviousSignIn()
-                }
-            } else if error.localizedDescription.contains("authentication") {
-                GIDSignIn.sharedInstance()?.signIn()
-            }
             
+            if error.localizedDescription == "Request had insufficient authentication scopes." {
+                GIDSignIn.sharedInstance()?.signIn()
+            } else if error.localizedDescription == "@ClassroomDisabled The user is not permitted to access Classroom." {
+                errorNotification()
+            } else if (GIDSignIn.sharedInstance()?.hasPreviousSignIn()) != nil {
+                GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+            } else {
+                errorNotification()
+            }
+
             return
         }
 
@@ -1399,13 +1404,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     func getInfo() {
+        
         if GIDSignIn.sharedInstance()?.currentUser != nil {
             myAuth = GIDSignIn.sharedInstance()?.currentUser.authentication.fetcherAuthorizer()
         } else {
             myAuth = nil
         }
-
+        
         service.authorizer = myAuth
+
         fetchCourses()
     }
 
