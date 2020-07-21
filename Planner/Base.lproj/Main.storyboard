@@ -123,14 +123,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="app_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="xDb-H3-Jhn">
-                                <rect key="frame" x="0.0" y="86" width="1366" height="343.5"/>
-                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vKl-YD-PrK">
                                 <rect key="frame" x="633" y="492.5" width="100" height="39"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="3qR-tM-6E6"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="djE-qZ-Nvl"/>
+                                    <constraint firstAttribute="width" secondItem="vKl-YD-PrK" secondAttribute="height" multiplier="100:39" id="g4g-8F-oUv"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <state key="normal" title="Sign In"/>
@@ -138,16 +136,34 @@
                                     <action selector="loginTapped:" destination="BA2-jE-DmS" eventType="touchUpInside" id="ZHT-Kn-2t4"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please sign in to your Integrated Student Planner account" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="jaz-5W-Ny2">
+                                <rect key="frame" x="50" y="406.5" width="1266" height="78"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="78" id="rcU-vG-REU"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="26"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="app_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="xDb-H3-Jhn">
+                                <rect key="frame" x="0.0" y="148.5" width="1366" height="250"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="250" id="mqB-5q-YfI"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="y5B-ki-s5Y"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="top" relation="greaterThanOrEqual" secondItem="y5B-ki-s5Y" secondAttribute="top" constant="30" id="4A9-um-43i"/>
+                            <constraint firstItem="vKl-YD-PrK" firstAttribute="top" secondItem="jaz-5W-Ny2" secondAttribute="bottom" constant="8" symbolic="YES" id="Bp7-DA-S9E"/>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="leading" secondItem="y5B-ki-s5Y" secondAttribute="leading" id="Ka7-BX-ndl"/>
                             <constraint firstItem="vKl-YD-PrK" firstAttribute="centerY" secondItem="Vz6-gH-F8O" secondAttribute="centerY" id="PIl-bK-Eik"/>
-                            <constraint firstItem="vKl-YD-PrK" firstAttribute="top" secondItem="xDb-H3-Jhn" secondAttribute="bottom" constant="63" id="Upl-J2-bpg"/>
-                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="top" secondItem="y5B-ki-s5Y" secondAttribute="top" constant="86" id="dmJ-6F-BBs"/>
-                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="centerX" secondItem="vKl-YD-PrK" secondAttribute="centerX" id="qCs-4E-kmY"/>
+                            <constraint firstItem="jaz-5W-Ny2" firstAttribute="top" secondItem="xDb-H3-Jhn" secondAttribute="bottom" constant="8" symbolic="YES" id="bIX-NV-cux"/>
+                            <constraint firstItem="jaz-5W-Ny2" firstAttribute="trailing" secondItem="y5B-ki-s5Y" secondAttribute="trailing" constant="-50" id="dwj-Bg-P7A"/>
+                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="trailing" secondItem="y5B-ki-s5Y" secondAttribute="trailing" id="lka-eh-yPQ"/>
                             <constraint firstItem="vKl-YD-PrK" firstAttribute="centerX" secondItem="Vz6-gH-F8O" secondAttribute="centerX" id="vQL-Sx-vF7"/>
-                            <constraint firstItem="xDb-H3-Jhn" firstAttribute="leading" secondItem="y5B-ki-s5Y" secondAttribute="leading" id="zsd-jC-jRL"/>
+                            <constraint firstItem="jaz-5W-Ny2" firstAttribute="leading" secondItem="y5B-ki-s5Y" secondAttribute="leading" constant="50" id="zIq-qg-Md5"/>
                         </constraints>
                     </view>
                     <connections>
@@ -157,7 +173,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tpw-E8-y6g" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="656.52173913043487" y="-224.33035714285714"/>
+            <point key="canvasLocation" x="656.2225475841874" y="-224.41406249999997"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="BvR-78-2Wz">
@@ -183,7 +199,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="app_logo.png" width="626" height="626"/>
+        <image name="app_logo.png" width="466" height="466"/>
         <image name="logout" width="30" height="30"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

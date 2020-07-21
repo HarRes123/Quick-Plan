@@ -51,6 +51,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var assignmentAndDueDate = [String: String]()
 
     var daysFromToday = 0
+    
+    
 
     @IBOutlet var toggleView: BetterSegmentedControl!
 
@@ -488,7 +490,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
 
         } else {
-            cell.classAssignments.text = "Assignment"
+            cell.classAssignments.text = "Assignments"
         }
 
         return cell
@@ -1226,8 +1228,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         let currentDate = getCurrentDate()
 
-        //  for classCount in 0...classNames.count - 1 {
-
         for assignment in assignments {
             let dueMonth = assignment.dueDate?.month as? Int ?? 0
             let dueDay = assignment.dueDate?.day as? Int ?? 0
@@ -1320,11 +1320,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
 
         for course in courses {
-            // if course.courseState == "ACTIVE" {RELOAD
-            classIDAndNameClassroom.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
-            // }
+            if course.courseState == "ACTIVE" {
+                classIDAndNameClassroom.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
+            }
         }
-        //    print(outputText)
+
         assignmentIndex = 0
         fetchAssignments()
     }
