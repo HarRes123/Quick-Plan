@@ -1210,12 +1210,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                              finishedWithObject result: GTLRClassroom_ListCourseWorkResponse,
                              error: NSError?) {
         if let error = error {
-            //THIS IS CAUSING AN ERROR WHEN SIGNED IN WITH A TEACHER ACCOUNT
             print(error.localizedDescription)
-            print("CATCHING")
-            //  GIDSignIn.sharedInstance()?.signIn()
-            errorNotification()
-
             return
         }
 
@@ -1275,9 +1270,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         } else {
             assignmentIndex += 1
         }
-        print("index", assignmentIndex)
-
-        // print(outputText)
+        
     }
 
     func errorNotification() {
@@ -1312,19 +1305,28 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
             return
         }
-
+        
         guard let courses = result.courses, !courses.isEmpty else {
             print("No courses.")
             errorNotification()
             return
         }
 
+        var ownerIDs = [String]()
         for course in courses {
             if course.courseState == "ACTIVE" {
-                classIDAndNameClassroom.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
+                let currentOwnerID = "\(course)".slice(from:"ownerId:\"", to: "\"")!
+                ownerIDs.append(currentOwnerID)
+                if GIDSignIn.sharedInstance()?.currentUser.userID.description != currentOwnerID {
+                    classIDAndNameClassroom.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
+                }
             }
         }
-
+        
+        if [GIDSignIn.sharedInstance()?.currentUser.userID.description] == ownerIDs.removingDuplicates() {
+            errorNotification()
+        }
+        
         assignmentIndex = 0
         fetchAssignments()
     }
@@ -1382,7 +1384,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             self.navigationItem.title = "Planner"
 
             GIDSignIn.sharedInstance().signOut()
-            GIDSignIn.sharedInstance().disconnect()
 
             self.center.removeAllPendingNotificationRequests()
             self.service.authorizer = self.myAuth
