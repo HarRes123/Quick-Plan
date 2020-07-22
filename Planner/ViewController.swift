@@ -1312,18 +1312,18 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             return
         }
 
-        var ownerIDs = [String]()
+        var ownerIDs = Set<String>()
         for course in courses {
             if course.courseState == "ACTIVE" {
                 let currentOwnerID = "\(course)".slice(from:"ownerId:\"", to: "\"")!
-                ownerIDs.append(currentOwnerID)
+                ownerIDs.insert(currentOwnerID)
                 if GIDSignIn.sharedInstance()?.currentUser.userID.description != currentOwnerID {
                     classIDAndNameClassroom.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
                 }
             }
         }
         
-        if [GIDSignIn.sharedInstance()?.currentUser.userID.description] == ownerIDs.removingDuplicates() {
+        if [GIDSignIn.sharedInstance()?.currentUser.userID.description] == ownerIDs {
             errorNotification()
         }
         
