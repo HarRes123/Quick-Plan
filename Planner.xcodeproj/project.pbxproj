@@ -22,10 +22,10 @@
 		624BAC0924908E7C0050EA6F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 624BAC0724908E7B0050EA6F /* LaunchScreen.storyboard */; };
 		624BAC1424908E7C0050EA6F /* PlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BAC1324908E7C0050EA6F /* PlannerTests.swift */; };
 		624BAC1F24908E7C0050EA6F /* PlannerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BAC1E24908E7C0050EA6F /* PlannerUITests.swift */; };
+		62751CCE24CA381F006591D4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 62751CCD24CA381E006591D4 /* GoogleService-Info.plist */; };
 		627FB368249EC77D007E0E4C /* app_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 627FB367249EC77D007E0E4C /* app_logo.png */; };
 		62A3A52224BB9D6700B375D6 /* ManualEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A3A52024BB9D6700B375D6 /* ManualEntryViewController.swift */; };
 		62A3A52324BB9D6700B375D6 /* ManualEntryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 62A3A52124BB9D6700B375D6 /* ManualEntryViewController.xib */; };
-		62C7E55A249EB9A100155748 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 62C7E559249EB9A100155748 /* GoogleService-Info.plist */; };
 		62D1886624B2F80900675E94 /* top_pattern.png in Resources */ = {isa = PBXBuildFile; fileRef = 62D1886424B2F80900675E94 /* top_pattern.png */; };
 		62D1886724B2F80900675E94 /* bottom_pattern.png in Resources */ = {isa = PBXBuildFile; fileRef = 62D1886524B2F80900675E94 /* bottom_pattern.png */; };
 		62D84CE9249985D50011BD6F /* CalendarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D84CE7249985D50011BD6F /* CalendarTableViewCell.swift */; };
@@ -75,10 +75,10 @@
 		624BAC1E24908E7C0050EA6F /* PlannerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlannerUITests.swift; sourceTree = "<group>"; };
 		624BAC2024908E7C0050EA6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		625414A02490A45C00AA7908 /* Planner-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Planner-Bridging-Header.h"; sourceTree = "<group>"; };
+		62751CCD24CA381E006591D4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		627FB367249EC77D007E0E4C /* app_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_logo.png; sourceTree = "<group>"; };
 		62A3A52024BB9D6700B375D6 /* ManualEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryViewController.swift; sourceTree = "<group>"; };
 		62A3A52124BB9D6700B375D6 /* ManualEntryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ManualEntryViewController.xib; sourceTree = "<group>"; };
-		62C7E559249EB9A100155748 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		62D1886424B2F80900675E94 /* top_pattern.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = top_pattern.png; sourceTree = "<group>"; };
 		62D1886524B2F80900675E94 /* bottom_pattern.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bottom_pattern.png; sourceTree = "<group>"; };
 		62D84CE7249985D50011BD6F /* CalendarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTableViewCell.swift; sourceTree = "<group>"; };
@@ -165,7 +165,7 @@
 				627FB367249EC77D007E0E4C /* app_logo.png */,
 				62D1886524B2F80900675E94 /* bottom_pattern.png */,
 				62D1886424B2F80900675E94 /* top_pattern.png */,
-				62C7E559249EB9A100155748 /* GoogleService-Info.plist */,
+				62751CCD24CA381E006591D4 /* GoogleService-Info.plist */,
 			);
 			path = Planner;
 			sourceTree = "<group>";
@@ -330,9 +330,9 @@
 				624BAC0924908E7C0050EA6F /* LaunchScreen.storyboard in Resources */,
 				62D84CEA249985D50011BD6F /* CalendarTableViewCell.xib in Resources */,
 				624BAC0624908E7B0050EA6F /* Assets.xcassets in Resources */,
+				62751CCE24CA381F006591D4 /* GoogleService-Info.plist in Resources */,
 				624BAC0424908E790050EA6F /* Main.storyboard in Resources */,
 				62D1886724B2F80900675E94 /* bottom_pattern.png in Resources */,
-				62C7E55A249EB9A100155748 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

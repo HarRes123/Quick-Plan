@@ -136,7 +136,7 @@
                                     <action selector="loginTapped:" destination="BA2-jE-DmS" eventType="touchUpInside" id="ZHT-Kn-2t4"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please sign in to your Integrated Student Planner account" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="jaz-5W-Ny2">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please sign in to your Quick Plan account" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="jaz-5W-Ny2">
                                 <rect key="frame" x="50" y="406.5" width="1266" height="78"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="78" id="rcU-vG-REU"/>
@@ -146,7 +146,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="app_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="xDb-H3-Jhn">
-                                <rect key="frame" x="0.0" y="148.5" width="1366" height="250"/>
+                                <rect key="frame" x="0.0" y="165.5" width="1366" height="233"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="250" id="mqB-5q-YfI"/>
                                 </constraints>

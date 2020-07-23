@@ -923,7 +923,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
             if snapshot.exists() || self.isClassroomEnabled {
                 if !self.hasSignedIn {
-                    let alert = UIAlertController(title: "Welcome to Integrated Student Planner!", message: "Would you like to connect your Google Classroom account?", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Welcome to Quick Plan!", message: "Would you like to connect your Google Classroom account?", preferredStyle: .alert)
 
                     let yes = UIAlertAction(title: "Yes", style: .default) { [] (_: UIAlertAction) in
 
@@ -1519,9 +1519,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                 if self.classNameAndAssignments[self.assignmentsPerCourse[i].first!] == nil {
                                     self.classroomOnlyFetch(assignmentsPerCourse: self.assignmentsPerCourse[i], newAssignmentsPerCourse: self.newAssignmentsPerCourse[i])
                                 }
-                                if i >= self.assignmentsPerCourse.count - 1 {
-                                    self.finishedGettingInfo()
-                                }
+                   
                             }
 
                             if i >= self.assignmentsPerCourse.count - 1 {
