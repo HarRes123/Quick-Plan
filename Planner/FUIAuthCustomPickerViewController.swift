@@ -60,7 +60,7 @@ class FUIAuthCustomPickerViewController: FUIAuthPickerViewController {
         }
     }
 
-        override func viewWillDisappear(_ animated: Bool) {
+        override func viewDidDisappear(_ animated: Bool) {
             super.viewWillDisappear(animated)
             navigationController?.setNavigationBarHidden(false, animated: animated)
         }

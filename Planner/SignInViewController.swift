@@ -36,13 +36,16 @@ class SignInViewController: UIViewController, FUIAuthDelegate {
             return
         }
 
-        // Set delegate and specify sign in options
         authUI?.delegate = self
         authUI?.providers = [FUIEmailAuth(), FUIGoogleAuth()]
-
-        // Get the auth view controller and present it
+        
+        let rootNavigationController = authUI!.authViewController()
         let authViewController = FUIAuthCustomPickerViewController(authUI: authUI!)
+            
+        rootNavigationController.setViewControllers([authViewController], animated: true)
+        rootNavigationController.modalTransitionStyle = .coverVertical
+        present(rootNavigationController, animated: true, completion: nil)
 
-        present(authViewController, animated: true, completion: nil)
+        
     }
 }
