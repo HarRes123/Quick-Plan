@@ -1041,7 +1041,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         addCalendarSwipe()
 
-        navigationController?.navigationBar.transparentNavigationBar()
+        navigationController?.navigationBar.transparentNavigationBar(forceLight: true)
 
         view.backgroundColor = .customPurple
     }

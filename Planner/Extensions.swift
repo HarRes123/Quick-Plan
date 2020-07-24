@@ -86,14 +86,22 @@ extension UIColor {
 }
 
 extension UINavigationBar {
-    func transparentNavigationBar() {
+    func transparentNavigationBar(forceLight: Bool) {
         setBackgroundImage(UIImage(), for: .default)
         shadowImage = UIImage()
         isTranslucent = true
 
-        if #available(iOS 13.0, *) {
-            self.overrideUserInterfaceStyle = .light
+        if forceLight {
+            if #available(iOS 13.0, *) {
+                self.overrideUserInterfaceStyle = .light
+            }
         }
+    }
+}
+
+extension FUIAuthBaseViewController {
+    open override func viewWillAppear(_ animated: Bool) {
+        self.navigationController!.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "AvenirNext-Regular", size: 18)!]
     }
 }
 

@@ -43,8 +43,9 @@ class FUIAuthCustomPickerViewController: FUIAuthPickerViewController {
         super.viewWillAppear(animated)
         imageViewBackground.frame = view.frame
         logoImageView.center.x = view.center.x
-        logoImageView.center.y =  view.frame.size.height/4
-        navigationController?.setNavigationBarHidden(true, animated: animated)
+        logoImageView.center.y =  view.frame.size.height/4 + (navigationController?.navigationBar.frame.height)!
+        //navigationController?.setNavigationBarHidden(true, animated: animated)
+        navigationController?.navigationBar.transparentNavigationBar(forceLight: false)
     }
 
     
@@ -55,13 +56,13 @@ class FUIAuthCustomPickerViewController: FUIAuthPickerViewController {
             DispatchQueue.main.async {
                 self.imageViewBackground.frame = self.view.frame
                 self.logoImageView.center.x = self.view.center.x
-                self.logoImageView.center.y = self.view.frame.size.height/4
+                self.logoImageView.center.y = self.view.frame.size.height/4 + (self.navigationController?.navigationBar.frame.height)!
             }
         }
     }
 
         override func viewDidDisappear(_ animated: Bool) {
             super.viewWillDisappear(animated)
-            navigationController?.setNavigationBarHidden(false, animated: animated)
+           // navigationController?.setNavigationBarHidden(false, animated: animated)
         }
     }
