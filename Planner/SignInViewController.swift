@@ -16,7 +16,7 @@ class SignInViewController: UIViewController, FUIAuthDelegate {
         super.viewDidLoad()
 
         setUpButton(button: logInOutlet, darkTint: UIColor.gray.cgColor)
-        
+
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) {
             granted, _ in
             if granted {
@@ -24,7 +24,6 @@ class SignInViewController: UIViewController, FUIAuthDelegate {
             } else {
                 print("No")
             }
-
         }
     }
 
@@ -38,14 +37,12 @@ class SignInViewController: UIViewController, FUIAuthDelegate {
 
         authUI?.delegate = self
         authUI?.providers = [FUIEmailAuth(), FUIGoogleAuth()]
-        
+
         let rootNavigationController = authUI!.authViewController()
         let authViewController = FUIAuthCustomPickerViewController(authUI: authUI!)
-            
+
         rootNavigationController.setViewControllers([authViewController], animated: true)
         rootNavigationController.modalTransitionStyle = .coverVertical
         present(rootNavigationController, animated: true, completion: nil)
-
-        
     }
 }

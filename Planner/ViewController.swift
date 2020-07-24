@@ -45,14 +45,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var loadCalendar = true
 
     var importButtonText = "Loading..."
-    
+
     var hasSignedIn = false
 
     var assignmentAndDueDate = [String: String]()
 
     var daysFromToday = 0
-    
-    
 
     @IBOutlet var toggleView: BetterSegmentedControl!
 
@@ -312,7 +310,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
     }
 
-    func tableView(_: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath : IndexPath?) -> UITableViewDropProposal {
+    func tableView(_: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath: IndexPath?) -> UITableViewDropProposal {
         if session.localDragSession != nil { // Drag originated from the same app.
             if withDestinationIndexPath?.row == 0 {
                 return UITableViewDropProposal(operation: .forbidden)
@@ -870,7 +868,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func application(_: UIApplication, open url: URL, options _: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
         return GIDSignIn.sharedInstance().handle(url)
     }
-    
+
     func handleSignInError() {
         assignmentTableView.isUserInteractionEnabled = true
         calendarTableView.isUserInteractionEnabled = true
@@ -913,7 +911,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         } else {
             isClassroomEnabled = true
         }
-        
+
         if userAlreadyExist(kUsernameKey: "hasSignedIn") {
             hasSignedIn = UserDefaults.standard.bool(forKey: "hasSignedIn")
         } else {
@@ -938,7 +936,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     let no = UIAlertAction(title: "No", style: .cancel) { (_: UIAlertAction) in
                         alert.dismiss(animated: true, completion: nil)
                         self.handleSignInError()
-                    
                     }
 
                     alert.addAction(no)
@@ -950,7 +947,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     self.beginClassImport()
                     self.importButtonText = "Loading..."
                 }
-                
+
             } else {
                 self.noAssignmentsAlert()
             }
@@ -1041,7 +1038,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         addCalendarSwipe()
 
-        navigationController?.navigationBar.transparentNavigationBar(forceLight: true)
+        navigationController?.navigationBar.transparentNavigationBar()
 
         view.backgroundColor = .customPurple
     }
@@ -1275,7 +1272,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         } else {
             assignmentIndex += 1
         }
-        
     }
 
     func errorNotification() {
@@ -1297,7 +1293,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         if let error = error {
             print("ERRORERRORO")
             print(error.localizedDescription)
-            
+
             if error.localizedDescription == "Request had insufficient authentication scopes." {
                 GIDSignIn.sharedInstance()?.signIn()
             } else if error.localizedDescription == "@ClassroomDisabled The user is not permitted to access Classroom." {
@@ -1310,7 +1306,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
             return
         }
-        
+
         guard let courses = result.courses, !courses.isEmpty else {
             print("No courses.")
             errorNotification()
@@ -1320,18 +1316,18 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         var ownerIDs = Set<String>()
         for course in courses {
             if course.courseState == "ACTIVE" {
-                let currentOwnerID = "\(course)".slice(from:"ownerId:\"", to: "\"")!
+                let currentOwnerID = "\(course)".slice(from: "ownerId:\"", to: "\"")!
                 ownerIDs.insert(currentOwnerID)
                 if GIDSignIn.sharedInstance()?.currentUser.userID.description != currentOwnerID {
                     classIDAndNameClassroom.updateValue(course.name ?? "no name", forKey: course.identifier ?? "00000")
                 }
             }
         }
-        
+
         if [GIDSignIn.sharedInstance()?.currentUser.userID.description] == ownerIDs {
             errorNotification()
         }
-        
+
         assignmentIndex = 0
         fetchAssignments()
     }
@@ -1411,13 +1407,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     func getInfo() {
-        
         if GIDSignIn.sharedInstance()?.currentUser != nil {
             myAuth = GIDSignIn.sharedInstance()?.currentUser.authentication.fetcherAuthorizer()
         } else {
             myAuth = nil
         }
-        
+
         service.authorizer = myAuth
 
         fetchCourses()
@@ -1526,7 +1521,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                                 if self.classNameAndAssignments[self.assignmentsPerCourse[i].first!] == nil {
                                     self.classroomOnlyFetch(assignmentsPerCourse: self.assignmentsPerCourse[i], newAssignmentsPerCourse: self.newAssignmentsPerCourse[i])
                                 }
-                   
                             }
 
                             if i >= self.assignmentsPerCourse.count - 1 {
