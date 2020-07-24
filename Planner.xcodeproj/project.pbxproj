@@ -24,6 +24,7 @@
 		624BAC1F24908E7C0050EA6F /* PlannerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624BAC1E24908E7C0050EA6F /* PlannerUITests.swift */; };
 		62751CCE24CA381F006591D4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 62751CCD24CA381E006591D4 /* GoogleService-Info.plist */; };
 		627FB368249EC77D007E0E4C /* app_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 627FB367249EC77D007E0E4C /* app_logo.png */; };
+		628E260424CA47F100057071 /* FUIAuthCustomPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E260224CA47F100057071 /* FUIAuthCustomPickerViewController.swift */; };
 		62A3A52224BB9D6700B375D6 /* ManualEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A3A52024BB9D6700B375D6 /* ManualEntryViewController.swift */; };
 		62A3A52324BB9D6700B375D6 /* ManualEntryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 62A3A52124BB9D6700B375D6 /* ManualEntryViewController.xib */; };
 		62D1886624B2F80900675E94 /* top_pattern.png in Resources */ = {isa = PBXBuildFile; fileRef = 62D1886424B2F80900675E94 /* top_pattern.png */; };
@@ -77,6 +78,7 @@
 		625414A02490A45C00AA7908 /* Planner-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Planner-Bridging-Header.h"; sourceTree = "<group>"; };
 		62751CCD24CA381E006591D4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		627FB367249EC77D007E0E4C /* app_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_logo.png; sourceTree = "<group>"; };
+		628E260224CA47F100057071 /* FUIAuthCustomPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FUIAuthCustomPickerViewController.swift; sourceTree = "<group>"; };
 		62A3A52024BB9D6700B375D6 /* ManualEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryViewController.swift; sourceTree = "<group>"; };
 		62A3A52124BB9D6700B375D6 /* ManualEntryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ManualEntryViewController.xib; sourceTree = "<group>"; };
 		62D1886424B2F80900675E94 /* top_pattern.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = top_pattern.png; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				62EF22A424AC24CD00513F63 /* Planner.entitlements */,
 				624BABFC24908E790050EA6F /* AppDelegate.swift */,
 				623079B1249EB3C5006BD643 /* SignInViewController.swift */,
+				628E260224CA47F100057071 /* FUIAuthCustomPickerViewController.swift */,
 				624BABFE24908E790050EA6F /* SceneDelegate.swift */,
 				624BAC0024908E790050EA6F /* ViewController.swift */,
 				6235D9D62494B32400D81324 /* Extensions.swift */,
@@ -502,6 +505,7 @@
 				62D84CE9249985D50011BD6F /* CalendarTableViewCell.swift in Sources */,
 				620ABAF6249726B500730D80 /* AssignmentTableViewCell.swift in Sources */,
 				624BABFF24908E790050EA6F /* SceneDelegate.swift in Sources */,
+				628E260424CA47F100057071 /* FUIAuthCustomPickerViewController.swift in Sources */,
 				6235D9D72494B32400D81324 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

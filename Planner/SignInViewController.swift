@@ -41,11 +41,7 @@ class SignInViewController: UIViewController, FUIAuthDelegate {
         authUI?.providers = [FUIEmailAuth(), FUIGoogleAuth()]
 
         // Get the auth view controller and present it
-        let authViewController = authUI!.authViewController()
-
-        //                let backItem = UIBarButtonItem()
-        //                backItem.title = "Back"
-        //                self.navigationItem.backBarButtonItem = backItem
+        let authViewController = FUIAuthCustomPickerViewController(authUI: authUI!)
 
         present(authViewController, animated: true, completion: nil)
     }

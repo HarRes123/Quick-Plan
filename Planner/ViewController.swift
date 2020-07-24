@@ -340,6 +340,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         calendarTableView.isUserInteractionEnabled = false
         assignmentTableView.isUserInteractionEnabled = false
         toggleView.isUserInteractionEnabled = false
+        navigationController?.navigationBar.isUserInteractionEnabled = false
         setUpCalendar()
         //    setUpInitialNotifications()
 
@@ -348,6 +349,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             self.calendarTableView.isUserInteractionEnabled = true
             self.assignmentTableView.isUserInteractionEnabled = true
             self.toggleView.isUserInteractionEnabled = true
+            self.navigationController?.navigationBar.isUserInteractionEnabled = true
             self.removeSpinner()
         }
     }
@@ -410,6 +412,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         assignmentTableView.isUserInteractionEnabled = false
         calendarTableView.isUserInteractionEnabled = false
         toggleView.isUserInteractionEnabled = false
+        navigationController?.navigationBar.isUserInteractionEnabled = false
         arrayHeader = Array(repeating: 0, count: arrayHeader.count)
         classNameAndAssignments = [String: [String]]()
         newClassNameAndAssignments = [String: [String]]()
@@ -759,6 +762,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         calendarTableView.isUserInteractionEnabled = false
         assignmentTableView.isUserInteractionEnabled = false
         toggleView.isUserInteractionEnabled = false
+        navigationController?.navigationBar.isUserInteractionEnabled = false
         setUpCalendar()
         setUpInitialNotifications()
 
@@ -871,6 +875,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         assignmentTableView.isUserInteractionEnabled = true
         calendarTableView.isUserInteractionEnabled = true
         toggleView.isUserInteractionEnabled = true
+        navigationController?.navigationBar.isUserInteractionEnabled = true
         importButtonText = "Import\nClasses"
         assignmentTableView.reloadData()
         calendarTableView.reloadData()
@@ -1355,6 +1360,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         assignmentTableView.isUserInteractionEnabled = true
         calendarTableView.isUserInteractionEnabled = true
         toggleView.isUserInteractionEnabled = true
+        navigationController?.navigationBar.isUserInteractionEnabled = true
         assignmentTableView.reloadData()
         calendarTableView.reloadData()
         present(alert, animated: true)
@@ -1427,6 +1433,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         assignmentTableView.isUserInteractionEnabled = true
         calendarTableView.isUserInteractionEnabled = true
         toggleView.isUserInteractionEnabled = true
+        navigationController?.navigationBar.isUserInteractionEnabled = true
 
         assignmentTableView.reloadData()
     }
