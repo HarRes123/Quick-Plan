@@ -322,13 +322,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         return UITableViewDropProposal(operation: .forbidden)
     }
 
-    func getViewedDate() -> String {
-        let date = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM dd, yyyy"
-        return formatter.string(from: date.getDate(dayDifference: globalVariables.daysFromToday))
-    }
-
     func changeDays(sign: Int) {
         print("PRESSED")
         globalVariables.daysFromToday += sign
