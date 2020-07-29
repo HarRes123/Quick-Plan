@@ -29,7 +29,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var arrayHeader = [Int]()
 
     var isClassroomEnabled = true
-    
+
     let calVC = FullCalendarViewController(nibName: "FullCalendarViewController", bundle: nil)
 
     var calendarItems = [String]()
@@ -349,7 +349,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         print("POPOVER DISMISSED")
         beginClassImport()
     }
-    
+
     @objc func calendarDismissed() {
         print("CALLED")
         changeDays(sign: 0)
@@ -751,16 +751,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     @objc func pressedOnDate(sender _: UIButton) {
-
         calVC.modalPresentationStyle = .popover
         let popover: UIPopoverPresentationController = calVC.popoverPresentationController!
-        popover.sourceView = self.view
+        popover.sourceView = view
         popover.sourceRect = CGRect(x: view.center.x, y: view.center.y, width: 0, height: 0)
         popover.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
 
         present(calVC, animated: true, completion: nil)
-
     }
+
 //    @objc func pressedOnDate(sender _: UIButton) {
 //        changeDays(sign: -daysFromToday)
 //    }
