@@ -29,6 +29,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var arrayHeader = [Int]()
 
     var isClassroomEnabled = true
+    
+    let calVC = FullCalendarViewController(nibName: "FullCalendarViewController", bundle: nil)
 
     var calendarItems = [String]()
 
@@ -49,8 +51,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var hasSignedIn = false
 
     var assignmentAndDueDate = [String: String]()
-
-    var daysFromToday = 0
 
     @IBOutlet var toggleView: BetterSegmentedControl!
 
@@ -326,12 +326,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         let date = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM dd, yyyy"
-        return formatter.string(from: date.getDate(dayDifference: daysFromToday))
+        return formatter.string(from: date.getDate(dayDifference: globalVariables.daysFromToday))
     }
 
     func changeDays(sign: Int) {
         print("PRESSED")
-        daysFromToday += sign
+        globalVariables.daysFromToday += sign
         let indexPath = IndexPath(row: 0, section: 0)
         calendarTableView.scrollToRow(at: indexPath, at: .top, animated: false)
         showSpinner(onView: calendarTableView)
@@ -352,9 +352,14 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
     }
 
-    @objc func popOverDismissed() {
+    @objc func manualEntryDismissed() {
         print("POPOVER DISMISSED")
         beginClassImport()
+    }
+    
+    @objc func calendarDismissed() {
+        print("CALLED")
+        changeDays(sign: 0)
     }
 
     @objc func performFetch() {
@@ -753,8 +758,19 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     @objc func pressedOnDate(sender _: UIButton) {
-        changeDays(sign: -daysFromToday)
+
+        calVC.modalPresentationStyle = .popover
+        let popover: UIPopoverPresentationController = calVC.popoverPresentationController!
+        popover.sourceView = self.view
+        popover.sourceRect = CGRect(x: view.center.x, y: view.center.y, width: 0, height: 0)
+        popover.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
+
+        present(calVC, animated: true, completion: nil)
+
     }
+//    @objc func pressedOnDate(sender _: UIButton) {
+//        changeDays(sign: -daysFromToday)
+//    }
 
     func loadCal() {
         calendarTableView.isUserInteractionEnabled = false
@@ -855,6 +871,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             DispatchQueue.main.async {
                 self.calendarTableView.reloadData()
                 self.assignmentTableView.reloadData()
+                let popover: UIPopoverPresentationController = self.calVC.popoverPresentationController!
+                popover.sourceView = self.view
+                popover.sourceRect = CGRect(x: self.view.center.x, y: self.view.center.y, width: 0, height: 0)
             }
         }
     }
@@ -959,7 +978,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         //    classroomToggle.tintColor = .customGreen
 
         NotificationCenter.default.addObserver(self, selector: #selector(performFetch), name: Notification.Name("performFetchAuto"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(popOverDismissed), name: Notification.Name("popOverDismissed"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(manualEntryDismissed), name: Notification.Name("manualEntryDismissed"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(calendarDismissed), name: Notification.Name("calendarDismissed"), object: nil)
 
         service.authorizer = myAuth
 

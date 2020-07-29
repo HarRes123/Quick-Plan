@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		07803649A158A468DA7D2DFA /* Pods_Planner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67B77B5EEB5E70542B767D72 /* Pods_Planner.framework */; };
 		2C77E8F144CE8F8F0A47C513 /* Pods_PlannerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1FF72B43E26EFA8E57187D /* Pods_PlannerTests.framework */; };
+		6201A12424D1E3E2008A0CE6 /* FullCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6201A12224D1E3E2008A0CE6 /* FullCalendarViewController.swift */; };
+		6201A12524D1E3E2008A0CE6 /* FullCalendarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6201A12324D1E3E2008A0CE6 /* FullCalendarViewController.xib */; };
 		620ABAF6249726B500730D80 /* AssignmentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620ABAF4249726B500730D80 /* AssignmentTableViewCell.swift */; };
 		620ABAF7249726B500730D80 /* AssignmentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620ABAF5249726B500730D80 /* AssignmentTableViewCell.xib */; };
 		623079B2249EB3C5006BD643 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623079B1249EB3C5006BD643 /* SignInViewController.swift */; };
@@ -56,6 +58,8 @@
 		2C1FF72B43E26EFA8E57187D /* Pods_PlannerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PlannerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D34907A22D4322E0AC896D6 /* Pods_Planner_PlannerUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Planner_PlannerUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		55876FC994EED796FCC51024 /* Pods-Planner-PlannerUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Planner-PlannerUITests.debug.xcconfig"; path = "Target Support Files/Pods-Planner-PlannerUITests/Pods-Planner-PlannerUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		6201A12224D1E3E2008A0CE6 /* FullCalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullCalendarViewController.swift; sourceTree = "<group>"; };
+		6201A12324D1E3E2008A0CE6 /* FullCalendarViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullCalendarViewController.xib; sourceTree = "<group>"; };
 		620ABAF4249726B500730D80 /* AssignmentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentTableViewCell.swift; sourceTree = "<group>"; };
 		620ABAF5249726B500730D80 /* AssignmentTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AssignmentTableViewCell.xib; sourceTree = "<group>"; };
 		623079B1249EB3C5006BD643 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
@@ -161,6 +165,8 @@
 				62A3A52124BB9D6700B375D6 /* ManualEntryViewController.xib */,
 				620ABAF4249726B500730D80 /* AssignmentTableViewCell.swift */,
 				620ABAF5249726B500730D80 /* AssignmentTableViewCell.xib */,
+				6201A12224D1E3E2008A0CE6 /* FullCalendarViewController.swift */,
+				6201A12324D1E3E2008A0CE6 /* FullCalendarViewController.xib */,
 				623295BF24BC740700373465 /* iOSDropDown.swift */,
 				624BAC0524908E7B0050EA6F /* Assets.xcassets */,
 				624BAC0724908E7B0050EA6F /* LaunchScreen.storyboard */,
@@ -334,6 +340,7 @@
 				62D84CEA249985D50011BD6F /* CalendarTableViewCell.xib in Resources */,
 				624BAC0624908E7B0050EA6F /* Assets.xcassets in Resources */,
 				62751CCE24CA381F006591D4 /* GoogleService-Info.plist in Resources */,
+				6201A12524D1E3E2008A0CE6 /* FullCalendarViewController.xib in Resources */,
 				624BAC0424908E790050EA6F /* Main.storyboard in Resources */,
 				62D1886724B2F80900675E94 /* bottom_pattern.png in Resources */,
 			);
@@ -497,6 +504,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6201A12424D1E3E2008A0CE6 /* FullCalendarViewController.swift in Sources */,
 				623295C024BC740700373465 /* iOSDropDown.swift in Sources */,
 				623079B2249EB3C5006BD643 /* SignInViewController.swift in Sources */,
 				62A3A52224BB9D6700B375D6 /* ManualEntryViewController.swift in Sources */,
@@ -686,7 +694,7 @@
 				CODE_SIGN_ENTITLEMENTS = Planner/Planner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.06;
+				CURRENT_PROJECT_VERSION = 2.07;
 				DEVELOPMENT_TEAM = 5JJZ9DST9Z;
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = Planner/Info.plist;
@@ -714,7 +722,7 @@
 				CODE_SIGN_ENTITLEMENTS = Planner/Planner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.06;
+				CURRENT_PROJECT_VERSION = 2.07;
 				DEVELOPMENT_TEAM = 5JJZ9DST9Z;
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = Planner/Info.plist;

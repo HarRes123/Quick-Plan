@@ -196,7 +196,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
     override func viewDidDisappear(_: Bool) {
         if isBeingDismissed {
             if savePressed {
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "popOverDismissed"), object: nil)
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "manualEntryDismissed"), object: nil)
             }
         }
     }

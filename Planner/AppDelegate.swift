@@ -44,3 +44,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "performFetch"), object: nil)
     }
 }
+struct globalVariables {
+    static var daysFromToday = 0
+}
