@@ -44,6 +44,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
         question2Label.text = "What is the name of the assignment?"
         question3Label.text = "When is the assignment due?"
 
+        stackView.setCustomSpacing(35, after: dummyView)
         stackView.setCustomSpacing(12, after: question1Label)
         stackView.setCustomSpacing(64, after: classPicker)
         stackView.setCustomSpacing(12, after: question2Label)
@@ -54,17 +55,6 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
 
         refResponse = Database.database().reference().child("users")
 
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            navBar.isUserInteractionEnabled = false
-            navBar.isHidden = true
-            stackView.setCustomSpacing(0, after: dummyView)
-        } else {
-            navBar.isUserInteractionEnabled = true
-            navBar.isHidden = false
-            stackView.setCustomSpacing(28, after: dummyView)
-        }
-
-        // The the Closure returns Selected Index and String
         classPicker.didSelect { selectedText, index, _ in
             if selectedText == "Add Class" {
                 print("USER WANTS TO ADD A CLASS")
@@ -102,7 +92,8 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
         hideKeyboardWhenTappedAround()
         // selectClass.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: (selectClass.titleLabel?.font.pointSize)!)
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "AvenirNext-Regular", size: 17)!], for: .normal)
-        navBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "AvenirNext-Regular", size: 20)!]
+        navBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "AvenirNext-Regular", size: 18)!]
+        navBar.shadowImage = UIImage()
     }
 
     func textFieldShouldReturn(_: UITextField) -> Bool {

@@ -35,21 +35,9 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.timeZone = .current
         dateFormatter.dateFormat = "MM/dd/yyyy"
-        navBar.titleTextAttributes = [NSAttributedString.Key.font: desiredFont(pointSize: 20)]
+        navBar.titleTextAttributes = [NSAttributedString.Key.font: desiredFont(pointSize: 18)]
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: desiredFont(pointSize: 17)], for: .normal)
-
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            navBar.isUserInteractionEnabled = false
-            navBar.isHidden = true
-            calendarView.topAnchor.constraint(equalTo: navBar.bottomAnchor).isActive = false
-            calendarView.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: -navBar.frame.height).isActive = true
-
-        } else {
-            navBar.isUserInteractionEnabled = true
-            navBar.isHidden = false
-            calendarView.topAnchor.constraint(equalTo: navBar.bottomAnchor).isActive = true
-            calendarView.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: -navBar.frame.height).isActive = false
-        }
+        navBar.shadowImage = UIImage()
     }
 
     override func viewWillAppear(_: Bool) {
@@ -57,7 +45,7 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
         dateSelected = false
     }
 
-    func calendar(_: FSCalendar, didSelect date: Date, at _: FSCalendarMonthPosition) {
+    func dayChanged(date: Date) {
         let formattedString = dateFormatter.string(from: date)
         let formattedDate = dateFormatter.date(from: formattedString)!
 
@@ -66,6 +54,10 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
 
         print("DATE:", dateFormatter.string(from: date), "Difference:", globalVariables.daysFromToday)
         dateSelected = true
+    }
+
+    func calendar(_: FSCalendar, didSelect date: Date, at _: FSCalendarMonthPosition) {
+        dayChanged(date: date)
     }
 
     override func traitCollectionDidChange(_: UITraitCollection?) {
@@ -78,7 +70,6 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
             calendarView.appearance.titleDefaultColor = .darkGray
             calendarView.appearance.titleTodayColor = .white
             calendarView.appearance.titleSelectionColor = .white
-
         } else {
             calendarView.backgroundColor = .darkGray
             view.backgroundColor = .darkGray
@@ -91,8 +82,23 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
         }
     }
 
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        if size.width != view.frame.size.width {
+            DispatchQueue.main.async {
+                self.calendarView.reloadData()
+                self.calendarView.calendarHeaderView.reloadData()
+            }
+        }
+    }
+
     @IBAction func dismissButton(_: Any) {
         dismiss(animated: true, completion: nil)
+    }
+
+    @IBAction func todayButton(_: Any) {
+        calendarView.select(Date())
+        dayChanged(date: Date())
     }
 
     override func viewDidDisappear(_: Bool) {

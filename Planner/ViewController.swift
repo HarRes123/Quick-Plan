@@ -1382,6 +1382,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         vc.modalPresentationStyle = .popover
         let popover: UIPopoverPresentationController = vc.popoverPresentationController!
         popover.barButtonItem = sender
+
         present(vc, animated: true, completion: nil)
     }
 
