@@ -40,12 +40,13 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
         navBar.shadowImage = UIImage()
     }
 
-    override func viewWillAppear(_: Bool) {
-        calendarView.select(dateFormatter.date(from: getViewedDate()))
+    override func viewDidAppear(_ animated: Bool) {
+        let dateToShow = dateFormatter.date(from: getViewedDate())
+        calendarView.select(dateToShow)
         dateSelected = false
     }
-
-    func dayChanged(date: Date) {
+    
+    func dateChanged(date: Date) {
         let formattedString = dateFormatter.string(from: date)
         let formattedDate = dateFormatter.date(from: formattedString)!
 
@@ -57,7 +58,7 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
     }
 
     func calendar(_: FSCalendar, didSelect date: Date, at _: FSCalendarMonthPosition) {
-        dayChanged(date: date)
+        dateChanged(date: date)
     }
 
     override func traitCollectionDidChange(_: UITraitCollection?) {
@@ -98,7 +99,7 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
 
     @IBAction func todayButton(_: Any) {
         calendarView.select(Date())
-        dayChanged(date: Date())
+        dateChanged(date: Date())
     }
 
     override func viewDidDisappear(_: Bool) {

@@ -14,6 +14,7 @@ import UIKit
 import UserNotifications
 
 class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate {
+    
     var myAuth: GTMFetcherAuthorizationProtocol?
     private let service = GTLRClassroomService()
 
