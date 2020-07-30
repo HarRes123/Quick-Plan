@@ -928,6 +928,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         coachMarksController.dataSource = self
         coachMarksController.delegate = self
+        
+        if #available(iOS 13.0, *) {
+            coachMarksController.statusBarStyle = .darkContent
+        } else {
+            coachMarksController.statusBarStyle = .default
+        }
 
         // manualEntryButton.
         // self.coachMarksController.coa
@@ -1106,11 +1112,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         case 0:
             coachMark = coachMarksController.helper.makeCoachMark(for: assignmentTableView)
         case 1:
-            coachMark = coachMarksController.helper.makeCoachMark(for: assignmentButton)
+            coachMark = coachMarksController.helper.makeCoachMark(for: assignmentButton.titleLabel)
         case 2:
             coachMark = coachMarksController.helper.makeCoachMark(for: calendarTableView)
         case 3:
-            coachMark = coachMarksController.helper.makeCoachMark(for: assignmentButton)
+            coachMark = coachMarksController.helper.makeCoachMark(for: assignmentButton.titleLabel)
         case 4:
             coachMark = coachMarksController.helper.makeCoachMark(for: calView)
         case 5:
@@ -1134,10 +1140,20 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark) -> (bodyView: UIView & CoachMarkBodyView, arrowView: (UIView & CoachMarkArrowView)?) {
         
         let coachViews = coachMarksController.helper.makeDefaultCoachViews(withArrow: true, arrowOrientation: coachMark.arrowOrientation)
-        
+       
         coachViews.bodyView.hintLabel.font = UIFont(name: "AvenirNext-Regular", size: coachViews.bodyView.hintLabel.font!.pointSize)
         coachViews.bodyView.nextLabel.font = UIFont(name: "AvenirNext-Regular", size: coachViews.bodyView.nextLabel.font!.pointSize)
+
+        coachViews.arrowView!.background.borderColor = .darkGray
+        coachViews.bodyView.background.cornerRadius = 10
+        coachViews.bodyView.background.borderColor = .darkGray
         
+        coachViews.bodyView.layer.shadowColor = UIColor.darkGray.cgColor
+        coachViews.bodyView.layer.shadowOffset = CGSize(width: -1.5, height: 1.5)
+        coachViews.bodyView.layer.shadowOpacity = 1.0
+        coachViews.bodyView.layer.shadowRadius = 1.5
+
+
         switch index {
         case 0:
             coachViews.bodyView.hintLabel.text = "These are your classes"
@@ -1223,8 +1239,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         view.layer.cornerRadius = 15
         view.layer.masksToBounds = true
-
         self.view.addSubview(containerView)
+        
         containerView.addSubview(view)
     }
 

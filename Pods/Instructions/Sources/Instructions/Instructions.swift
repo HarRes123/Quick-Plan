@@ -10,30 +10,15 @@ struct Constants {
 
 struct InstructionsColor {
     static let overlay: UIColor = {
-        let defaultColor = #colorLiteral(red: 0.9098039216, green: 0.9098039216, blue: 0.9098039216, alpha: 0.65)
-
-        if #available(iOS 13.0, *) {
-            return UIColor { (traits) -> UIColor in
-                if traits.userInterfaceStyle == .dark {
-                    return #colorLiteral(red: 0.1960784314, green: 0.1960784314, blue: 0.1960784314, alpha: 0.75)
-                } else {
-                    return defaultColor
-                }
-            }
-        } else {
-            return defaultColor
-        }
+        let defaultColor = #colorLiteral(red: 0.1960784314, green: 0.1960784314, blue: 0.1960784314, alpha: 0.75)
+        return defaultColor
     }()
 
     static let coachMarkInner: UIColor = {
         if #available(iOS 13.0, *) {
             return UIColor { (traits) -> UIColor in
-                if traits.userInterfaceStyle == .dark {
-                    let lightTraits = UITraitCollection(userInterfaceStyle: .light)
-                    return UIColor.systemGray4.resolvedColor(with: lightTraits)
-                } else {
-                    return .white
-                }
+                let lightTraits = UITraitCollection(userInterfaceStyle: .light)
+                return UIColor.systemGray4.resolvedColor(with: lightTraits)
             }
         } else {
             return .white
@@ -45,12 +30,8 @@ struct InstructionsColor {
 
         if #available(iOS 13.0, *) {
             return UIColor { (traits) -> UIColor in
-                if traits.userInterfaceStyle == .dark {
-                    let lightTraits = UITraitCollection(userInterfaceStyle: .light)
-                    return UIColor.systemGray2.resolvedColor(with: lightTraits)
-                } else {
-                    return defaultColor
-                }
+                let lightTraits = UITraitCollection(userInterfaceStyle: .light)
+                return UIColor.systemGray2.resolvedColor(with: lightTraits)
             }
         } else {
             return defaultColor
@@ -62,11 +43,7 @@ struct InstructionsColor {
 
         if #available(iOS 13.0, *) {
             return UIColor { (traits) -> UIColor in
-                if traits.userInterfaceStyle == .dark {
-                    return .systemGray
-                } else {
-                    return defaultColor
-                }
+                return .systemGray
             }
         } else {
             return defaultColor
@@ -78,11 +55,8 @@ struct InstructionsColor {
 
         if #available(iOS 13.0, *) {
             return UIColor { (traits) -> UIColor in
-                if traits.userInterfaceStyle == .dark {
-                    return .black
-                } else {
-                    return defaultColor
-                }
+                return .black
+                
             }
         } else {
             return defaultColor
