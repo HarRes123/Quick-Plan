@@ -248,7 +248,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 calView = UIView(frame: .zero)
                 notificationDay = getViewedDate()
 
-                var buttonWidth = 150
+                let buttonWidth = 110
                 let buttonX = Int(tableView.frame.size.width) / 2
                 //  var button = UIButton()
                 let leftButton = UIButton(type: .custom)
@@ -259,9 +259,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 calendarTableView.backgroundColor = .customGray
                 calView.backgroundColor = .customGray
                 dateButton = UIButton(frame: CGRect(x: buttonX - buttonWidth / 2, y: 5, width: buttonWidth, height: 65))
+                dateButton.titleLabel?.adjustsFontSizeToFitWidth = true
                 if !loadCalendar {
-                    buttonWidth = 110
-
                     dateButton.setTitle(notificationDay, for: .normal)
                     dateButton.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
                     // label.removeTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
@@ -1553,10 +1552,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         navigationController?.navigationBar.isUserInteractionEnabled = true
         assignmentTableView.reloadData()
 
-        if !UserDefaults.standard.bool(forKey: "First Launch") {
+       // if !UserDefaults.standard.bool(forKey: "First Launch") {
             coachMarksController.start(in: .window(over: self))
-            UserDefaults.standard.set(true, forKey: "First Launch")
-        }
+        //    UserDefaults.standard.set(true, forKey: "First Launch")
+      //  }
     }
 
     func getClassesNoClassroom() {
