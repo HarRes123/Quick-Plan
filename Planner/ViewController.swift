@@ -221,8 +221,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             button.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: (button.titleLabel?.font.pointSize)!)
             button.tag = section
 
-            //     print("test")
-
             if classNameAndAssignments.count > 0 {
                 button.setTitle(classes[section], for: .normal)
                 button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
@@ -1101,7 +1099,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             break
         }
     }
-
+    
     func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkAt index: Int) -> CoachMark {
         var coachMark = CoachMark()
         switch index {
@@ -1134,7 +1132,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark) -> (bodyView: UIView & CoachMarkBodyView, arrowView: (UIView & CoachMarkArrowView)?) {
+        
         let coachViews = coachMarksController.helper.makeDefaultCoachViews(withArrow: true, arrowOrientation: coachMark.arrowOrientation)
+        
+        coachViews.bodyView.hintLabel.font = UIFont(name: "AvenirNext-Regular", size: coachViews.bodyView.hintLabel.font!.pointSize)
+        coachViews.bodyView.nextLabel.font = UIFont(name: "AvenirNext-Regular", size: coachViews.bodyView.nextLabel.font!.pointSize)
+        
         switch index {
         case 0:
             coachViews.bodyView.hintLabel.text = "These are your classes"
