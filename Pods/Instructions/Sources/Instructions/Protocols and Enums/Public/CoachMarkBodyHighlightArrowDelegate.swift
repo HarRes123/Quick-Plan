@@ -7,7 +7,6 @@ import UIKit
 /// useful in case the whole body itself is the active control and
 /// we want the arrow to looks like it is part of this control.
 public protocol CoachMarkBodyHighlightArrowDelegate: AnyObject {
-
     /// Set wethe ror not the arrow should get in its
     /// highlighted state.
     ///

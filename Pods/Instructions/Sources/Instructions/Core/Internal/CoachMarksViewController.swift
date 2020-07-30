@@ -5,10 +5,13 @@ import UIKit
 
 // TODO: ❗️ Find a good way to refactor this growing controller
 // swiftlint:disable file_length
+
 // MARK: - Main Class
+
 /// Handles a set of coach marks, and display them successively.
 class CoachMarksViewController: UIViewController {
     // MARK: - Private properties
+
     private var onGoingSizeChange = false
     private var presentationFashion: PresentationFashion = .window {
         didSet {
@@ -21,6 +24,7 @@ class CoachMarksViewController: UIViewController {
     private weak var viewControllerDisplayedUnder: UIViewController?
 
     // MARK: - Internal properties
+
     weak var delegate: CoachMarksViewControllerDelegate?
 
     var rotationStyle: RotationStyle = .systemDefined
@@ -64,6 +68,7 @@ class CoachMarksViewController: UIViewController {
     }()
 
     // MARK: - Overrided properties
+
     ///
     override var preferredStatusBarStyle: UIStatusBarStyle {
         if let statusBarStyle = customStatusBarStyle {
@@ -94,11 +99,12 @@ class CoachMarksViewController: UIViewController {
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         switch interfaceOrientations {
         case .systemDefined: return super.supportedInterfaceOrientations
-        case .userDefined(let orientations): return orientations
+        case let .userDefined(orientations): return orientations
         }
     }
 
     // MARK: - Lifecycle
+
     convenience init(coachMarkDisplayManager: CoachMarkDisplayManager,
                      skipViewDisplayManager: SkipViewDisplayManager) {
         self.init()
@@ -125,6 +131,7 @@ class CoachMarksViewController: UIViewController {
     }
 
     // MARK: - Internal Methods
+
     /// Will attach the controller as a child of the given window.
     ///
     /// - Parameters:
@@ -135,11 +142,11 @@ class CoachMarksViewController: UIViewController {
                 at windowLevel: UIWindow.Level? = nil) {
         if #available(iOS 13.0, *) {
             if let windowLevel = windowLevel,
-               windowLevel.rawValue >= UIWindow.Level.statusBar.rawValue {
+                windowLevel.rawValue >= UIWindow.Level.statusBar.rawValue {
                 print("""
-                      [WARNING] Displaying Instructions over the status bar is \
-                      unsupported in iOS 13+.
-                      """)
+                [WARNING] Displaying Instructions over the status bar is \
+                unsupported in iOS 13+.
+                """)
             }
         }
 
@@ -166,9 +173,9 @@ class CoachMarksViewController: UIViewController {
     func attachToWindow(of viewController: UIViewController) {
         guard let window = viewController.view?.window else {
             print("""
-                  [ERROR] Instructions could not be properly attached to the window \
-                  did you call `start(in:)` inside `viewDidLoad` instead of `viewDidAppear`?
-                  """)
+            [ERROR] Instructions could not be properly attached to the window \
+            did you call `start(in:)` inside `viewDidLoad` instead of `viewDidAppear`?
+            """)
 
             return
         }
@@ -181,7 +188,7 @@ class CoachMarksViewController: UIViewController {
         view.fillSuperview()
 
         registerForSystemEventChanges()
-        self.didMove(toParent: viewController)
+        didMove(toParent: viewController)
 
         addRootView(to: window)
         addOverlayView()
@@ -205,7 +212,7 @@ class CoachMarksViewController: UIViewController {
         instructionsRootView.fillSuperview()
         addOverlayView()
 
-        self.didMove(toParent: viewController)
+        didMove(toParent: viewController)
     }
 
     func addRootView(to window: UIWindow) {
@@ -223,15 +230,16 @@ class CoachMarksViewController: UIViewController {
             window?.rootViewController = nil
             window?.accessibilityIdentifier = nil
         case .viewControllerWindow, .viewController:
-            self.instructionsRootView.removeFromSuperview()
-            self.willMove(toParent: nil)
-            self.view.removeFromSuperview()
-            self.removeFromParent()
+            instructionsRootView.removeFromSuperview()
+            willMove(toParent: nil)
+            view.removeFromSuperview()
+            removeFromParent()
             deregisterFromSystemEventChanges()
         }
     }
 
     // MARK: - Private Methods
+
     private func addOverlayView() {
         instructionsRootView.addSubview(overlayManager.overlayView)
         overlayManager.overlayView.fillSuperview()
@@ -250,8 +258,10 @@ class CoachMarksViewController: UIViewController {
 }
 
 // MARK: - Coach Mark Display
+
 extension CoachMarksViewController {
     // MARK: - Internal Methods
+
     func prepareToShowCoachMarks(_ completion: @escaping () -> Void) {
         disableInteraction()
 
@@ -275,9 +285,9 @@ extension CoachMarksViewController {
 
         disableInteraction()
 
-        self.coachMarkDisplayManager.hide(coachMarkView: currentCoachMarkView,
-                                          from: coachMark, at: index,
-                                          animated: animated, beforeTransition: beforeTransition) {
+        coachMarkDisplayManager.hide(coachMarkView: currentCoachMarkView,
+                                     from: coachMark, at: index,
+                                     animated: animated, beforeTransition: beforeTransition) {
             self.enableInteraction()
             self.removeTargetFromCurrentCoachView()
             completion?()
@@ -289,7 +299,7 @@ extension CoachMarksViewController {
         disableInteraction()
         coachMark.computeMetadata(inFrame: instructionsRootView.frame)
         let passthrough = coachMark.isUserInteractionEnabledInsideCutoutPath ||
-                          overlayManager.areTouchEventsForwarded
+            overlayManager.areTouchEventsForwarded
         let coachMarkView = coachMarkDisplayManager.createCoachMarkView(from: coachMark,
                                                                         at: index)
 
@@ -304,6 +314,7 @@ extension CoachMarksViewController {
     }
 
     // MARK: - Private Methods
+
     private func disableInteraction() {
         instructionsRootView.passthrough = false
         instructionsRootView.isUserInteractionEnabled = true
@@ -321,8 +332,10 @@ extension CoachMarksViewController {
 }
 
 // MARK: - Change Events
+
 extension CoachMarksViewController {
     // MARK: - Overrides
+
     override func viewWillTransition(to size: CGSize,
                                      with coordinator: UIViewControllerTransitionCoordinator) {
         if currentCoachMarkView == nil { return }
@@ -341,6 +354,7 @@ extension CoachMarksViewController {
     }
 
     // MARK: - Internal Methods
+
     /// Will remove currently displayed coach mark.
     func prepareForSizeTransition() {
         guard let skipView = skipView else { return }
@@ -383,30 +397,31 @@ extension CoachMarksViewController {
 }
 
 // MARK: - Private Extension: User Events
+
 private extension CoachMarksViewController {
     /// Add touch up target to the current coach mark view.
     func addTargetToCurrentCoachView() {
         currentCoachMarkView?.nextControl?.addTarget(self,
-            action: #selector(didTapCoachMark(_:)), for: .touchUpInside)
+                                                     action: #selector(didTapCoachMark(_:)), for: .touchUpInside)
     }
 
     /// Remove touch up target from the current coach mark view.
     func removeTargetFromCurrentCoachView() {
         currentCoachMarkView?.nextControl?.removeTarget(self,
-            action: #selector(didTapCoachMark(_:)), for: .touchUpInside)
+                                                        action: #selector(didTapCoachMark(_:)), for: .touchUpInside)
     }
 
     /// Will be called when the user perform an action requiring the display of the next coach mark.
     ///
     /// - Parameter sender: the object sending the message
-    @objc func didTapCoachMark(_ sender: AnyObject?) {
+    @objc func didTapCoachMark(_: AnyObject?) {
         delegate?.didTap(coachMarkView: currentCoachMarkView)
     }
 
     /// Will be called when the user choose to skip the coach mark tour.
     ///
     /// - Parameter sender: the object sending the message
-    @objc func skipCoachMarksTour(_ sender: AnyObject?) {
+    @objc func skipCoachMarksTour(_: AnyObject?) {
         delegate?.didTap(skipView: skipView)
     }
 }

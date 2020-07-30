@@ -7,6 +7,7 @@ import UIKit
 /// It doesn't provide any clue about the way it will look, however.
 public struct CoachMark {
     // MARK: - Public properties
+
     /// The path to cut in the overlay, so the point of interest will be visible.
     public var cutoutPath: UIBezierPath?
 
@@ -51,19 +52,19 @@ public struct CoachMark {
     public var isUserInteractionEnabledInsideCutoutPath: Bool = false
 
     // MARK: - Initialization
-    /// Allocate and initialize a Coach mark with default values.
-    public init () {
 
-    }
+    /// Allocate and initialize a Coach mark with default values.
+    public init() {}
 
     // MARK: - Internal Methods
+
     /// This method perform both `computeOrientationInFrame` and `computePointOfInterestInFrame`.
     ///
     /// - Parameter frame: the frame in which compute the orientation
     ///                    (likely to match the overlay's frame)
     internal mutating func computeMetadata(inFrame frame: CGRect) {
-        self.computeOrientation(inFrame: frame)
-        self.computePointOfInterest()
+        computeOrientation(inFrame: frame)
+        computePointOfInterest()
     }
 
     /// Compute the orientation of the arrow, given the frame in which the coach mark
@@ -75,18 +76,18 @@ public struct CoachMark {
         // No cutout path means no arrow. That way, no orientation
         // computation is needed.
         guard let cutoutPath = self.cutoutPath else {
-            self.arrowOrientation = nil
+            arrowOrientation = nil
             return
         }
 
-        if self.arrowOrientation != nil {
+        if arrowOrientation != nil {
             return
         }
 
         if cutoutPath.bounds.origin.y > frame.size.height / 2 {
-            self.arrowOrientation = .bottom
+            arrowOrientation = .bottom
         } else {
-            self.arrowOrientation = .top
+            arrowOrientation = .top
         }
     }
 
@@ -94,7 +95,7 @@ public struct CoachMark {
     /// will be displayed.
     internal mutating func computePointOfInterest() {
         /// If the value is already set, don't do anything.
-        if self.pointOfInterest != nil { return }
+        if pointOfInterest != nil { return }
 
         /// No cutout path means no point of interest.
         /// That way, no orientation computation is needed.
@@ -103,7 +104,7 @@ public struct CoachMark {
         let xVal = cutoutPath.bounds.origin.x + cutoutPath.bounds.width / 2
         let yVal = cutoutPath.bounds.origin.y + cutoutPath.bounds.height / 2
 
-        self.pointOfInterest = CGPoint(x: xVal, y: yVal)
+        pointOfInterest = CGPoint(x: xVal, y: yVal)
     }
 
     internal func ceiledMaxWidth(in frame: CGRect) -> CGFloat {
@@ -111,6 +112,7 @@ public struct CoachMark {
     }
 
     // MARK: - Renamed Properties
+
     // swiftlint:disable unused_setter_value
     @available(*, unavailable, renamed: "isDisplayedOverCutoutPath")
     public var displayOverCutoutPath: Bool {

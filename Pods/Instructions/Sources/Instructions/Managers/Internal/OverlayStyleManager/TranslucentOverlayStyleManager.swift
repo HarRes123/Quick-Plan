@@ -5,25 +5,30 @@ import UIKit
 
 class TranslucentOverlayStyleManager: OverlayStyleManager {
     // MARK: Properties
+
     weak var overlayView: OverlayView?
 
     // MARK: Private Properties
+
     private var onGoingTransition = false
     private let color: UIColor
 
     // MARK: Layer Mask related properties
+
     private var cutoutMaskLayer = CAShapeLayer()
     private var fullMaskLayer = CAShapeLayer()
     private lazy var overlayLayer: CALayer = {
-        return self.createSublayer()
+        self.createSublayer()
     }()
 
     // MARK: Initialization
+
     init(color: UIColor) {
         self.color = color
     }
 
     // MARK: OverlayStyleManager
+
     func viewWillTransition() {
         // Basically removes everything except the overlay itself.
         // Background color duty, handled by the sublayer, it transfered to
@@ -31,7 +36,7 @@ class TranslucentOverlayStyleManager: OverlayStyleManager {
         guard let overlay = overlayView else { return }
 
         onGoingTransition = true
-        self.overlayLayer.removeFromSuperlayer()
+        overlayLayer.removeFromSuperlayer()
         overlay.backgroundColor = color
     }
 
@@ -43,7 +48,7 @@ class TranslucentOverlayStyleManager: OverlayStyleManager {
 
         overlayLayer = createSublayer()
         overlayLayer.frame = overlay.bounds
-        overlayLayer.backgroundColor = self.color.cgColor
+        overlayLayer.backgroundColor = color.cgColor
 
         overlay.holder.layer.addSublayer(overlayLayer)
         updateCutoutPath()
@@ -60,7 +65,7 @@ class TranslucentOverlayStyleManager: OverlayStyleManager {
         overlay.backgroundColor = .clear
         overlay.holder.backgroundColor = color
 
-        if !show { self.overlayLayer.removeFromSuperlayer() }
+        if !show { overlayLayer.removeFromSuperlayer() }
 
         UIView.animate(withDuration: duration, animations: {
             overlay.alpha = show ? 1.0 : 0.0
@@ -102,12 +107,13 @@ class TranslucentOverlayStyleManager: OverlayStyleManager {
         CATransaction.commit()
     }
 
-    func updateStyle(with traitCollection: UITraitCollection) {
-        overlayLayer.backgroundColor = self.color.cgColor
+    func updateStyle(with _: UITraitCollection) {
+        overlayLayer.backgroundColor = color.cgColor
         overlayView?.setNeedsDisplay()
     }
 
     // MARK: Private methods
+
     private func updateCutoutPath() {
         cutoutMaskLayer.removeFromSuperlayer()
         fullMaskLayer.removeFromSuperlayer()
@@ -122,8 +128,8 @@ class TranslucentOverlayStyleManager: OverlayStyleManager {
 
         let maskLayer = CALayer()
         maskLayer.frame = overlayLayer.bounds
-        maskLayer.addSublayer(self.cutoutMaskLayer)
-        maskLayer.addSublayer(self.fullMaskLayer)
+        maskLayer.addSublayer(cutoutMaskLayer)
+        maskLayer.addSublayer(fullMaskLayer)
 
         overlayLayer.mask = maskLayer
     }

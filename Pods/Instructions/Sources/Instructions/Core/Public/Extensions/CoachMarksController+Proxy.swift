@@ -14,16 +14,16 @@ extension CoachMarksController: CoachMarksControllerProxyDataSource {
 
     func coachMarkViews(at index: Int, madeFrom coachMark: CoachMark)
         -> (bodyView: UIView & CoachMarkBodyView, arrowView: (UIView & CoachMarkArrowView)?) {
-            return dataSource!.coachMarksController(self, coachMarkViewsAt: index,
-                                                    madeFrom: coachMark)
+        return dataSource!.coachMarksController(self, coachMarkViewsAt: index,
+                                                madeFrom: coachMark)
     }
 
     func constraintsForSkipView(_ skipView: UIView,
                                 inParent parentView: UIView)
         -> [NSLayoutConstraint]? {
-            return dataSource?.coachMarksController(self,
-                                                    constraintsForSkipView: skipView,
-                                                    inParent: parentView)
+        return dataSource?.coachMarksController(self,
+                                                constraintsForSkipView: skipView,
+                                                inParent: parentView)
     }
 }
 

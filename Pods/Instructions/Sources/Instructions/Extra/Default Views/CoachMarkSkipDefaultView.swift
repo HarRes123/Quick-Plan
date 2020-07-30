@@ -7,11 +7,12 @@ import UIKit
 /// default one provided by the library.
 public class CoachMarkSkipDefaultView: UIButton, CoachMarkSkipView {
     // MARK: Public properties
+
     public var skipControl: UIControl? {
         return self
     }
 
-    public override var isHighlighted: Bool {
+    override public var isHighlighted: Bool {
         didSet {
             bodyBackground.isHighlighted = isHighlighted
         }
@@ -25,10 +26,12 @@ public class CoachMarkSkipDefaultView: UIButton, CoachMarkSkipView {
     }
 
     // MARK: Private properties
+
     private var bodyBackground = CoachMarkBodyBackgroundView()
 
     // MARK: Initialization
-    public override init(frame: CGRect) {
+
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         accessibilityIdentifier = AccessibilityIdentifiers.skipButton
     }
@@ -51,7 +54,7 @@ public class CoachMarkSkipDefaultView: UIButton, CoachMarkSkipView {
         sizeToFit()
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("This class does not support NSCoding.")
     }
 }

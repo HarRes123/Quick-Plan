@@ -4,15 +4,13 @@
 import UIKit
 
 class MaskView: UIView {
-
     override public class var layerClass: AnyClass {
         return CAShapeLayer.self
     }
 
     var shapeLayer: CAShapeLayer {
-        //swiftlint:disable force_cast
+        // swiftlint:disable force_cast
         return layer as! CAShapeLayer
-        //swiftlint:enable force_cast
+        // swiftlint:enable force_cast
     }
-
 }

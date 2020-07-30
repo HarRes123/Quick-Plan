@@ -8,6 +8,7 @@
 
 import FirebaseUI
 import Foundation
+import Instructions
 
 extension Array {
     func arrayWithoutFirstElement() -> Array {
@@ -238,10 +239,9 @@ extension UIViewController {
         return formatter.string(from: date.getDate(dayDifference: globalVariables.daysFromToday))
     }
 }
-extension UIBarButtonItem {
 
-    var frame:CGRect?{
+extension UIBarButtonItem {
+    var frame: CGRect? {
         return (value(forKey: "view") as? UIView)?.frame
     }
-
 }

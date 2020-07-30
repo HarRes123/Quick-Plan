@@ -6,17 +6,20 @@ import UIKit
 /// This class deals with the layout of coach marks.
 class CoachMarkDisplayManager {
     // MARK: - Public properties
+
     weak var dataSource: CoachMarksControllerProxyDataSource!
     weak var animationDelegate: CoachMarksControllerAnimationProxyDelegate?
     weak var overlayManager: OverlayManager?
 
     // MARK: - Private properties
+
     /// The coach mark view (the one displayed)
     private var coachMarkView: CoachMarkView!
 
     private let coachMarkLayoutHelper: CoachMarkLayoutHelper
 
     // MARK: - Initialization
+
     /// Allocate and initialize the manager.
     ///
     /// - Parameter coachMarkLayoutHelper: auto-layout constraint generator
@@ -85,8 +88,8 @@ class CoachMarkDisplayManager {
             UIView.animate(withDuration: transitionManager.parameters.duration,
                            animations: { coachMarkView.alpha = 0.0 },
                            completion: { _ in
-                coachMarkView.removeFromSuperview()
-                completion?()
+                               coachMarkView.removeFromSuperview()
+                               completion?()
             })
 
             return
@@ -159,8 +162,8 @@ class CoachMarkDisplayManager {
             UIView.animate(withDuration: transitionManager.parameters.duration,
                            animations: { coachMarkView.alpha = 1.0 },
                            completion: { [weak self] _ in
-                completion?()
-                self?.applyIdleAnimation(to: coachMarkView, from: coachMark, at: index)
+                               completion?()
+                               self?.applyIdleAnimation(to: coachMarkView, from: coachMark, at: index)
             })
 
             return
@@ -191,6 +194,7 @@ class CoachMarkDisplayManager {
     }
 
     // MARK: - Private methods
+
     /// Add the current coach mark to the view, making sure it is
     /// properly positioned.
     ///
@@ -206,18 +210,17 @@ class CoachMarkDisplayManager {
         parentView.addSubview(coachMarkView)
 
         coachMarkView.widthAnchor
-                     .constraint(lessThanOrEqualToConstant: coachMark.maxWidth).isActive = true
+            .constraint(lessThanOrEqualToConstant: coachMark.maxWidth).isActive = true
 
         // No cutoutPath, no arrow.
         if let cutoutPath = coachMark.cutoutPath {
-
             generateAndEnableVerticalConstraints(of: coachMarkView, forDisplayIn: parentView,
                                                  usingCoachMark: coachMark, cutoutPath: cutoutPath,
                                                  andOverlayView: overlayView)
 
             generateAndEnableHorizontalConstraints(of: coachMarkView, forDisplayIn: parentView,
-                                                  usingCoachMark: coachMark,
-                                                  andOverlayView: overlayView)
+                                                   usingCoachMark: coachMark,
+                                                   andOverlayView: overlayView)
 
             overlayView.cutoutPath = cutoutPath
         } else {
@@ -238,7 +241,7 @@ class CoachMarkDisplayManager {
                                                       forDisplayIn parentView: UIView,
                                                       usingCoachMark coachMark: CoachMark,
                                                       cutoutPath: UIBezierPath,
-                                                      andOverlayView overlayView: OverlayView) {
+                                                      andOverlayView _: OverlayView) {
         let offset = coachMark.gapBetweenCoachMarkAndCutoutPath
 
         // Depending where the cutoutPath sits, the coach mark will either
@@ -278,7 +281,7 @@ class CoachMarkDisplayManager {
     private func generateAndEnableHorizontalConstraints(of coachMarkView: CoachMarkView,
                                                         forDisplayIn parentView: UIView,
                                                         usingCoachMark coachMark: CoachMark,
-                                                        andOverlayView overlayView: OverlayView) {
+                                                        andOverlayView _: OverlayView) {
         // Generating the constraints for the first pass. This constraints center
         // the view around the point of interest.
         let constraints = coachMarkLayoutHelper.constraints(for: coachMarkView,

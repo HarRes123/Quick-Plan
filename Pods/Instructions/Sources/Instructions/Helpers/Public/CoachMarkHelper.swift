@@ -4,7 +4,6 @@
 import UIKit
 
 public class CoachMarkHelper {
-
     let instructionsRootView: InstructionsRootView
     let flowManager: FlowManager
 
@@ -32,8 +31,8 @@ public class CoachMarkHelper {
             return coachMark
         }
 
-        self.update(coachMark: &coachMark, usingView: view,
-                    pointOfInterest: pointOfInterest, cutoutPathMaker: cutoutPathMaker)
+        update(coachMark: &coachMark, usingView: view,
+               pointOfInterest: pointOfInterest, cutoutPathMaker: cutoutPathMaker)
 
         return coachMark
     }
@@ -50,8 +49,7 @@ public class CoachMarkHelper {
     public func makeDefaultCoachViews(withArrow arrow: Bool = true,
                                       withNextText nextText: Bool = true,
                                       arrowOrientation: CoachMarkArrowOrientation? = .top)
-    -> (bodyView: CoachMarkBodyDefaultView, arrowView: CoachMarkArrowDefaultView?) {
-
+        -> (bodyView: CoachMarkBodyDefaultView, arrowView: CoachMarkArrowDefaultView?) {
         var coachMarkBodyView: CoachMarkBodyDefaultView
 
         if nextText {
@@ -80,7 +78,7 @@ public class CoachMarkHelper {
     public func makeDefaultCoachViews(withArrow arrow: Bool = true,
                                       arrowOrientation: CoachMarkArrowOrientation? = .top,
                                       hintText: String, nextText: String? = nil)
-    -> (bodyView: CoachMarkBodyDefaultView, arrowView: CoachMarkArrowDefaultView?) {
+        -> (bodyView: CoachMarkBodyDefaultView, arrowView: CoachMarkArrowDefaultView?) {
         let coachMarkBodyView = CoachMarkBodyDefaultView(hintText: hintText, nextText: nextText)
 
         var coachMarkArrowView: CoachMarkArrowDefaultView?
@@ -110,9 +108,9 @@ public class CoachMarkHelper {
                                        cutoutPathMaker: CutoutPathMaker? = nil) {
         if !flowManager.isPaused || flowManager.currentCoachMark == nil {
             print("""
-                  [ERROR] Something went wrong, did you call \
-                  `updateCurrentCoachMark()` without pausing the controller first?
-                  """)
+            [ERROR] Something went wrong, did you call \
+            `updateCurrentCoachMark()` without pausing the controller first?
+            """)
             return
         }
 
@@ -153,12 +151,12 @@ public class CoachMarkHelper {
 
         if let pointOfInterest = pointOfInterest {
             coachMark.pointOfInterest = instructionsRootView.convert(pointOfInterest,
-                                                                          from: view.superview)
+                                                                     from: view.superview)
         }
     }
 
     internal func makeDefaultArrow(withOrientation arrowOrientation: CoachMarkArrowOrientation?)
-    -> CoachMarkArrowDefaultView {
+        -> CoachMarkArrowDefaultView {
         var arrowOrientation = arrowOrientation
 
         if arrowOrientation == nil {

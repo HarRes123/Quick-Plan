@@ -7,6 +7,7 @@ import UIKit
 // around the point of interest.
 public class OverlayManager {
     // MARK: - Public properties
+
     /// The background color of the overlay
     public var backgroundColor: UIColor = InstructionsColor.overlay {
         didSet {
@@ -37,14 +38,14 @@ public class OverlayManager {
     /// After receiving a tap event, the controller will show the next coach mark.
     public var isUserInteractionEnabled: Bool {
         get {
-            return self.singleTapGestureRecognizer.view != nil
+            return singleTapGestureRecognizer.view != nil
         }
 
         set {
             if newValue == true {
-                self.overlayView.addGestureRecognizer(self.singleTapGestureRecognizer)
+                overlayView.addGestureRecognizer(singleTapGestureRecognizer)
             } else {
-                self.overlayView.removeGestureRecognizer(self.singleTapGestureRecognizer)
+                overlayView.removeGestureRecognizer(singleTapGestureRecognizer)
             }
         }
     }
@@ -61,6 +62,7 @@ public class OverlayManager {
     }
 
     // MARK: - Internal Properties
+
     /// Delegate to which tell that the overlay view received a tap event.
     internal weak var overlayDelegate: OverlayManagerDelegate?
 
@@ -94,8 +96,9 @@ public class OverlayManager {
     }
 
     // MARK: - Private Properties
+
     private lazy var overlayStyleManager: OverlayStyleManager = {
-        return self.updateOverlayStyleManager()
+        self.updateOverlayStyleManager()
     }()
 
     /// TapGestureRecognizer that will catch tap event performed on the overlay
@@ -110,9 +113,9 @@ public class OverlayManager {
     /// a tap event.
     ///
     /// - Parameter sender: the object which sent the event
-    @objc private func handleSingleTap(_ sender: AnyObject?) {
+    @objc private func handleSingleTap(_: AnyObject?) {
         if enableTap {
-            self.overlayDelegate?.didReceivedSingleTap()
+            overlayDelegate?.didReceivedSingleTap()
         }
     }
 
@@ -145,7 +148,7 @@ public class OverlayManager {
             overlayView.window?.isHidden = false
             UIView.animate(withDuration: fadeAnimationDuration, animations: {
                 rootView.alpha = 0.0
-            }, completion: { (success) in
+            }, completion: { success in
                 rootView.isHidden = true
                 completion?(success)
             })
@@ -167,27 +170,28 @@ public class OverlayManager {
     }
 
     private func updateDependencies(of overlayAnimator: BlurringOverlayStyleManager) {
-        overlayAnimator.overlayView = self.overlayView
-        overlayAnimator.snapshotDelegate = self.overlayDelegate
+        overlayAnimator.overlayView = overlayView
+        overlayAnimator.snapshotDelegate = overlayDelegate
     }
 
     private func updateDependencies(of overlayAnimator: TranslucentOverlayStyleManager) {
-        overlayAnimator.overlayView = self.overlayView
+        overlayAnimator.overlayView = overlayView
     }
 
     private func updateOverlayStyleManager() -> OverlayStyleManager {
         if let style = blurEffectStyle, !UIAccessibility.isReduceTransparencyEnabled {
             let blurringOverlayStyleManager = BlurringOverlayStyleManager(style: style)
-            self.updateDependencies(of: blurringOverlayStyleManager)
+            updateDependencies(of: blurringOverlayStyleManager)
             return blurringOverlayStyleManager
         } else {
             let translucentOverlayStyleManager = TranslucentOverlayStyleManager(color: backgroundColor)
-            self.updateDependencies(of: translucentOverlayStyleManager)
+            updateDependencies(of: translucentOverlayStyleManager)
             return translucentOverlayStyleManager
         }
     }
 
     // MARK: Renamed Public Properties
+
     @available(*, unavailable, renamed: "backgroundColor")
     public var color: UIColor = InstructionsColor.overlay
 

@@ -18,6 +18,7 @@ class OverlayView: UIView {
     public var forwardTouchEvents: Bool = false
 
     // MARK: - Initialization
+
     init() {
         holder = UIView()
         ornaments = UIView()
@@ -40,11 +41,12 @@ class OverlayView: UIView {
         accessibilityIdentifier = AccessibilityIdentifiers.overlayView
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("This class does not support NSCoding")
     }
 
     // MARK: - Internal methods
+
     override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let hitView = super.hitTest(point, with: event)
 
@@ -55,7 +57,7 @@ class OverlayView: UIView {
                 return hitView
             }
 
-            if !self.allowTouchInsideCutoutPath {
+            if !allowTouchInsideCutoutPath {
                 return hitView
             }
 

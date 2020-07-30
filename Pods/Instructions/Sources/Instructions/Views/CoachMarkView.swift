@@ -28,6 +28,7 @@ class CoachMarkView: UIView {
     }
 
     // MARK: - Private properties
+
     private var bodyUIView: UIView { return bodyView as! UIView }
     private var arrowUIView: UIView? { return arrowView as? UIView }
     private var innerConstraints = CoachMarkViewConstraints()
@@ -48,11 +49,10 @@ class CoachMarkView: UIView {
          arrowView: (UIView & CoachMarkArrowView)? = nil,
          arrowOrientation: CoachMarkArrowOrientation? = nil, arrowOffset: CGFloat? = nil,
          coachMarkInnerLayoutHelper: CoachMarkInnerLayoutHelper) {
-
         self.bodyView = bodyView
         self.arrowView = arrowView
         self.arrowOrientation = arrowOrientation
-        self.coachMarkLayoutHelper = coachMarkInnerLayoutHelper
+        coachMarkLayoutHelper = coachMarkInnerLayoutHelper
 
         if let arrowOffset = arrowOffset {
             self.arrowOffset = arrowOffset
@@ -61,16 +61,16 @@ class CoachMarkView: UIView {
         super.init(frame: CGRect.zero)
 
         self.bodyView.highlightArrowDelegate = self
-        self.layoutViewComposition()
+        layoutViewComposition()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("This class does not support NSCoding.")
     }
 
     // MARK: - Internal Method
 
-    //TODO: Better documentation
+    // TODO: Better documentation
     /// Change the arrow horizontal position to the given position.
     /// `position` is relative to:
     /// - `.Leading`: `offset` is relative to the leading edge of the overlay;
@@ -80,16 +80,16 @@ class CoachMarkView: UIView {
     /// - Parameter position: arrow position
     /// - Parameter offset: arrow offset
     func changeArrowPosition(to position: ArrowPosition, offset: CGFloat) {
-
         guard let arrowUIView = arrowUIView else { return }
 
         if innerConstraints.arrowXposition != nil {
-            self.removeConstraint(innerConstraints.arrowXposition!)
+            removeConstraint(innerConstraints.arrowXposition!)
         }
 
         innerConstraints.arrowXposition = coachMarkLayoutHelper.horizontalArrowConstraints(
             for: (bodyView: bodyUIView, arrowView: arrowUIView), withPosition: position,
-            horizontalOffset: offset)
+            horizontalOffset: offset
+        )
 
         innerConstraints.arrowXposition?.isActive = true
     }
@@ -100,18 +100,19 @@ class CoachMarkView: UIView {
     private func layoutViewComposition() {
         translatesAutoresizingMaskIntoConstraints = false
 
-        self.addSubview(bodyUIView)
-        self.addConstraints(bodyUIView.makeConstraintToFillSuperviewHorizontally())
+        addSubview(bodyUIView)
+        addConstraints(bodyUIView.makeConstraintToFillSuperviewHorizontally())
 
         if let arrowUIView = arrowUIView, let arrowOrientation = self.arrowOrientation {
-            self.addSubview(arrowUIView)
+            addSubview(arrowUIView)
 
             innerConstraints.arrowXposition = coachMarkLayoutHelper.horizontalArrowConstraints(
                 for: (bodyView: bodyUIView, arrowView: arrowUIView), withPosition: .center,
-                horizontalOffset: 0)
+                horizontalOffset: 0
+            )
 
             innerConstraints.arrowXposition?.isActive = true
-            self.addConstraints(coachMarkLayoutHelper.verticalConstraints(
+            addConstraints(coachMarkLayoutHelper.verticalConstraints(
                 for: (bodyView: bodyUIView, arrowView: arrowUIView), in: self,
                 withProperties: (orientation: arrowOrientation, verticalArrowOffset: arrowOffset)
             ))
@@ -123,9 +124,10 @@ class CoachMarkView: UIView {
 }
 
 // MARK: - Protocol conformance | CoachMarkBodyHighlightArrowDelegate
+
 extension CoachMarkView: CoachMarkBodyHighlightArrowDelegate {
     func highlightArrow(_ highlighted: Bool) {
-        self.arrowView?.isHighlighted = highlighted
+        arrowView?.isHighlighted = highlighted
     }
 }
 
@@ -137,5 +139,5 @@ private struct CoachMarkViewConstraints {
     /// The constraint making the body stick to its parent.
     var bodyStickToParent: NSLayoutConstraint?
 
-    init () { }
+    init() {}
 }

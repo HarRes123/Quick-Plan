@@ -40,12 +40,12 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
         navBar.shadowImage = UIImage()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_: Bool) {
         let dateToShow = dateFormatter.date(from: getViewedDate())
         calendarView.select(dateToShow)
         dateSelected = false
     }
-    
+
     func dateChanged(date: Date) {
         let formattedString = dateFormatter.string(from: date)
         let formattedDate = dateFormatter.date(from: formattedString)!

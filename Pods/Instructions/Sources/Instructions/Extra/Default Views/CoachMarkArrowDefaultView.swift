@@ -4,13 +4,14 @@
 import UIKit
 
 // MARK: - Default Class
+
 /// A concrete implementation of the coach mark arrow view and the
 /// default one provided by the library.
 public class CoachMarkArrowDefaultView: UIView,
-                                        CoachMarkArrowView,
-                                        CoachMarkComponent {
-
+    CoachMarkArrowView,
+    CoachMarkComponent {
     // MARK: Private Constants
+
     private let defaultWidth: CGFloat = 15
     private let defaultHeight: CGFloat = 9
 
@@ -20,6 +21,7 @@ public class CoachMarkArrowDefaultView: UIView,
     private let orientation: CoachMarkArrowOrientation
 
     // MARK: Public Properties
+
     public var isHighlighted: Bool = false {
         didSet {
             setNeedsLayout()
@@ -29,6 +31,7 @@ public class CoachMarkArrowDefaultView: UIView,
     public var background = CoachMarkArrowBackground()
 
     // MARK: - Initialization
+
     public init(orientation: CoachMarkArrowOrientation) {
         self.orientation = orientation
 
@@ -40,7 +43,7 @@ public class CoachMarkArrowDefaultView: UIView,
         initializeConstraints()
     }
 
-    public override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
 
         foregroundLayer.frame = bounds
@@ -58,24 +61,26 @@ public class CoachMarkArrowDefaultView: UIView,
         backgroundLayer.path = makeOuterTrianglePath(orientation: orientation)
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("This class does not support NSCoding.")
     }
 }
 
 // MARK: - Private Methods
+
 private extension CoachMarkArrowDefaultView {
     func initializeConstraints() {
         translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             widthAnchor.constraint(equalToConstant: defaultWidth),
-            heightAnchor.constraint(equalToConstant: defaultHeight)
+            heightAnchor.constraint(equalToConstant: defaultHeight),
         ])
     }
 }
 
 // MARK: - Background Style
+
 public struct CoachMarkArrowBackground: CoachMarkBackgroundStyle {
     public var innerColor = InstructionsColor.coachMarkInner
     public var borderColor = InstructionsColor.coachMarkOuter

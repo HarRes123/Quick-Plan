@@ -23,7 +23,7 @@ class InstructionsWindow: UIWindow {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let hitView = super.hitTest(point, with: event)
 
-        if let hitView = hitView, (hitView == self || insertedViewsToIgnore.contains(hitView)) {
+        if let hitView = hitView, hitView == self || insertedViewsToIgnore.contains(hitView) {
             return nil
         }
 
@@ -41,7 +41,7 @@ class InstructionsWindow: UIWindow {
 
     func recursiveSubviews(of view: UIView) -> [UIView] {
         // We just hit the bottom.
-        guard !(view is PassthroughView) && !(view is InstructionsRootView) else {
+        guard !(view is PassthroughView), !(view is InstructionsRootView) else {
             return []
         }
 
@@ -71,13 +71,12 @@ class PassthroughView: UIView {
 
 /// Top view added to the window, forwarding touch events.
 class InstructionsRootView: UIView {
-
     var passthrough: Bool = false
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let hitView = super.hitTest(point, with: event)
 
-        if hitView == self && passthrough {
+        if hitView == self, passthrough {
             return nil
         }
 

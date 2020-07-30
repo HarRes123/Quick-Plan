@@ -4,6 +4,7 @@
 import UIKit
 
 // MARK: Main protocols
+
 /// Define context in which the transition will execute. Note that here, what "context" means
 /// really is "animation parameters" and "coach mark metadata".
 public protocol CoachMarkAnimationManagementContext {
@@ -19,11 +20,13 @@ protocol CoachMarkAnimationManagement: CoachMarkAnimationManagementContext {
 }
 
 // MARK: Enums
+
 public enum AnimationType {
     case regular, keyframe
 }
 
 // MARK: Structs
+
 /// Hold the parameters which will eventually be passed to `UIView.animate`.
 public struct AnimationParameters {
     /// The total duration of the animations, measured in seconds.

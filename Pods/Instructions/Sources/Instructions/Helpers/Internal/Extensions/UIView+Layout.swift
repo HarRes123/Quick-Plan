@@ -4,7 +4,6 @@
 import UIKit
 
 internal extension UIView {
-
     var isOutOfSuperview: Bool {
         let insets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         return isOutOfSuperview(consideringInsets: insets)
@@ -16,12 +15,12 @@ internal extension UIView {
         }
 
         let isInBounds = frame.origin.x >= insets.left && frame.origin.y >= insets.top
-                         &&
-                         (frame.origin.x + frame.size.width) <=
-                         (superview.frame.size.width - insets.right)
-                         &&
-                         (frame.origin.y + frame.size.height) <=
-                         (superview.frame.size.height - insets.bottom)
+            &&
+            (frame.origin.x + frame.size.width) <=
+            (superview.frame.size.width - insets.right)
+            &&
+            (frame.origin.y + frame.size.height) <=
+            (superview.frame.size.height - insets.bottom)
 
         return !isInBounds
     }
@@ -36,7 +35,7 @@ internal extension UIView {
             topAnchor.constraint(equalTo: superview.topAnchor, constant: insets.top),
             bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -insets.bottom),
             leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: insets.left),
-            trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -insets.right)
+            trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -insets.right),
         ])
     }
 
@@ -61,7 +60,7 @@ internal extension UIView {
 
         return [
             topAnchor.constraint(equalTo: superview.topAnchor),
-            bottomAnchor.constraint(equalTo: superview.bottomAnchor)
+            bottomAnchor.constraint(equalTo: superview.bottomAnchor),
         ]
     }
 
@@ -73,7 +72,7 @@ internal extension UIView {
 
         return [
             leadingAnchor.constraint(equalTo: superview.leadingAnchor),
-            trailingAnchor.constraint(equalTo: superview.trailingAnchor)
+            trailingAnchor.constraint(equalTo: superview.trailingAnchor),
         ]
     }
 

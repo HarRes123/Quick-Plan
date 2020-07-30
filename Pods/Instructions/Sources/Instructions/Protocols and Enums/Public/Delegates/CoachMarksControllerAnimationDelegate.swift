@@ -22,20 +22,20 @@ public protocol CoachMarksControllerAnimationDelegate: AnyObject {
 }
 
 public extension CoachMarksControllerAnimationDelegate {
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              fetchAppearanceTransitionOfCoachMark coachMarkView: UIView,
-                              at index: Int,
-                              using manager: CoachMarkTransitionManager) { }
+    func coachMarksController(_: CoachMarksController,
+                              fetchAppearanceTransitionOfCoachMark _: UIView,
+                              at _: Int,
+                              using _: CoachMarkTransitionManager) {}
 
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              fetchDisappearanceTransitionOfCoachMark coachMarkView: UIView,
-                              at index: Int,
-                              using manager: CoachMarkTransitionManager) { }
+    func coachMarksController(_: CoachMarksController,
+                              fetchDisappearanceTransitionOfCoachMark _: UIView,
+                              at _: Int,
+                              using _: CoachMarkTransitionManager) {}
 
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              fetchIdleAnimationOfCoachMark coachMarkView: UIView,
-                              at index: Int,
-                              using manager: CoachMarkAnimationManager) { }
+    func coachMarksController(_: CoachMarksController,
+                              fetchIdleAnimationOfCoachMark _: UIView,
+                              at _: Int,
+                              using _: CoachMarkAnimationManager) {}
 }
 
 protocol CoachMarksControllerAnimationProxyDelegate: AnyObject {

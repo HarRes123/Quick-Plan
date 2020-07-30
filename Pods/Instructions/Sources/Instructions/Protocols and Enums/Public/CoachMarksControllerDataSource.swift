@@ -42,7 +42,7 @@ public protocol CoachMarksControllerDataSource: AnyObject {
     /// - Returns: a tuple packaging the body component and the arrow component.
     func coachMarksController(_ coachMarksController: CoachMarksController,
                               coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark)
-    -> (bodyView: (UIView & CoachMarkBodyView), arrowView: (UIView & CoachMarkArrowView)?)
+        -> (bodyView: UIView & CoachMarkBodyView, arrowView: (UIView & CoachMarkArrowView)?)
 
     /// Asks for autolayout constraints needed to position `skipView` in
     /// `coachMarksController.view`.
@@ -59,9 +59,9 @@ public protocol CoachMarksControllerDataSource: AnyObject {
 }
 
 public extension CoachMarksControllerDataSource {
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              constraintsForSkipView skipView: UIView,
-                              inParent parentView: UIView) -> [NSLayoutConstraint]? {
+    func coachMarksController(_: CoachMarksController,
+                              constraintsForSkipView _: UIView,
+                              inParent _: UIView) -> [NSLayoutConstraint]? {
         return nil
     }
 }

@@ -4,12 +4,14 @@
 import UIKit
 
 // MARK: - Main Class
+
 /// A concrete implementation of the coach mark body view and the
 /// default one provided by the library.
 public class CoachMarkBodyDefaultView: UIControl,
-                                       CoachMarkBodyView {
+    CoachMarkBodyView {
     // MARK: Overriden Properties
-    public override var isHighlighted: Bool {
+
+    override public var isHighlighted: Bool {
         didSet {
             bodyBackground.isHighlighted = isHighlighted
             highlightArrowDelegate?.highlightArrow(isHighlighted)
@@ -17,6 +19,7 @@ public class CoachMarkBodyDefaultView: UIControl,
     }
 
     // MARK: Public Properties
+
     public var nextControl: UIControl? {
         return self
     }
@@ -31,14 +34,17 @@ public class CoachMarkBodyDefaultView: UIControl,
     }
 
     // MARK: Delegates
+
     public weak var highlightArrowDelegate: CoachMarkBodyHighlightArrowDelegate?
 
     // MARK: Private Properties
+
     private lazy var labelStackView: UIStackView = makeStackView()
 
     private var bodyBackground = CoachMarkBodyBackgroundView().preparedForAutoLayout()
 
     // MARK: - Initialization
+
     override public init(frame: CGRect) {
         super.init(frame: frame)
         initializeViewHierarchy()
@@ -55,20 +61,21 @@ public class CoachMarkBodyDefaultView: UIControl,
         hintLabel.text = hintText
     }
 
-    convenience public init(hintText: String, nextText: String?) {
+    public convenience init(hintText: String, nextText: String?) {
         self.init(frame: CGRect.zero, hintText: hintText, nextText: nextText)
     }
 
-    convenience public init() {
+    public convenience init() {
         self.init(frame: CGRect.zero)
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("This class does not support NSCoding.")
     }
 }
 
 // MARK: - Private Methods
+
 private extension CoachMarkBodyDefaultView {
     func initializeViewHierarchy() {
         backgroundColor = .clear
@@ -97,6 +104,7 @@ private extension CoachMarkBodyDefaultView {
     }
 
     // MARK: Builders
+
     func makeHintTextView() -> UITextView {
         let textView = UITextView().preparedForAutoLayout()
 

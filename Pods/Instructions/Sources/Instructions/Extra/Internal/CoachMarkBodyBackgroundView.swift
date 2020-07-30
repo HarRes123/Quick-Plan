@@ -4,9 +4,10 @@
 import UIKit
 
 class CoachMarkBodyBackgroundView: UIView,
-                                   CoachMarkBodyBackgroundStyle,
-                                   CoachMarkComponent {
+    CoachMarkBodyBackgroundStyle,
+    CoachMarkComponent {
     // MARK: Private Constants
+
     private let minimumWidth: CGFloat = 17
     private let minimumHeight: CGFloat = 18
 
@@ -14,6 +15,7 @@ class CoachMarkBodyBackgroundView: UIView,
     private let backgroundLayer = CAShapeLayer()
 
     // MARK: Public Properties
+
     public var isHighlighted: Bool = false {
         didSet {
             setNeedsLayout()
@@ -29,6 +31,7 @@ class CoachMarkBodyBackgroundView: UIView,
     public lazy var highlightedBorderColor = InstructionsColor.coachMarkOuter
 
     // MARK: - Initialization
+
     override public init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -40,16 +43,17 @@ class CoachMarkBodyBackgroundView: UIView,
         initializeConstraints()
     }
 
-    convenience public init() {
+    public convenience init() {
         self.init(frame: CGRect.zero)
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("This class does not support NSCoding.")
     }
 
     // MARK: - Layout
-    public override func layoutSubviews() {
+
+    override public func layoutSubviews() {
         super.layoutSubviews()
 
         foregroundLayer.frame = bounds
@@ -68,6 +72,7 @@ class CoachMarkBodyBackgroundView: UIView,
     }
 
     // MARK: Internal Methods
+
     func updateValues(from bodyBackground: CoachMarkBodyBackgroundStyle) {
         borderColor = bodyBackground.borderColor
         innerColor = bodyBackground.innerColor
@@ -79,10 +84,11 @@ class CoachMarkBodyBackgroundView: UIView,
     }
 
     // MARK: - Private Methods
+
     private func initializeConstraints() {
         NSLayoutConstraint.activate([
             widthAnchor.constraint(greaterThanOrEqualToConstant: minimumWidth),
-            heightAnchor.constraint(greaterThanOrEqualToConstant: minimumHeight)
+            heightAnchor.constraint(greaterThanOrEqualToConstant: minimumHeight),
         ])
     }
 }

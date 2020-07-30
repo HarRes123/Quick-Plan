@@ -4,9 +4,11 @@
 import UIKit
 
 // MARK: - Main Class
+
 /// Handles a set of coach marks, and display them successively.
 public class CoachMarksController {
     // MARK: - Public properties
+
     /// Implement the data source protocol and supply
     /// the coach marks to display.
     public weak var dataSource: CoachMarksControllerDataSource?
@@ -47,7 +49,7 @@ public class CoachMarksController {
     }
 
     /// Hide the UI.
-    private(set) public lazy var overlay: OverlayManager = {
+    public private(set) lazy var overlay: OverlayManager = {
         let overlay = OverlayManager()
         overlay.overlayDelegate = self
 
@@ -55,14 +57,14 @@ public class CoachMarksController {
     }()
 
     /// Provide cutout path related helpers.
-    private(set) public lazy var helper: CoachMarkHelper! = {
+    public private(set) lazy var helper: CoachMarkHelper! = {
         let instructionsTopView = self.coachMarksViewController.instructionsRootView
         return CoachMarkHelper(instructionsRootView: instructionsTopView,
                                flowManager: self.flow)
     }()
 
     /// Handles the flow of coachmarks.
-    private(set) public lazy var flow: FlowManager = {
+    public private(set) lazy var flow: FlowManager = {
         let flowManager = FlowManager(coachMarksViewController: self.coachMarksViewController)
         flowManager.dataSource = self
         flowManager.delegate = self
@@ -73,6 +75,7 @@ public class CoachMarksController {
     }()
 
     // MARK: - Private properties
+
     private weak var controllerWindow: UIWindow?
     private var coachMarksWindow: UIWindow?
 
@@ -89,10 +92,12 @@ public class CoachMarksController {
     }()
 
     // MARK: - Lifecycle
-    public init() { }
+
+    public init() {}
 }
 
 // MARK: - Forwarded Properties
+
 public extension CoachMarksController {
     /// Control or control wrapper used to skip the flow.
     var skipView: (UIView & CoachMarkSkipView)? {
@@ -102,6 +107,7 @@ public extension CoachMarksController {
 }
 
 // MARK: - Flow management
+
 public extension CoachMarksController {
     /// Start instructions in the given context.
     ///
@@ -125,18 +131,18 @@ public extension CoachMarksController {
         }
 
         switch presentationContext {
-        case .newWindow(let viewController, let windowLevel):
-#if INSTRUCTIONS_APP_EXTENSIONS
-            fatalError("PresentationContext.newWindow(above:) is not available in App Extensions.")
-#else
-            controllerWindow = viewController.view.window
-            coachMarksWindow = coachMarksWindow ?? buildNewWindow()
-            coachMarksViewController.attach(to: coachMarksWindow!, over: viewController,
-                                            at: windowLevel)
-#endif
-        case .currentWindow(let viewController):
+        case let .newWindow(viewController, windowLevel):
+            #if INSTRUCTIONS_APP_EXTENSIONS
+                fatalError("PresentationContext.newWindow(above:) is not available in App Extensions.")
+            #else
+                controllerWindow = viewController.view.window
+                coachMarksWindow = coachMarksWindow ?? buildNewWindow()
+                coachMarksViewController.attach(to: coachMarksWindow!, over: viewController,
+                                                at: windowLevel)
+            #endif
+        case let .currentWindow(viewController):
             coachMarksViewController.attachToWindow(of: viewController)
-        case .viewController(let viewController):
+        case let .viewController(viewController):
             coachMarksViewController.attach(to: viewController)
         }
 
@@ -173,6 +179,7 @@ public extension CoachMarksController {
 }
 
 // MARK: - Protocol Conformance | OverlayViewDelegate
+
 extension CoachMarksController: Snapshottable {
     func snapshot() -> UIView? {
         guard let window = controllerWindow else { return nil }
@@ -189,6 +196,7 @@ extension CoachMarksController: OverlayManagerDelegate {
 }
 
 // MARK: - Private builders
+
 private extension CoachMarksController {
     func buildCoachMarkDisplayManager() -> CoachMarkDisplayManager {
         let coachMarkDisplayManager =
@@ -207,19 +215,19 @@ private extension CoachMarksController {
     }
 
     func buildNewWindow() -> UIWindow {
-#if !INSTRUCTIONS_APP_EXTENSIONS
-        if #available(iOS 13.0, *) {
-            if let windowScene = UIApplication.shared.activeScene {
-                let window = InstructionsWindow(windowScene: windowScene)
-                window.frame = UIApplication.shared.keyWindow?.bounds ?? UIScreen.main.bounds
+        #if !INSTRUCTIONS_APP_EXTENSIONS
+            if #available(iOS 13.0, *) {
+                if let windowScene = UIApplication.shared.activeScene {
+                    let window = InstructionsWindow(windowScene: windowScene)
+                    window.frame = UIApplication.shared.keyWindow?.bounds ?? UIScreen.main.bounds
 
-                return window
+                    return window
+                }
+            } else {
+                let bounds = UIApplication.shared.keyWindow?.bounds ?? UIScreen.main.bounds
+                return InstructionsWindow(frame: bounds)
             }
-        } else {
-            let bounds = UIApplication.shared.keyWindow?.bounds ?? UIScreen.main.bounds
-            return InstructionsWindow(frame: bounds)
-        }
-#endif
+        #endif
         return InstructionsWindow(frame: UIScreen.main.bounds)
     }
 }

@@ -16,10 +16,11 @@ import UIKit
 /// 1. Opacity animation
 /// 2. Mask animation
 ///
-/// TODO: Look for ways to improve everything, I'm fairly confident we can optimize
+// TODO: Look for ways to improve everything, I'm fairly confident we can optimize
 ///       a bunch of things.
 class BlurringOverlayStyleManager: OverlayStyleManager {
     // MARK: Properties
+
     weak var overlayView: OverlayView? {
         didSet {
             sizeTransitionOverlay = UIVisualEffectView(effect: blurEffect)
@@ -35,6 +36,7 @@ class BlurringOverlayStyleManager: OverlayStyleManager {
     weak var snapshotDelegate: Snapshottable?
 
     // MARK: Private Properties
+
     /// Basic blurring overlay used during size transitions
     private var sizeTransitionOverlay: UIView?
     /// Subview holding the actual bunch.
@@ -50,9 +52,9 @@ class BlurringOverlayStyleManager: OverlayStyleManager {
         let view = MaskView()
         view.backgroundColor = UIColor.clear
 
-        guard let overlay = self.overlayView,
-            let cutoutPath = self.overlayView?.cutoutPath else {
-                return view
+        guard let overlay = overlayView,
+            let cutoutPath = overlayView?.cutoutPath else {
+            return view
         }
 
         let path = UIBezierPath(rect: overlay.bounds)
@@ -74,6 +76,7 @@ class BlurringOverlayStyleManager: OverlayStyleManager {
     private var isOverlayHidden: Bool = true
 
     // MARK: Initialization
+
     init(style: UIBlurEffect.Style) {
         self.style = style
     }
@@ -101,7 +104,7 @@ class BlurringOverlayStyleManager: OverlayStyleManager {
         setUpOverlay()
 
         guard let overlay = overlayView,
-              let subOverlay = subOverlay as? UIVisualEffectView else {
+            let subOverlay = subOverlay as? UIVisualEffectView else {
             completion?(false)
             return
         }
@@ -139,16 +142,16 @@ class BlurringOverlayStyleManager: OverlayStyleManager {
         guard let overlay = overlayView,
             let background = cutoutOverlays?.background,
             let foreground = cutoutOverlays?.foreground else {
-                completion?(false)
-                return
+            completion?(false)
+            return
         }
 
         background.frame = overlay.bounds
         foreground.frame = overlay.bounds
 
-        background.visualEffectView.effect = show ? self.blurEffect : nil
-        foreground.visualEffectView.effect = self.blurEffect
-        foreground.mask = self.mask
+        background.visualEffectView.effect = show ? blurEffect : nil
+        foreground.visualEffectView.effect = blurEffect
+        foreground.mask = mask
 
         subviews?.forEach { if $0 !== sizeTransitionOverlay { $0.removeFromSuperview() } }
 
@@ -165,13 +168,14 @@ class BlurringOverlayStyleManager: OverlayStyleManager {
         })
     }
 
-    func updateStyle(with traitCollection: UITraitCollection) {
+    func updateStyle(with _: UITraitCollection) {
         overlayView?.setNeedsDisplay()
     }
 
     // MARK: Private methods
+
     private func setUpOverlay() {
-        guard let cutoutOverlays = self.makeSnapshotOverlays() else { return }
+        guard let cutoutOverlays = makeSnapshotOverlays() else { return }
 
         self.cutoutOverlays = cutoutOverlays
 
@@ -181,7 +185,7 @@ class BlurringOverlayStyleManager: OverlayStyleManager {
 
     private func makeSnapshotView() -> OverlaySnapshotView? {
         guard let overlayView = overlayView,
-              let snapshot = snapshotDelegate?.snapshot() else {
+            let snapshot = snapshotDelegate?.snapshot() else {
             return nil
         }
 
@@ -199,11 +203,11 @@ class BlurringOverlayStyleManager: OverlayStyleManager {
 
     private func makeSnapshotOverlays() -> (background: OverlaySnapshotView,
                                             foreground: OverlaySnapshotView)? {
-            guard let background = makeSnapshotView(),
-                  let foreground = makeSnapshotView() else {
-                    return nil
-            }
+        guard let background = makeSnapshotView(),
+            let foreground = makeSnapshotView() else {
+            return nil
+        }
 
-            return (background: background, foreground: foreground)
+        return (background: background, foreground: foreground)
     }
 }

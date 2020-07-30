@@ -12,10 +12,11 @@ class OverlaySnapshotView: UIView {
 
         didSet {
             if visualEffectView != nil {
-                self.addSubview(visualEffectView)
+                addSubview(visualEffectView)
             }
         }
     }
+
     var backgroundView: UIView! {
         willSet {
             if backgroundView == nil { return }
@@ -29,7 +30,7 @@ class OverlaySnapshotView: UIView {
         }
     }
 
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    override func hitTest(_: CGPoint, with _: UIEvent?) -> UIView? {
         return nil
     }
 }

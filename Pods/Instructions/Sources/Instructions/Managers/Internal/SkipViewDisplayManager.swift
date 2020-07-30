@@ -6,21 +6,24 @@ import UIKit
 /// This class deals with the layout of the "skip" view.
 class SkipViewDisplayManager {
     // MARK: - Internal properties
+
     /// Datasource providing the constraints to use.
     weak var dataSource: CoachMarksControllerProxyDataSource?
 
     var presentationFashion: PresentationFashion = .window
 
     // MARK: - Private properties
+
     /// Constraints defining the position of the "Skip" view
     private var skipViewConstraints: [NSLayoutConstraint] = []
 
     // MARK: - Internal methods
+
     /// Hide the given Skip View with a fading effect.
     ///
     /// - Parameter skipView: the skip view to hide.
     /// - Parameter duration: the duration of the fade.
-    func hide(skipView: (UIView & CoachMarkSkipView), duration: TimeInterval = 0) {
+    func hide(skipView: UIView & CoachMarkSkipView, duration: TimeInterval = 0) {
         if duration == 0 {
             skipView.asView?.alpha = 0.0
         } else {
@@ -34,14 +37,14 @@ class SkipViewDisplayManager {
     ///
     /// - Parameter skipView: the skip view to show.
     /// - Parameter duration: the duration of the fade.
-    func show(skipView: (UIView & CoachMarkSkipView), duration: TimeInterval = 0) {
+    func show(skipView: UIView & CoachMarkSkipView, duration: TimeInterval = 0) {
         guard let parentView = skipView.asView?.superview else {
             print("[INFO] skipView has no superview and won't be shown.")
             return
         }
 
-        let constraints = self.dataSource?.constraintsForSkipView(skipView.asView!,
-                                                                  inParent: parentView)
+        let constraints = dataSource?.constraintsForSkipView(skipView.asView!,
+                                                             inParent: parentView)
 
         update(skipView: skipView, withConstraints: constraints)
 
@@ -60,7 +63,7 @@ class SkipViewDisplayManager {
     ///
     /// - Parameter skipView: the skip view to position.
     /// - Parameter constraints: the constraints to use.
-    func update(skipView: (UIView & CoachMarkSkipView),
+    func update(skipView: UIView & CoachMarkSkipView,
                 withConstraints constraints: [NSLayoutConstraint]?) {
         guard let parentView = skipView.asView?.superview else {
             print("[INFO] skipView has no superview and won't be updated.")
@@ -68,21 +71,21 @@ class SkipViewDisplayManager {
         }
 
         skipView.asView?.translatesAutoresizingMaskIntoConstraints = false
-        parentView.removeConstraints(self.skipViewConstraints)
+        parentView.removeConstraints(skipViewConstraints)
 
-        self.skipViewConstraints = []
+        skipViewConstraints = []
 
         if let constraints = constraints {
-            self.skipViewConstraints = constraints
+            skipViewConstraints = constraints
         } else {
-            self.skipViewConstraints = defaultConstraints(for: skipView, in: parentView)
+            skipViewConstraints = defaultConstraints(for: skipView, in: parentView)
         }
 
-        parentView.addConstraints(self.skipViewConstraints)
+        parentView.addConstraints(skipViewConstraints)
     }
 
-    private func defaultConstraints(for skipView: (UIView & CoachMarkSkipView), in parentView: UIView)
-    -> [NSLayoutConstraint] {
+    private func defaultConstraints(for skipView: UIView & CoachMarkSkipView, in parentView: UIView)
+        -> [NSLayoutConstraint] {
         var constraints = [NSLayoutConstraint]()
 
         let trailingAnchor: NSLayoutXAxisAnchor
@@ -108,7 +111,7 @@ class SkipViewDisplayManager {
             }
         case .viewControllerWindow:
             if #available(iOS 11.0, *), let window = parentView.window,
-               let safeAreaInsets = window.rootViewController?.view.safeAreaInsets {
+                let safeAreaInsets = window.rootViewController?.view.safeAreaInsets {
                 // For some reasons I don't fully understand, window.safeAreaInsets.top is correctly
                 // set for the iPhone X, but not for other iPhones. That's why we have this
                 // awkward "hack", whereby the top inset is added manually.
@@ -135,11 +138,11 @@ class SkipViewDisplayManager {
     }
 
     func updateTopConstant(from original: CGFloat) -> CGFloat {
-#if !INSTRUCTIONS_APP_EXTENSIONS
-        if !UIApplication.shared.isStatusBarHidden {
-            return UIApplication.shared.statusBarFrame.size.height
-        }
-#endif
+        #if !INSTRUCTIONS_APP_EXTENSIONS
+            if !UIApplication.shared.isStatusBarHidden {
+                return UIApplication.shared.statusBarFrame.size.height
+            }
+        #endif
 
         return original
     }

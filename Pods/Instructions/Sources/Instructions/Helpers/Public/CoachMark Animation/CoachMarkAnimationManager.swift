@@ -9,6 +9,7 @@ import Foundation
 /// `parameters` property first and then, call `animate`.
 public class CoachMarkAnimationManager: CoachMarkAnimationManagement {
     // MARK: Internal properties
+
     /// Used to descriminate between regular animations and keyframe-based animations.
     internal var animationType: AnimationType = .regular
 
@@ -19,15 +20,18 @@ public class CoachMarkAnimationManager: CoachMarkAnimationManagement {
     internal var completion: ((Bool) -> Void)?
 
     // MARK: Public properties
+
     public let coachMark: CoachMark
     public var parameters = AnimationParameters()
 
     // MARK: Lifecycle
+
     init(coachMark: CoachMark) {
         self.coachMark = coachMark
     }
 
     // MARK: Public methods
+
     /// Use this method to register the animations which will be used while coach marks will be
     /// displayed. A `CoachMarkAnimationManagementContext` will be passed to the animation block
     /// so that you will be able to access the animation parameters and the related coach mark.
@@ -47,6 +51,7 @@ public class CoachMarkAnimationManager: CoachMarkAnimationManagement {
     }
 
     // MARK: Internal methods
+
     /// Create the context from the current parameters and coach mark.
     ///
     /// - Returns: new context object.

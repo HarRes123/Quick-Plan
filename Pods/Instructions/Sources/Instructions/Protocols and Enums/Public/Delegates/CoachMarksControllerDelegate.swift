@@ -37,47 +37,47 @@ public protocol CoachMarksControllerDelegate: AnyObject {
 }
 
 public extension CoachMarksControllerDelegate {
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              configureOrnamentsOfOverlay overlay: UIView) { }
+    func coachMarksController(_: CoachMarksController,
+                              configureOrnamentsOfOverlay _: UIView) {}
 
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              willLoadCoachMarkAt index: Int) -> Bool {
+    func coachMarksController(_: CoachMarksController,
+                              willLoadCoachMarkAt _: Int) -> Bool {
         return true
     }
 
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              willShow coachMark: inout CoachMark,
-                              afterSizeTransition: Bool,
-                              at index: Int) { }
+    func coachMarksController(_: CoachMarksController,
+                              willShow _: inout CoachMark,
+                              afterSizeTransition _: Bool,
+                              at _: Int) {}
 
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              didShow coachMark: CoachMark,
-                              afterSizeTransition: Bool,
-                              at index: Int) { }
+    func coachMarksController(_: CoachMarksController,
+                              didShow _: CoachMark,
+                              afterSizeTransition _: Bool,
+                              at _: Int) {}
 
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              willShow coachMark: inout CoachMark,
-                              beforeChanging change: ConfigurationChange,
-                              at index: Int) { }
+    func coachMarksController(_: CoachMarksController,
+                              willShow _: inout CoachMark,
+                              beforeChanging _: ConfigurationChange,
+                              at _: Int) {}
 
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              didShow coachMark: CoachMark,
-                              afterChanging change: ConfigurationChange,
-                              at index: Int) { }
+    func coachMarksController(_: CoachMarksController,
+                              didShow _: CoachMark,
+                              afterChanging _: ConfigurationChange,
+                              at _: Int) {}
 
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              willHide coachMark: CoachMark,
-                              at index: Int) { }
+    func coachMarksController(_: CoachMarksController,
+                              willHide _: CoachMark,
+                              at _: Int) {}
 
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              didHide coachMark: CoachMark,
-                              at index: Int) { }
+    func coachMarksController(_: CoachMarksController,
+                              didHide _: CoachMark,
+                              at _: Int) {}
 
-    func coachMarksController(_ coachMarksController: CoachMarksController,
-                              didEndShowingBySkipping skipped: Bool) { }
+    func coachMarksController(_: CoachMarksController,
+                              didEndShowingBySkipping _: Bool) {}
 
-    func shouldHandleOverlayTap(in coachMarksController: CoachMarksController,
-                                at index: Int) -> Bool {
+    func shouldHandleOverlayTap(in _: CoachMarksController,
+                                at _: Int) -> Bool {
         return true
     }
 }

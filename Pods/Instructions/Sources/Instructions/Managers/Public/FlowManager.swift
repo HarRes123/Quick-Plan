@@ -5,13 +5,14 @@ import UIKit
 
 public class FlowManager {
     // MARK: - Internal Properties
+
     /// `true` if coach marks are curently being displayed, `false` otherwise.
     public var isStarted: Bool { return currentIndex > -1 }
 
     /// Sometimes, the chain of coach mark display can be paused
     /// to let animations be performed. `true` to pause the execution,
     /// `false` otherwise.
-    private(set) open var isPaused = false
+    open private(set) var isPaused = false
 
     internal unowned let coachMarksViewController: CoachMarksViewController
     internal weak var dataSource: CoachMarksControllerProxyDataSource?
@@ -57,6 +58,7 @@ public class FlowManager {
     }
 
     // MARK: Internal methods
+
     internal func startFlow(withNumberOfCoachMarks numberOfCoachMarks: Int) {
         disableFlow = false
 
@@ -71,7 +73,7 @@ public class FlowManager {
         currentIndex = -1
         isPaused = false
         canShowCoachMark = true
-        //disableFlow will be set by startFlow, to enable quick stop.
+        // disableFlow will be set by startFlow, to enable quick stop.
     }
 
     /// Stop displaying the coach marks and perform some cleanup.
@@ -90,7 +92,7 @@ public class FlowManager {
             self.coachMarksViewController.currentCoachMarkView?.alpha = 0.0
         }
 
-        let completionBlock = { [weak self] (finished: Bool) -> Void in
+        let completionBlock = { [weak self] (_: Bool) -> Void in
             guard let strongSelf = self else { return }
             strongSelf.coachMarksViewController.detachFromWindow()
             if shouldCallDelegate { strongSelf.delegate?.didEndShowingBySkipping(skipped) }
@@ -102,14 +104,14 @@ public class FlowManager {
             animationBlock()
             completionBlock(true)
             // TODO: SoC
-            self.coachMarksViewController.overlayManager.overlayView.alpha = 0
+            coachMarksViewController.overlayManager.overlayView.alpha = 0
         } else {
             UIView.animate(withDuration: coachMarksViewController.overlayManager
-                                                                 .fadeAnimationDuration,
+                .fadeAnimationDuration,
                            animations: animationBlock)
 
-            self.coachMarksViewController.overlayManager.showOverlay(false,
-                                                                     completion: completionBlock)
+            coachMarksViewController.overlayManager.showOverlay(false,
+                                                                completion: completionBlock)
         }
     }
 
@@ -175,10 +177,10 @@ public class FlowManager {
     }
 
     internal func showOrStop() {
-        if self.currentIndex < self.numberOfCoachMarks {
-            self.createAndShowCoachMark()
+        if currentIndex < numberOfCoachMarks {
+            createAndShowCoachMark()
         } else {
-            self.stopFlow()
+            stopFlow()
         }
     }
 
@@ -201,23 +203,23 @@ public class FlowManager {
 
             // Retrieves the current coach mark structure from the datasource.
             // It can't be nil, that's why we'll force unwrap it everywhere.
-            currentCoachMark = self.dataSource!.coachMark(at: currentIndex)
+            currentCoachMark = dataSource!.coachMark(at: currentIndex)
 
             // The coach mark will soon show, we notify the delegate, so it
             // can perform some things and, if required, update the coach mark structure.
-            self.delegate?.willShow(coachMark: &currentCoachMark!,
-                                    beforeChanging: change, at: currentIndex)
+            delegate?.willShow(coachMark: &currentCoachMark!,
+                               beforeChanging: change, at: currentIndex)
         }
 
         // The delegate might have paused the flow, we check whether or not it's
         // the case.
-        if !self.isPaused {
+        if !isPaused {
             if coachMarksViewController.instructionsRootView.bounds.isEmpty {
                 print("""
-                      [ERROR] The overlay view added to the window has empty bounds, \
-                      Instructions will stop.
-                      """)
-                self.stopFlow()
+                [ERROR] The overlay view added to the window has empty bounds, \
+                Instructions will stop.
+                """)
+                stopFlow()
                 return
             }
 
@@ -231,8 +233,9 @@ public class FlowManager {
     }
 
     // MARK: Public methods
+
     public func resume() {
-        if isStarted && isPaused {
+        if isStarted, isPaused {
             isPaused = false
 
             let completion: (Bool) -> Void = { _ in
@@ -266,7 +269,7 @@ public class FlowManager {
     /// - Parameter numberOfCoachMarksToSkip: the number of coach marks
     ///                                       to skip.
     public func showNext(numberOfCoachMarksToSkip numberToSkip: Int = 0) {
-        if !self.isStarted || !canShowCoachMark { return }
+        if !isStarted || !canShowCoachMark { return }
 
         if numberToSkip < 0 {
             print("[WARNING] numberToSkip is negative, ignoring.")
@@ -283,7 +286,7 @@ public class FlowManager {
     /// - Parameter numberOfCoachMarksToSkip: the number of coach marks
     ///                                       to skip.
     public func showPrevious(numberOfCoachMarksToSkip numberToSkip: Int = 0) {
-        if !self.isStarted || !canShowCoachMark { return }
+        if !isStarted || !canShowCoachMark { return }
 
         if numberToSkip < 0 {
             print("[WARNING] numberToSkip is negative, ignoring.")
@@ -296,6 +299,7 @@ public class FlowManager {
     }
 
     // MARK: Renamed Public Properties
+
     @available(*, unavailable, renamed: "isStarted")
     public var started: Bool = false
 
@@ -304,11 +308,11 @@ public class FlowManager {
 }
 
 extension FlowManager: CoachMarksViewControllerDelegate {
-    func didTap(coachMarkView: CoachMarkView?) {
+    func didTap(coachMarkView _: CoachMarkView?) {
         showNextCoachMark()
     }
 
-    func didTap(skipView: CoachMarkSkipView?) {
+    func didTap(skipView _: CoachMarkSkipView?) {
         stopFlow(immediately: false, userDidSkip: true, shouldCallDelegate: true)
     }
 

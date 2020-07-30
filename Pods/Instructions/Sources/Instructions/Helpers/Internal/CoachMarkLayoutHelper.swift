@@ -11,18 +11,18 @@ class CoachMarkLayoutHelper {
         for coachMarkView: CoachMarkView,
         coachMark: CoachMark,
         parentView: UIView,
-        layoutDirection: UIUserInterfaceLayoutDirection? = nil,
+        layoutDirection _: UIUserInterfaceLayoutDirection? = nil,
         passNumber: Int = 0
     ) -> [NSLayoutConstraint] {
         if coachMarkView.superview != parentView {
             print("""
-                  [WARNING] `coachMarkView` is not a child of `parentView`. \
-                  The array of constraints will be empty.
-                  """)
+            [WARNING] `coachMarkView` is not a child of `parentView`. \
+            The array of constraints will be empty.
+            """)
             return []
         }
 
-        self.layoutDirection = UIView.userInterfaceLayoutDirection(
+        layoutDirection = UIView.userInterfaceLayoutDirection(
             for: parentView.semanticContentAttribute
         )
 
@@ -30,7 +30,7 @@ class CoachMarkLayoutHelper {
         let offset: CGFloat
 
         if passNumber == 0 {
-            computedProperties = CoachMarkComputedProperties(layoutDirection: self.layoutDirection,
+            computedProperties = CoachMarkComputedProperties(layoutDirection: layoutDirection,
                                                              horizontalAligment: .centered)
             offset = 0
         } else {
@@ -57,29 +57,27 @@ class CoachMarkLayoutHelper {
 
     private func leadingConstraints(for coachMarkView: CoachMarkView,
                                     withCoachMark coachMark: CoachMark,
-                                    inParentView parentView: UIView
-    ) -> [NSLayoutConstraint] {
-
+                                    inParentView parentView: UIView) -> [NSLayoutConstraint] {
         if #available(iOS 11.0, *) {
             let layoutGuide = parentView.safeAreaLayoutGuide
 
             return [
                 coachMarkView.leadingAnchor
-                             .constraint(equalTo: layoutGuide.leadingAnchor,
-                                         constant: coachMark.horizontalMargin),
+                    .constraint(equalTo: layoutGuide.leadingAnchor,
+                                constant: coachMark.horizontalMargin),
                 coachMarkView.widthAnchor
-                             .constraint(lessThanOrEqualToConstant: coachMark.maxWidth),
+                    .constraint(lessThanOrEqualToConstant: coachMark.maxWidth),
                 coachMarkView.trailingAnchor
-                             .constraint(lessThanOrEqualTo: layoutGuide.trailingAnchor,
-                                         constant: -coachMark.horizontalMargin)
+                    .constraint(lessThanOrEqualTo: layoutGuide.trailingAnchor,
+                                constant: -coachMark.horizontalMargin),
             ]
         }
 
         let visualFormat = """
-                           H:|-(==\(coachMark.horizontalMargin))-\
-                           [currentCoachMarkView(<=\(coachMark.maxWidth))]-\
-                           (>=\(coachMark.horizontalMargin))-|
-                           """
+        H:|-(==\(coachMark.horizontalMargin))-\
+        [currentCoachMarkView(<=\(coachMark.maxWidth))]-\
+        (>=\(coachMark.horizontalMargin))-|
+        """
 
         return NSLayoutConstraint.constraints(withVisualFormat: visualFormat,
                                               options: NSLayoutConstraint.FormatOptions(rawValue: 0),
@@ -89,10 +87,9 @@ class CoachMarkLayoutHelper {
 
     private func middleConstraints(for coachMarkView: CoachMarkView,
                                    withCoachMark coachMark: CoachMark,
-                                   inParentView parentView: UIView
-    ) -> [NSLayoutConstraint] {
-        let maxWidth = min(coachMark.maxWidth, (parentView.bounds.width - 2 *
-                                                coachMark.horizontalMargin))
+                                   inParentView parentView: UIView) -> [NSLayoutConstraint] {
+        let maxWidth = min(coachMark.maxWidth, parentView.bounds.width - 2 *
+            coachMark.horizontalMargin)
 
         let visualFormat = "H:[currentCoachMarkView(<=\(maxWidth)@1000)]"
 
@@ -123,8 +120,7 @@ class CoachMarkLayoutHelper {
 
     private func trailingConstraints(for coachMarkView: CoachMarkView,
                                      withCoachMark coachMark: CoachMark,
-                                     inParentView parentView: UIView
-    ) -> [NSLayoutConstraint] {
+                                     inParentView parentView: UIView) -> [NSLayoutConstraint] {
         if #available(iOS 11.0, *) {
             let layoutGuide = parentView.safeAreaLayoutGuide
 
@@ -136,15 +132,15 @@ class CoachMarkLayoutHelper {
                     .constraint(lessThanOrEqualToConstant: coachMark.maxWidth),
                 coachMarkView.trailingAnchor
                     .constraint(equalTo: layoutGuide.trailingAnchor,
-                                constant: -coachMark.horizontalMargin)
+                                constant: -coachMark.horizontalMargin),
             ]
         }
 
         let visualFormat = """
-                           H:|-(>=\(coachMark.horizontalMargin))-\
-                           [currentCoachMarkView(<=\(coachMark.maxWidth))]-\
-                           (==\(coachMark.horizontalMargin))-|
-                           """
+        H:|-(>=\(coachMark.horizontalMargin))-\
+        [currentCoachMarkView(<=\(coachMark.maxWidth))]-\
+        (==\(coachMark.horizontalMargin))-|
+        """
 
         return NSLayoutConstraint.constraints(withVisualFormat: visualFormat,
                                               options: NSLayoutConstraint.FormatOptions(rawValue: 0),
@@ -192,7 +188,7 @@ class CoachMarkLayoutHelper {
             return pointOfInterest.x - coachMark.horizontalMargin - compensation
         } else {
             return parentView.bounds.size.width - pointOfInterest.x -
-                   coachMark.horizontalMargin - compensation
+                coachMark.horizontalMargin - compensation
         }
     }
 
@@ -223,7 +219,7 @@ class CoachMarkLayoutHelper {
 
         if properties.layoutDirection == .leftToRight {
             return parentView.bounds.size.width - pointOfInterest.x -
-                   coachMark.horizontalMargin - compensation
+                coachMark.horizontalMargin - compensation
         } else {
             return pointOfInterest.x - coachMark.horizontalMargin - compensation
         }
@@ -233,7 +229,6 @@ class CoachMarkLayoutHelper {
                                       with properties: CoachMarkComputedProperties) -> CGFloat {
         if #available(iOS 11.0, *) {
             switch (properties.horizontalAligment, properties.layoutDirection) {
-
             case (.leading, .leftToRight), (.trailing, .rightToLeft):
                 return parentView.safeAreaInsets.left
             case (.leading, .rightToLeft), (.trailing, .leftToRight):
@@ -283,7 +278,7 @@ class CoachMarkLayoutHelper {
 
     private func computeProperties(for coachMark: CoachMark,
                                    inParentView parentView: UIView)
-    -> CoachMarkComputedProperties {
+        -> CoachMarkComputedProperties {
         let horizontalAligment = computeHorizontalAligment(of: coachMark,
                                                            forLayoutDirection: layoutDirection,
                                                            inFrame: parentView.frame)

@@ -9,13 +9,12 @@
 import BetterSegmentedControl
 import Firebase
 import GoogleSignIn
+import Instructions
 import MobileCoreServices
 import UIKit
 import UserNotifications
-import Instructions
 
 class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate, CoachMarksControllerDataSource, CoachMarksControllerDelegate {
-    
     let coachMarksController = CoachMarksController()
 
     var myAuth: GTMFetcherAuthorizationProtocol?
@@ -55,10 +54,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var hasSignedIn = false
 
     var assignmentAndDueDate = [String: String]()
-    
-    @IBOutlet weak var manualEntryButton: UIBarButtonItem!
-    
 
+    var calView = UIView(frame: .zero)
+    var dateButton = UIButton()
+    var assignmentButton = UIButton(type: .custom)
+
+    @IBOutlet var manualEntryButton: UIBarButtonItem!
     @IBOutlet var toggleView: BetterSegmentedControl!
 
     let enabledImageView = UIImageView(image: UIImage(named: "classroom")!)
@@ -66,10 +67,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     let date = Date()
     var calendar = Calendar.current
-    
+
     @IBOutlet var calendarTableView: UITableView!
     @IBOutlet var assignmentTableView: UITableView!
-    
+
     private let scopes = [kGTLRAuthScopeClassroomCourseworkMeReadonly, kGTLRAuthScopeClassroomCoursesReadonly]
 
     func tableView(_ tableView: UITableView, itemsForBeginning _: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
@@ -211,6 +212,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if tableView == assignmentTableView {
+            // assignmentButton = UIButton(type: .custom)
             classes = [String](classNameAndAssignments.keys)
             let button = UIButton(type: .custom)
             button.setTitleColor(.black, for: .normal)
@@ -235,46 +237,49 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             button.titleLabel?.textAlignment = .center
             // assignmentTableView.reloadData()
 
-            //        return button
+            if section == 0 {
+                assignmentButton = button
+            }
+
             return button
         } else {
             // return nil
             if section == 0 {
+                calView = UIView(frame: .zero)
                 notificationDay = getViewedDate()
 
-                let view = UIView(frame: .zero)
                 var buttonWidth = 150
                 let buttonX = Int(tableView.frame.size.width) / 2
-                var button = UIButton()
+                //  var button = UIButton()
                 let leftButton = UIButton(type: .custom)
                 let rightButton = UIButton(type: .custom)
                 // button.center = view.center
                 leftButton.frame = CGRect(x: 5, y: 5, width: 30, height: 65)
                 rightButton.frame = CGRect(x: tableView.frame.width - 35, y: 5, width: 30, height: 65)
                 calendarTableView.backgroundColor = .customGray
-                view.backgroundColor = .customGray
-                button = UIButton(frame: CGRect(x: buttonX - buttonWidth / 2, y: 5, width: buttonWidth, height: 65))
+                calView.backgroundColor = .customGray
+                dateButton = UIButton(frame: CGRect(x: buttonX - buttonWidth / 2, y: 5, width: buttonWidth, height: 65))
                 if !loadCalendar {
                     buttonWidth = 110
 
-                    button.setTitle(notificationDay, for: .normal)
-                    button.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
+                    dateButton.setTitle(notificationDay, for: .normal)
+                    dateButton.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
                     // label.removeTarget(self, action: #selector(loadCal(sender:)), for: .touchUpInside)
                     assignmentTableView.dragInteractionEnabled = true
                     calendarTableView.separatorStyle = .singleLine
-                    view.addSubview(leftButton)
-                    view.addSubview(rightButton)
+                    calView.addSubview(leftButton)
+                    calView.addSubview(rightButton)
                 } else {
-                    button.setTitle("Loading...", for: .normal)
+                    dateButton.setTitle("Loading...", for: .normal)
                     calendarTableView.separatorStyle = .none
                     assignmentTableView.dragInteractionEnabled = false
                 }
 
-                button.setTitleColor(.black, for: .normal)
-                button.setTitleColor(.gray, for: .selected)
-                button.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: (button.titleLabel?.font.pointSize)!)
+                dateButton.setTitleColor(.black, for: .normal)
+                dateButton.setTitleColor(.gray, for: .selected)
+                dateButton.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: (dateButton.titleLabel?.font.pointSize)!)
                 leftButton.setImage(UIImage(named: "backwards"), for: .normal)
-                print("WIDTH", button.frame.width)
+                print("WIDTH", dateButton.frame.width)
 
                 leftButton.setTitleColor(.black, for: .normal)
                 leftButton.setTitleColor(.gray, for: .selected)
@@ -288,10 +293,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 //  label.addTarget(self, action: #selector(pressedOnDate(sender:)), for: .touchUpInside)
                 //   self.calendarTableView.addGestureRecognizer(lpgr)
 
-                view.sizeToFit()
-                view.addSubview(button)
+                calView.sizeToFit()
+                calView.addSubview(dateButton)
 
-                return view
+                return calView
             } else {
                 return nil
             }
@@ -870,7 +875,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             DispatchQueue.main.async {
                 self.calendarTableView.reloadData()
                 self.assignmentTableView.reloadData()
-                guard let popover: UIPopoverPresentationController = self.calVC.popoverPresentationController else {return}
+                guard let popover: UIPopoverPresentationController = self.calVC.popoverPresentationController else { return }
                 popover.sourceView = self.view
                 popover.sourceRect = CGRect(x: self.view.center.x, y: self.view.center.y, width: 0, height: 0)
             }
@@ -893,7 +898,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         toggleView.isUserInteractionEnabled = true
         navigationController?.navigationBar.isUserInteractionEnabled = true
         importButtonText = "Import\nClasses"
-        self.coachMarksController.start(in: .window(over: self))
         assignmentTableView.reloadData()
         calendarTableView.reloadData()
     }
@@ -918,19 +922,18 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func userAlreadyExist(kUsernameKey: String) -> Bool {
         return UserDefaults.standard.object(forKey: kUsernameKey) != nil
     }
-    
 
     func sign(_: GIDSignIn!, didDisconnectWith _: GIDGoogleUser!,
               withError _: Error!) {}
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.coachMarksController.dataSource = self
-        self.coachMarksController.delegate = self
 
-        //manualEntryButton.
-        //self.coachMarksController.coa
+        coachMarksController.dataSource = self
+        coachMarksController.delegate = self
+
+        // manualEntryButton.
+        // self.coachMarksController.coa
         if userAlreadyExist(kUsernameKey: "isClassroomEnabled") {
             isClassroomEnabled = UserDefaults.standard.bool(forKey: "isClassroomEnabled")
         } else {
@@ -1074,62 +1077,99 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         print("APPEAR")
         setUpInitialNotifications()
     }
-    
-    func coachMarksController(_ coachMarksController: CoachMarksController, willShow coachMark: inout CoachMark, beforeChanging change: ConfigurationChange, at index: Int) {
-        
+
+    func coachMarksController(_: CoachMarksController, willShow coachMark: inout CoachMark, beforeChanging _: ConfigurationChange, at index: Int) {
         switch index {
         case 0:
             coachMark.arrowOrientation = .bottom
         case 1:
-            coachMark.arrowOrientation = .bottom
+            coachMark.arrowOrientation = .top
         case 2:
+            coachMark.arrowOrientation = .bottom
+        case 3:
+            coachMark.arrowOrientation = .top
+        case 4:
+            coachMark.arrowOrientation = .top
+        case 5:
+            coachMark.arrowOrientation = .top
+        case 6:
+            coachMark.arrowOrientation = .top
+        case 7:
+            coachMark.arrowOrientation = .top
+        case 8:
             coachMark.arrowOrientation = .top
         default:
             break
         }
     }
-    
+
     func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkAt index: Int) -> CoachMark {
         var coachMark = CoachMark()
         switch index {
         case 0:
             coachMark = coachMarksController.helper.makeCoachMark(for: assignmentTableView)
         case 1:
-            coachMark = coachMarksController.helper.makeCoachMark(for: calendarTableView)
+            coachMark = coachMarksController.helper.makeCoachMark(for: assignmentButton)
         case 2:
-            let rightBarButton = self.navigationItem.rightBarButtonItem! as UIBarButtonItem
+            coachMark = coachMarksController.helper.makeCoachMark(for: calendarTableView)
+        case 3:
+            coachMark = coachMarksController.helper.makeCoachMark(for: assignmentButton)
+        case 4:
+            coachMark = coachMarksController.helper.makeCoachMark(for: calView)
+        case 5:
+            coachMark = coachMarksController.helper.makeCoachMark(for: dateButton)
+        case 6:
+            let rightBarButton = navigationItem.rightBarButtonItem! as UIBarButtonItem
             let viewRight = rightBarButton.value(forKey: "view") as! UIView
             coachMark = coachMarksController.helper.makeCoachMark(for: viewRight)
+        case 7:
+            coachMark = coachMarksController.helper.makeCoachMark(for: toggleView)
+        case 8:
+            let leftBarButton = navigationItem.leftBarButtonItem! as UIBarButtonItem
+            let viewLeft = leftBarButton.value(forKey: "view") as! UIView
+            coachMark = coachMarksController.helper.makeCoachMark(for: viewLeft)
         default:
             break
         }
         return coachMark
     }
-    
-    func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark) -> (bodyView: (UIView & CoachMarkBodyView), arrowView: (UIView & CoachMarkArrowView)?) {
-        
+
+    func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark) -> (bodyView: UIView & CoachMarkBodyView, arrowView: (UIView & CoachMarkArrowView)?) {
         let coachViews = coachMarksController.helper.makeDefaultCoachViews(withArrow: true, arrowOrientation: coachMark.arrowOrientation)
         switch index {
         case 0:
-            coachViews.bodyView.hintLabel.text = "These are your assignments"
+            coachViews.bodyView.hintLabel.text = "These are your classes"
         case 1:
-            coachViews.bodyView.hintLabel.text = "This is your calendar"
+            coachViews.bodyView.hintLabel.text = "You can click on a class to view its corresponding assignments"
         case 2:
-            coachViews.bodyView.hintLabel.text = "Click here to manually add assignments"
+            coachViews.bodyView.hintLabel.text = "This is your calendar"
+        case 3:
+            coachViews.bodyView.hintLabel.text = "You can drag the assignments onto the calendar, and you will receive a notification at the appropriate time and date"
+        case 4:
+            coachViews.bodyView.hintLabel.text = "You can use the arrows to change the date"
+        case 5:
+            coachViews.bodyView.hintLabel.text = "You can also click on the date to view a monthly calendar"
+        case 6:
+            coachViews.bodyView.hintLabel.text = "If an assignment is not in Google Classroom, you can click here to create it manually"
+        case 7:
+            coachViews.bodyView.hintLabel.text = "You can use this toggle to seperate your Classroom assignments from your created assignments"
+        case 8:
+            coachViews.bodyView.hintLabel.text = "Lastly, you can click the arrow to sign out of your account"
         default:
             break
-            
         }
-        coachViews.bodyView.nextLabel.text = "Ok"
+        if index != 8 {
+            coachViews.bodyView.nextLabel.text = "Ok"
+        } else {
+            coachViews.bodyView.nextLabel.text = "Done"
+        }
         return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
     }
-    
-    
-    
-    func numberOfCoachMarks(for coachMarksController: CoachMarksController) -> Int {
-        return 3
+
+    func numberOfCoachMarks(for _: CoachMarksController) -> Int {
+        return 9
     }
-    
+
     func configureTitleView() {
         var firstName = Auth.auth().currentUser?.displayName ?? "User"
         var greeting = String()
@@ -1511,8 +1551,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         calendarTableView.isUserInteractionEnabled = true
         toggleView.isUserInteractionEnabled = true
         navigationController?.navigationBar.isUserInteractionEnabled = true
-        self.coachMarksController.start(in: .window(over: self))
         assignmentTableView.reloadData()
+
+        if !UserDefaults.standard.bool(forKey: "First Launch") {
+            coachMarksController.start(in: .window(over: self))
+            UserDefaults.standard.set(true, forKey: "First Launch")
+        }
     }
 
     func getClassesNoClassroom() {
