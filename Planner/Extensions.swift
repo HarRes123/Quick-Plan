@@ -8,6 +8,7 @@
 
 import FirebaseUI
 import Foundation
+import Instructions
 
 extension Array {
     func arrayWithoutFirstElement() -> Array {
