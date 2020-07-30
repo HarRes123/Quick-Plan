@@ -12,9 +12,12 @@ import GoogleSignIn
 import MobileCoreServices
 import UIKit
 import UserNotifications
+import Instructions
 
-class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate {
+class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate, CoachMarksControllerDataSource, CoachMarksControllerDelegate {
     
+    let coachMarksController = CoachMarksController()
+
     var myAuth: GTMFetcherAuthorizationProtocol?
     private let service = GTLRClassroomService()
 
@@ -52,6 +55,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var hasSignedIn = false
 
     var assignmentAndDueDate = [String: String]()
+    
+    @IBOutlet weak var manualEntryButton: UIBarButtonItem!
+    
 
     @IBOutlet var toggleView: BetterSegmentedControl!
 
@@ -60,10 +66,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     let date = Date()
     var calendar = Calendar.current
-
+    
     @IBOutlet var calendarTableView: UITableView!
     @IBOutlet var assignmentTableView: UITableView!
-
+    
     private let scopes = [kGTLRAuthScopeClassroomCourseworkMeReadonly, kGTLRAuthScopeClassroomCoursesReadonly]
 
     func tableView(_ tableView: UITableView, itemsForBeginning _: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
@@ -864,7 +870,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             DispatchQueue.main.async {
                 self.calendarTableView.reloadData()
                 self.assignmentTableView.reloadData()
-                let popover: UIPopoverPresentationController = self.calVC.popoverPresentationController!
+                guard let popover: UIPopoverPresentationController = self.calVC.popoverPresentationController else {return}
                 popover.sourceView = self.view
                 popover.sourceRect = CGRect(x: self.view.center.x, y: self.view.center.y, width: 0, height: 0)
             }
@@ -887,6 +893,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         toggleView.isUserInteractionEnabled = true
         navigationController?.navigationBar.isUserInteractionEnabled = true
         importButtonText = "Import\nClasses"
+        self.coachMarksController.start(in: .window(over: self))
         assignmentTableView.reloadData()
         calendarTableView.reloadData()
     }
@@ -911,13 +918,19 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func userAlreadyExist(kUsernameKey: String) -> Bool {
         return UserDefaults.standard.object(forKey: kUsernameKey) != nil
     }
+    
 
     func sign(_: GIDSignIn!, didDisconnectWith _: GIDGoogleUser!,
               withError _: Error!) {}
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.coachMarksController.dataSource = self
+        self.coachMarksController.delegate = self
 
+        //manualEntryButton.
+        //self.coachMarksController.coa
         if userAlreadyExist(kUsernameKey: "isClassroomEnabled") {
             isClassroomEnabled = UserDefaults.standard.bool(forKey: "isClassroomEnabled")
         } else {
@@ -1061,7 +1074,62 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         print("APPEAR")
         setUpInitialNotifications()
     }
-
+    
+    func coachMarksController(_ coachMarksController: CoachMarksController, willShow coachMark: inout CoachMark, beforeChanging change: ConfigurationChange, at index: Int) {
+        
+        switch index {
+        case 0:
+            coachMark.arrowOrientation = .bottom
+        case 1:
+            coachMark.arrowOrientation = .bottom
+        case 2:
+            coachMark.arrowOrientation = .top
+        default:
+            break
+        }
+    }
+    
+    func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkAt index: Int) -> CoachMark {
+        var coachMark = CoachMark()
+        switch index {
+        case 0:
+            coachMark = coachMarksController.helper.makeCoachMark(for: assignmentTableView)
+        case 1:
+            coachMark = coachMarksController.helper.makeCoachMark(for: calendarTableView)
+        case 2:
+            let rightBarButton = self.navigationItem.rightBarButtonItem! as UIBarButtonItem
+            let viewRight = rightBarButton.value(forKey: "view") as! UIView
+            coachMark = coachMarksController.helper.makeCoachMark(for: viewRight)
+        default:
+            break
+        }
+        return coachMark
+    }
+    
+    func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark) -> (bodyView: (UIView & CoachMarkBodyView), arrowView: (UIView & CoachMarkArrowView)?) {
+        
+        let coachViews = coachMarksController.helper.makeDefaultCoachViews(withArrow: true, arrowOrientation: coachMark.arrowOrientation)
+        switch index {
+        case 0:
+            coachViews.bodyView.hintLabel.text = "These are your assignments"
+        case 1:
+            coachViews.bodyView.hintLabel.text = "This is your calendar"
+        case 2:
+            coachViews.bodyView.hintLabel.text = "Click here to manually add assignments"
+        default:
+            break
+            
+        }
+        coachViews.bodyView.nextLabel.text = "Ok"
+        return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
+    }
+    
+    
+    
+    func numberOfCoachMarks(for coachMarksController: CoachMarksController) -> Int {
+        return 3
+    }
+    
     func configureTitleView() {
         var firstName = Auth.auth().currentUser?.displayName ?? "User"
         var greeting = String()
@@ -1443,7 +1511,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         calendarTableView.isUserInteractionEnabled = true
         toggleView.isUserInteractionEnabled = true
         navigationController?.navigationBar.isUserInteractionEnabled = true
-
+        self.coachMarksController.start(in: .window(over: self))
         assignmentTableView.reloadData()
     }
 

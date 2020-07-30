@@ -624,9 +624,11 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -678,9 +680,11 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -745,7 +749,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E659B549A9BCCBF9E3CC19F1 /* Pods-PlannerTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5JJZ9DST9Z;
@@ -768,7 +771,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 632B8D664A9206503C8834DA /* Pods-PlannerTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5JJZ9DST9Z;
@@ -791,7 +793,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55876FC994EED796FCC51024 /* Pods-Planner-PlannerUITests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5JJZ9DST9Z;
 				INFOPLIST_FILE = PlannerUITests/Info.plist;
@@ -812,7 +813,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2950B3B3B06E8EA0B26CE3A9 /* Pods-Planner-PlannerUITests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5JJZ9DST9Z;
 				INFOPLIST_FILE = PlannerUITests/Info.plist;

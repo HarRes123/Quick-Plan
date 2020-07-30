@@ -104,6 +104,7 @@ PODS:
   - GTMSessionFetcher/Core (1.4.0)
   - GTMSessionFetcher/Full (1.4.0):
     - GTMSessionFetcher/Core (= 1.4.0)
+  - Instructions (2.0.0)
   - leveldb-library (1.22)
   - nanopb (1.30905.0):
     - nanopb/decode (= 1.30905.0)
@@ -123,6 +124,7 @@ DEPENDENCIES:
   - FSCalendar
   - GoogleAPIClientForREST/Classroom
   - GoogleSignIn
+  - Instructions
 
 SPEC REPOS:
   trunk:
@@ -145,6 +147,7 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMAppAuth
     - GTMSessionFetcher
+    - Instructions
     - leveldb-library
     - nanopb
     - PromisesObjC
@@ -169,10 +172,11 @@ SPEC CHECKSUMS:
   GoogleUtilities: 39530bc0ad980530298e9c4af8549e991fd033b1
   GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
   GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
+  Instructions: debf9cedeaf8d095108fd35d2c54b97ccf769e65
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   PromisesObjC: b48e0338dbbac2207e611750777895f7a5811b75
 
-PODFILE CHECKSUM: a34ae88faf6e2479b24495514e7729a941945174
+PODFILE CHECKSUM: a74de73ca1a784132aa84b30640b28214203af33
 
 COCOAPODS: 1.9.3

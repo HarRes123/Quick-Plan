@@ -13,6 +13,7 @@ target 'Planner' do
     pod 'Firebase/Database'
     pod 'BetterSegmentedControl'
     pod 'FSCalendar'
+    pod 'Instructions'
 
   # Pods for Planner
 

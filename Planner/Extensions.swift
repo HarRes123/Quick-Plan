@@ -238,3 +238,10 @@ extension UIViewController {
         return formatter.string(from: date.getDate(dayDifference: globalVariables.daysFromToday))
     }
 }
+extension UIBarButtonItem {
+
+    var frame:CGRect?{
+        return (value(forKey: "view") as? UIView)?.frame
+    }
+
+}
