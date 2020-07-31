@@ -1120,6 +1120,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         case 3:
             coachMark = coachMarksController.helper.makeCoachMark(for: assignmentButton.titleLabel)
         case 4:
+    
             coachMark = coachMarksController.helper.makeCoachMark(for: calView)
         case 5:
             coachMark = coachMarksController.helper.makeCoachMark(for: dateButton)
@@ -1138,10 +1139,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
         return coachMark
     }
+    
 
     func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark) -> (bodyView: UIView & CoachMarkBodyView, arrowView: (UIView & CoachMarkArrowView)?) {
         let coachViews = coachMarksController.helper.makeDefaultCoachViews(withArrow: true, arrowOrientation: coachMark.arrowOrientation)
-<<<<<<< HEAD
        
         coachViews.bodyView.hintLabel.font = UIFont(name: "AvenirNext-Regular", size: coachViews.bodyView.hintLabel.font!.pointSize)
         coachViews.bodyView.nextLabel.font = UIFont(name: "AvenirNext-Regular", size: coachViews.bodyView.nextLabel.font!.pointSize)
@@ -1151,13 +1152,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         coachViews.bodyView.background.borderColor = .darkGray
         
         coachViews.bodyView.layer.shadowColor = UIColor.darkGray.cgColor
-        coachViews.bodyView.layer.shadowOffset = CGSize(width: -1.5, height: 1.5)
+        coachViews.bodyView.layer.shadowOffset = CGSize(width: -2, height: 2)
         coachViews.bodyView.layer.shadowOpacity = 1.0
         coachViews.bodyView.layer.shadowRadius = 1.5
 
-
-=======
->>>>>>> parent of d83130a... changed font of instructions
         switch index {
         case 0:
             coachViews.bodyView.hintLabel.text = "These are your classes"
@@ -1574,6 +1572,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         toggleView.isUserInteractionEnabled = true
         navigationController?.navigationBar.isUserInteractionEnabled = true
         assignmentTableView.reloadData()
+        UserDefaults.standard.set(true, forKey: "hasSignedIn")
 
        // if !UserDefaults.standard.bool(forKey: "First Launch") {
             coachMarksController.start(in: .window(over: self))
@@ -1691,6 +1690,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             present(alert, animated: true)
         }
-        UserDefaults.standard.set(true, forKey: "hasSignedIn")
+        
     }
 }

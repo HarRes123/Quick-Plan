@@ -138,13 +138,39 @@ public class CoachMarkHelper {
         let convertedFrame = instructionsRootView.convert(view.frame, from: view.superview)
 
         let bezierPath: UIBezierPath
+        
+        var cornerRadius = CGFloat()
+        var insertSize = CGFloat()
+        var cornersToRound = UIRectCorner()
+
+        if view.layer.cornerRadius == 0 {
+            
+            if !(view is UILabel), view.frame.width > view.frame.height * 1.7  {
+                cornersToRound = [.topLeft, .topRight]
+                cornerRadius = 15
+                insertSize = 0
+            } else {
+                if view is UILabel {
+                    insertSize = -8
+                } else {
+                    insertSize = -1
+                }
+                cornersToRound = .allCorners
+                cornerRadius = 6
+            }
+        
+        } else {
+            cornerRadius = view.layer.cornerRadius
+            insertSize = 0
+            cornersToRound = .allCorners
+        }
 
         if let makeCutoutPathWithFrame = cutoutPathMaker {
             bezierPath = makeCutoutPathWithFrame(convertedFrame)
         } else {
-            bezierPath = UIBezierPath(roundedRect: convertedFrame.insetBy(dx: -4, dy: -4),
-                                      byRoundingCorners: .allCorners,
-                                      cornerRadii: CGSize(width: 4, height: 4))
+            bezierPath = UIBezierPath(roundedRect: convertedFrame.insetBy(dx: insertSize, dy: insertSize),
+                                      byRoundingCorners: cornersToRound,
+                                      cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
         }
 
         coachMark.cutoutPath = bezierPath
