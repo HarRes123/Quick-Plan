@@ -54,6 +54,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var hasSignedIn = false
 
     var assignmentAndDueDate = [String: String]()
+    
+    var showMainTutorial = Bool()
 
     var calView = UIView(frame: .zero)
     var dateButton = UIButton()
@@ -1084,58 +1086,65 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     func coachMarksController(_: CoachMarksController, willShow coachMark: inout CoachMark, beforeChanging _: ConfigurationChange, at index: Int) {
-        switch index {
-        case 0:
-            coachMark.arrowOrientation = .bottom
-        case 1:
+        if showMainTutorial {
+            switch index {
+            case 0:
+                coachMark.arrowOrientation = .bottom
+            case 1:
+                coachMark.arrowOrientation = .top
+            case 2:
+                coachMark.arrowOrientation = .bottom
+            case 3:
+                coachMark.arrowOrientation = .top
+            case 4:
+                coachMark.arrowOrientation = .top
+            case 5:
+                coachMark.arrowOrientation = .top
+            case 6:
+                coachMark.arrowOrientation = .top
+            case 7:
+                coachMark.arrowOrientation = .top
+            case 8:
+                coachMark.arrowOrientation = .top
+            default:
+                break
+            }
+        } else {
             coachMark.arrowOrientation = .top
-        case 2:
-            coachMark.arrowOrientation = .bottom
-        case 3:
-            coachMark.arrowOrientation = .top
-        case 4:
-            coachMark.arrowOrientation = .top
-        case 5:
-            coachMark.arrowOrientation = .top
-        case 6:
-            coachMark.arrowOrientation = .top
-        case 7:
-            coachMark.arrowOrientation = .top
-        case 8:
-            coachMark.arrowOrientation = .top
-        default:
-            break
         }
     }
 
     func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkAt index: Int) -> CoachMark {
         var coachMark = CoachMark()
-        switch index {
-        case 0:
-            coachMark = coachMarksController.helper.makeCoachMark(for: assignmentTableView)
-        case 1:
-            coachMark = coachMarksController.helper.makeCoachMark(for: assignmentButton.titleLabel)
-        case 2:
-            coachMark = coachMarksController.helper.makeCoachMark(for: calendarTableView)
-        case 3:
-            coachMark = coachMarksController.helper.makeCoachMark(for: assignmentButton.titleLabel)
-        case 4:
-    
-            coachMark = coachMarksController.helper.makeCoachMark(for: calView)
-        case 5:
-            coachMark = coachMarksController.helper.makeCoachMark(for: dateButton)
-        case 6:
-            let rightBarButton = navigationItem.rightBarButtonItem! as UIBarButtonItem
-            let viewRight = rightBarButton.value(forKey: "view") as! UIView
+        let rightBarButton = navigationItem.rightBarButtonItem! as UIBarButtonItem
+        let viewRight = rightBarButton.value(forKey: "view") as! UIView
+        if showMainTutorial {
+            switch index {
+            case 0:
+                coachMark = coachMarksController.helper.makeCoachMark(for: assignmentTableView)
+            case 1:
+                coachMark = coachMarksController.helper.makeCoachMark(for: assignmentButton.titleLabel)
+            case 2:
+                coachMark = coachMarksController.helper.makeCoachMark(for: calendarTableView)
+            case 3:
+                coachMark = coachMarksController.helper.makeCoachMark(for: assignmentButton.titleLabel)
+            case 4:
+                coachMark = coachMarksController.helper.makeCoachMark(for: calView)
+            case 5:
+                coachMark = coachMarksController.helper.makeCoachMark(for: dateButton)
+            case 6:
+                coachMark = coachMarksController.helper.makeCoachMark(for: viewRight)
+            case 7:
+                coachMark = coachMarksController.helper.makeCoachMark(for: toggleView)
+            case 8:
+                let leftBarButton = navigationItem.leftBarButtonItem! as UIBarButtonItem
+                let viewLeft = leftBarButton.value(forKey: "view") as! UIView
+                coachMark = coachMarksController.helper.makeCoachMark(for: viewLeft)
+            default:
+                break
+            }
+        } else {
             coachMark = coachMarksController.helper.makeCoachMark(for: viewRight)
-        case 7:
-            coachMark = coachMarksController.helper.makeCoachMark(for: toggleView)
-        case 8:
-            let leftBarButton = navigationItem.leftBarButtonItem! as UIBarButtonItem
-            let viewLeft = leftBarButton.value(forKey: "view") as! UIView
-            coachMark = coachMarksController.helper.makeCoachMark(for: viewLeft)
-        default:
-            break
         }
         return coachMark
     }
@@ -1155,39 +1164,47 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         coachViews.bodyView.layer.shadowOffset = CGSize(width: -2, height: 2)
         coachViews.bodyView.layer.shadowOpacity = 1.0
         coachViews.bodyView.layer.shadowRadius = 1.5
-
-        switch index {
-        case 0:
-            coachViews.bodyView.hintLabel.text = "These are your classes"
-        case 1:
-            coachViews.bodyView.hintLabel.text = "You can click on a class to view its corresponding assignments"
-        case 2:
-            coachViews.bodyView.hintLabel.text = "This is your calendar"
-        case 3:
-            coachViews.bodyView.hintLabel.text = "You can drag the assignments onto the calendar, and you will receive a notification at the appropriate time and date"
-        case 4:
-            coachViews.bodyView.hintLabel.text = "You can use the arrows to change the date"
-        case 5:
-            coachViews.bodyView.hintLabel.text = "You can also click on the date to view a monthly calendar"
-        case 6:
-            coachViews.bodyView.hintLabel.text = "If an assignment is not in Google Classroom, you can click here to create it manually"
-        case 7:
-            coachViews.bodyView.hintLabel.text = "You can use this toggle to seperate your Classroom assignments from your created assignments"
-        case 8:
-            coachViews.bodyView.hintLabel.text = "Lastly, you can click the arrow to sign out of your account"
-        default:
-            break
-        }
-        if index != 8 {
-            coachViews.bodyView.nextLabel.text = "Ok"
+        if showMainTutorial {
+            switch index {
+            case 0:
+                coachViews.bodyView.hintLabel.text = "These are your classes"
+            case 1:
+                coachViews.bodyView.hintLabel.text = "You can click on a class to view its corresponding assignments"
+            case 2:
+                coachViews.bodyView.hintLabel.text = "This is your calendar"
+            case 3:
+                coachViews.bodyView.hintLabel.text = "You can drag the assignments onto the calendar, and you will receive a notification at the appropriate time and date"
+            case 4:
+                coachViews.bodyView.hintLabel.text = "You can use the arrows to change the date"
+            case 5:
+                coachViews.bodyView.hintLabel.text = "You can also click on the date to view a monthly calendar"
+            case 6:
+                coachViews.bodyView.hintLabel.text = "If an assignment is not in Google Classroom, you can click here to create it manually"
+            case 7:
+                coachViews.bodyView.hintLabel.text = "You can use this toggle to seperate your Classroom assignments from your created assignments"
+            case 8:
+                coachViews.bodyView.hintLabel.text = "Lastly, you can click the arrow to sign out of your account"
+            default:
+                break
+            }
+            if index != 8 {
+                coachViews.bodyView.nextLabel.text = "Ok"
+            } else {
+                coachViews.bodyView.nextLabel.text = "Done"
+            }
         } else {
-            coachViews.bodyView.nextLabel.text = "Done"
+            coachViews.bodyView.hintLabel.text = "Please create a new class"
+            coachViews.bodyView.nextLabel.text = "Ok"
         }
         return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
     }
 
     func numberOfCoachMarks(for _: CoachMarksController) -> Int {
-        return 9
+        if showMainTutorial {
+            return 9
+        } else {
+            return 1
+        }
     }
 
     func configureTitleView() {
@@ -1492,15 +1509,16 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         newClassNameAndAssignments = [String: [String]]()
         print("NO ADDED ASSIGNMENTS")
         importButtonText = "Import\nClasses"
-        let alert = UIAlertController(title: "No Classes", message: "Please create a new class", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        
+        showMainTutorial = false
+        coachMarksController.start(in: .window(over: self))
+      
         assignmentTableView.isUserInteractionEnabled = true
         calendarTableView.isUserInteractionEnabled = true
         toggleView.isUserInteractionEnabled = true
         navigationController?.navigationBar.isUserInteractionEnabled = true
         assignmentTableView.reloadData()
         calendarTableView.reloadData()
-        present(alert, animated: true)
     }
 
     @IBAction func showManualEntry(_ sender: UIBarButtonItem) {
@@ -1573,8 +1591,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         navigationController?.navigationBar.isUserInteractionEnabled = true
         assignmentTableView.reloadData()
         UserDefaults.standard.set(true, forKey: "hasSignedIn")
-
+        
        // if !UserDefaults.standard.bool(forKey: "First Launch") {
+            showMainTutorial = true
             coachMarksController.start(in: .window(over: self))
         //    UserDefaults.standard.set(true, forKey: "First Launch")
       //  }
