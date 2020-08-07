@@ -82,13 +82,16 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
             calendarView.appearance.titleSelectionColor = .black
         }
     }
-
+    
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        self.calendarView.reloadData()
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if size.width != view.frame.size.width {
             DispatchQueue.main.async {
                 self.calendarView.reloadData()
-                self.calendarView.calendarHeaderView.reloadData()
             }
         }
     }
