@@ -589,19 +589,19 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 view.addSubview(button)
                 button.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
                 button.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-                button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25).isActive = true
-                button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
+                button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15).isActive = true
+                button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
                 button.translatesAutoresizingMaskIntoConstraints = false
-
+                button.setTitleColor(.black, for: .normal)
+                button.titleLabel!.font = UIFont(name: "AvenirNext-Regular", size: 15)
                 if arrayHeader[section] == 1 {
-                    let plusImage = UIImage(named: "plus")
-                    button.setImage(plusImage, for: .normal)
+                    button.setTitle("Show All", for: .normal)
 
                     return view
 
                 } else if arrayHeader[section] == 2 {
-                    let minusImage = UIImage(named: "minus")
-                    button.setImage(minusImage, for: .normal)
+                   // let minusImage = UIImage(named: "minus")
+                    button.setTitle("Hide All", for: .normal)
 
                     return view
                 } else {
