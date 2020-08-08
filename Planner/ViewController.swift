@@ -14,11 +14,11 @@ import MobileCoreServices
 import UIKit
 import UserNotifications
 
-enum tutorial {
-    case full, noAddedClasses, noImport
-}
-
 class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate, CoachMarksControllerDataSource, CoachMarksControllerDelegate {
+    
+    enum tutorial {
+        case full, noAddedClasses, noImport
+    }
     
     let coachMarksController = CoachMarksController()
 
@@ -995,9 +995,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 self.noAssignmentsAlert()
             }
 
+            loadCal()
         })
 
-        loadCal()
 
         //    classroomToggle.tintColor = .customGreen
 
