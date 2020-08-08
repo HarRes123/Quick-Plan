@@ -1683,7 +1683,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func classroomOnlyFetch(assignmentsPerCourse: [String], newAssignmentsPerCourse: [String]) {
         classNameAndAssignments.updateValue(assignmentsPerCourse.arrayWithoutFirstElement(), forKey: assignmentsPerCourse.first ?? "no name")
         newClassNameAndAssignments.updateValue(newAssignmentsPerCourse.arrayWithoutFirstElement(), forKey: newAssignmentsPerCourse.first ?? "no name")
-    }
+    } 
 
     func showInfo() {
         if assignmentsPerCourse.count != 0 {
