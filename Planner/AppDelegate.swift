@@ -46,5 +46,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 struct globalVariables {
-    static var daysFromToday = 0
+    static var daysFromToday = Int()
+    static var dueDate = String()
 }

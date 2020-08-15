@@ -16,7 +16,7 @@ class SignInViewController: UIViewController, FUIAuthDelegate {
         super.viewDidLoad()
 
         setUpButton(button: logInOutlet, darkTint: UIColor.gray.cgColor)
-        
+
         if !UserDefaults.standard.bool(forKey: "Notification Permission") {
             UserDefaults.standard.set(true, forKey: "Notification Permission")
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) {
@@ -28,7 +28,6 @@ class SignInViewController: UIViewController, FUIAuthDelegate {
                 }
             }
         }
-
     }
 
     @IBAction func loginTapped(_: UIButton) {

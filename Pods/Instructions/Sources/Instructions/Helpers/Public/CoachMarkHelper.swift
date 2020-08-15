@@ -138,14 +138,13 @@ public class CoachMarkHelper {
         let convertedFrame = instructionsRootView.convert(view.frame, from: view.superview)
 
         let bezierPath: UIBezierPath
-        
+
         var cornerRadius = CGFloat()
         var insertSize = CGFloat()
         var cornersToRound = UIRectCorner()
 
         if view.layer.cornerRadius == 0 {
-            
-            if !(view is UILabel), view.frame.width > view.frame.height * 1.7  {
+            if !(view is UILabel), view.frame.width > view.frame.height * 1.7 {
                 cornersToRound = [.topLeft, .topRight]
                 cornerRadius = 15
                 insertSize = 0
@@ -158,7 +157,7 @@ public class CoachMarkHelper {
                 cornersToRound = .allCorners
                 cornerRadius = 6
             }
-        
+
         } else {
             cornerRadius = view.layer.cornerRadius
             insertSize = 0

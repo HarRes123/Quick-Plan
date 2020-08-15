@@ -14,7 +14,7 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
     @IBOutlet var calendarView: FSCalendar!
     @IBOutlet var dismissButton: UIBarButtonItem!
     var dateSelected = false
-
+    var rootIsMainViewContoller = Bool()
     let dateFormatter = DateFormatter()
 
     func desiredFont(pointSize: CGFloat) -> UIFont {
@@ -32,6 +32,8 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
         calendarView.appearance.selectionColor = .customOrange
         calendarView.appearance.todayColor = .customBlue
 
+        globalVariables.dueDate = "No Due Date"
+
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.timeZone = .current
         dateFormatter.dateFormat = "MM/dd/yyyy"
@@ -42,7 +44,14 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
 
     override func viewDidAppear(_: Bool) {
         let dateToShow = dateFormatter.date(from: getViewedDate())
-        calendarView.select(dateToShow)
+
+        if rootIsMainViewContoller {
+            // parentVC is someViewController
+            calendarView.select(dateToShow)
+        } else {
+            calendarView.select(Date())
+        }
+
         dateSelected = false
     }
 
@@ -51,9 +60,17 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
         let formattedDate = dateFormatter.date(from: formattedString)!
 
         let currentDate = Date()
-        globalVariables.daysFromToday = Int(Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: currentDate), to: Calendar.current.startOfDay(for: formattedDate)).day!)
 
-        print("DATE:", dateFormatter.string(from: date), "Difference:", globalVariables.daysFromToday)
+        // presented by parent view controller 1
+        if rootIsMainViewContoller {
+            print("YESYSYSYS")
+            // parentVC is someViewController
+            globalVariables.daysFromToday = Int(Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: currentDate), to: Calendar.current.startOfDay(for: formattedDate)).day!)
+
+            print("DATE:", dateFormatter.string(from: date), "Difference:", globalVariables.daysFromToday)
+        } else {
+            globalVariables.dueDate = formattedString
+        }
         dateSelected = true
     }
 
@@ -82,11 +99,11 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
             calendarView.appearance.titleSelectionColor = .black
         }
     }
-    
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        self.calendarView.reloadData()
+
+    override func willTransition(to _: UITraitCollection, with _: UIViewControllerTransitionCoordinator) {
+        calendarView.reloadData()
     }
-    
+
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if size.width != view.frame.size.width {
@@ -106,8 +123,16 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
     }
 
     override func viewDidDisappear(_: Bool) {
-        if isBeingDismissed, dateSelected {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "calendarDismissed"), object: nil)
+        if isBeingDismissed {
+            if rootIsMainViewContoller, dateSelected {
+                // parentVC is someViewController
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "calendarFromMainDismissed"), object: nil)
+            } else if !rootIsMainViewContoller {
+//                if !dateSelected {
+//                    globalVariables.dueDate = "No Due Date"
+//                }
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "calendarFromManualEntryDismissed"), object: nil)
+            }
         }
     }
 }

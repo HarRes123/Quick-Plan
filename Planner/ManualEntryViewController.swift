@@ -21,7 +21,6 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
     @IBOutlet var saveButton: UIButton!
     @IBOutlet var classPicker: DropDown!
     @IBOutlet var dueDateField: UITextField!
-    @IBOutlet var dateError: UILabel!
     @IBOutlet var dummyView: UIView!
     @IBOutlet var dismissButton: UIBarButtonItem!
     var savePressed = false
@@ -37,13 +36,10 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
         assignmentField.delegate = self
         dueDateField.delegate = self
         classPicker.optionArray = classNames + ["Add Class"]
-        dateError.text = "Please enter a valid date"
-        dateError.isHidden = true
-
         question1Label.text = "What is the name of the class?"
         question2Label.text = "What is the name of the assignment?"
         question3Label.text = "When is the assignment due?"
-
+        // dueDateField.inputView = assignmentField.inputView
         stackView.setCustomSpacing(35, after: dummyView)
         stackView.setCustomSpacing(12, after: question1Label)
         stackView.setCustomSpacing(64, after: classPicker)
@@ -51,7 +47,8 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
         stackView.setCustomSpacing(64, after: assignmentField)
         stackView.setCustomSpacing(12, after: question3Label)
         stackView.setCustomSpacing(64, after: dueDateField)
-        stackView.setCustomSpacing(64 - (dateError.frame.height + 5), after: dateError)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(calendarFromManualEntryDismissed), name: Notification.Name("calendarFromManualEntryDismissed"), object: nil)
 
         refResponse = Database.database().reference().child("users")
 
@@ -101,6 +98,32 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
         return false
     }
 
+    @objc func calendarFromManualEntryDismissed() {
+        print("CALLED")
+
+        if globalVariables.dueDate.first == "0" {
+            globalVariables.dueDate = String(globalVariables.dueDate.dropFirst())
+        }
+
+        dueDateField.text = globalVariables.dueDate
+    }
+
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if textField == dueDateField {
+            let calVC = FullCalendarViewController(nibName: "FullCalendarViewController", bundle: nil)
+            calVC.modalPresentationStyle = .popover
+            calVC.rootIsMainViewContoller = false
+            let popover: UIPopoverPresentationController = calVC.popoverPresentationController!
+            popover.sourceView = view
+            popover.sourceRect = CGRect(x: view.center.x, y: view.center.y, width: 0, height: 0)
+            popover.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
+
+            present(calVC, animated: true, completion: nil)
+            return false
+        }
+        return true
+    }
+
     override func traitCollectionDidChange(_: UITraitCollection?) {
         if traitCollection.userInterfaceStyle == .light {
             view.backgroundColor = .customGray
@@ -127,38 +150,6 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
             return true
         } else {
             return false
-        }
-    }
-
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if textField == dueDateField {
-            let newCharacters = CharacterSet(charactersIn: string)
-
-            // check the chars length dd -->2 at the same time dueDateField the dd-MM --> 5
-            if (dueDateField?.text?.count == 2) || (dueDateField?.text?.count == 5) {
-                // Handle backspace being pressed
-                if string != "", NSCharacterSet.decimalDigits.isSuperset(of: newCharacters) {
-                    // append the text
-                    dueDateField?.text = (dueDateField?.text)! + "/"
-                }
-            }
-            // check the condition not exceed 9 chars
-            print("COUNT:", textField.text!.count)
-            if textField.text!.count == 9 {
-                if checkValidDate(date: textField.text!) {
-                    print("VALID DATE")
-                    dateError.isHidden = true
-                    stackView.setCustomSpacing(64, after: dueDateField)
-                } else {
-                    print("NOT VALID DATE")
-                    dateError.isHidden = false
-                    stackView.setCustomSpacing(5, after: dueDateField)
-                }
-            }
-
-            return !(textField.text!.count > 9 && string.count > range.length) && NSCharacterSet.decimalDigits.isSuperset(of: newCharacters)
-        } else {
-            return true
         }
     }
 
@@ -198,14 +189,20 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
         present(alert, animated: true)
     }
 
+    func saveSuccessful() {
+        classPicker.text = ""
+        assignmentField.text = ""
+        dueDateField.text = ""
+    }
+
     @IBAction func savePressed(_: Any) {
         let selectedClass = "\(classPicker.text ?? "no text")"
         let selectedAssignment = assignmentField.text ?? "no text"
-        var selectedDueDate = dueDateField.text ?? "no text"
+        var selectedDueDate = globalVariables.dueDate
         guard let encodedClass = selectedClass.addingPercentEncoding(withAllowedCharacters: .alphanumerics) else { return }
         guard let decodedClass = selectedClass.removingPercentEncoding else { return }
 
-        if encodedClass != "no text", selectedAssignment != "no text", checkValidDate(date: selectedDueDate) {
+        if encodedClass != "no text", selectedAssignment != "no text", checkValidDate(date: selectedDueDate) || selectedDueDate == "No Due Date" {
             if selectedDueDate.first == "0" {
                 selectedDueDate = String(selectedDueDate.dropFirst())
             }
@@ -220,6 +217,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
                         allData.append(assignmentAndDueDate)
                         self.sendAlert(title: "Assignment Saved")
                         self.savePressed = true
+                        self.saveSuccessful()
                     } else {
                         self.sendAlert(title: "Assignment Already Exists")
                     }
@@ -232,6 +230,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
                     self.refResponse.child((Auth.auth().currentUser?.uid)!).child("Added Assignments").child(encodedClass).setValue([assignmentAndDueDate])
                     self.sendAlert(title: "Assignment Saved")
                     self.savePressed = true
+                    self.saveSuccessful()
                 }
             })
 

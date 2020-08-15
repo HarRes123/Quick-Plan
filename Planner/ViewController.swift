@@ -15,11 +15,10 @@ import UIKit
 import UserNotifications
 
 class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate, CoachMarksControllerDataSource, CoachMarksControllerDelegate {
-    
     enum tutorial {
         case full, noAddedClasses, noImport
     }
-    
+
     let coachMarksController = CoachMarksController()
 
     var myAuth: GTMFetcherAuthorizationProtocol?
@@ -49,7 +48,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var assignmentCellWidth = CGFloat()
 
     var refResponse: DatabaseReference!
-    
+
     var selectTutorial = tutorial.full
 
     let center = UNUserNotificationCenter.current()
@@ -61,7 +60,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var hasSignedIn = false
 
     var assignmentAndDueDate = [String: String]()
-    
+
     var calView = UIView(frame: .zero)
     var dateButton = UIButton()
     var assignmentButton = UIButton(type: .custom)
@@ -368,7 +367,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         beginClassImport()
     }
 
-    @objc func calendarDismissed() {
+    @objc func calendarFromMainDismissed() {
         print("CALLED")
         changeDays(sign: 0)
     }
@@ -376,7 +375,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     @objc func performFetch() {
         print("FETCHING INFO")
         if Auth.auth().currentUser != nil {
-
             setUpInitialNotifications()
             setUpCalendar()
             if isClassroomEnabled {
@@ -600,7 +598,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     return view
 
                 } else if arrayHeader[section] == 2 {
-                   // let minusImage = UIImage(named: "minus")
+                    // let minusImage = UIImage(named: "minus")
                     button.setTitle("Hide All", for: .normal)
 
                     return view
@@ -757,6 +755,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     @objc func pressedOnDate(sender _: UIButton) {
         calVC.modalPresentationStyle = .popover
+        calVC.rootIsMainViewContoller = true
         let popover: UIPopoverPresentationController = calVC.popoverPresentationController!
         popover.sourceView = view
         popover.sourceRect = CGRect(x: view.center.x, y: view.center.y, width: 0, height: 0)
@@ -764,10 +763,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         present(calVC, animated: true, completion: nil)
     }
-
-//    @objc func pressedOnDate(sender _: UIButton) {
-//        changeDays(sign: -daysFromToday)
-//    }
 
     func loadCal() {
         calendarTableView.isUserInteractionEnabled = false
@@ -918,14 +913,13 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
     func sign(_: GIDSignIn!, didDisconnectWith _: GIDGoogleUser!,
               withError _: Error!) {}
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         coachMarksController.dataSource = self
         coachMarksController.delegate = self
-        
+
         if !UserDefaults.standard.bool(forKey: "Notification Permission") {
             UserDefaults.standard.set(true, forKey: "Notification Permission")
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) {
@@ -938,7 +932,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             }
         }
 
-        
         if #available(iOS 13.0, *) {
             coachMarksController.statusBarStyle = .darkContent
         } else {
@@ -978,7 +971,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                         alert.dismiss(animated: true, completion: nil)
                         self.handleSignInError()
                         selectTutorial = .noImport
-                        //Add a tutorial shortened view by turning bool into enum
+                        // Add a tutorial shortened view by turning bool into enum
                     }
 
                     alert.addAction(no)
@@ -998,12 +991,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             loadCal()
         })
 
-
         //    classroomToggle.tintColor = .customGreen
 
         NotificationCenter.default.addObserver(self, selector: #selector(performFetch), name: Notification.Name("performFetchAuto"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(manualEntryDismissed), name: Notification.Name("manualEntryDismissed"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(calendarDismissed), name: Notification.Name("calendarDismissed"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(calendarFromMainDismissed), name: Notification.Name("calendarFromMainDismissed"), object: nil)
 
         service.authorizer = myAuth
 
@@ -1094,7 +1086,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     func coachMarksController(_: CoachMarksController, willShow coachMark: inout CoachMark, beforeChanging _: ConfigurationChange, at index: Int) {
-        
         switch selectTutorial {
         case .full:
             switch index {
@@ -1130,7 +1121,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         var coachMark = CoachMark()
         let rightBarButton = navigationItem.rightBarButtonItem! as UIBarButtonItem
         let viewRight = rightBarButton.value(forKey: "view") as! UIView
-        
+
         switch selectTutorial {
         case .full:
             switch index {
@@ -1164,23 +1155,22 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         }
         return coachMark
     }
-    
 
     func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkViewsAt index: Int, madeFrom coachMark: CoachMark) -> (bodyView: UIView & CoachMarkBodyView, arrowView: (UIView & CoachMarkArrowView)?) {
         let coachViews = coachMarksController.helper.makeDefaultCoachViews(withArrow: true, arrowOrientation: coachMark.arrowOrientation)
-       
+
         coachViews.bodyView.hintLabel.font = UIFont(name: "AvenirNext-Regular", size: coachViews.bodyView.hintLabel.font!.pointSize)
         coachViews.bodyView.nextLabel.font = UIFont(name: "AvenirNext-Regular", size: coachViews.bodyView.nextLabel.font!.pointSize)
 
         coachViews.arrowView!.background.borderColor = .darkGray
         coachViews.bodyView.background.cornerRadius = 10
         coachViews.bodyView.background.borderColor = .darkGray
-        
+
         coachViews.bodyView.layer.shadowColor = UIColor.darkGray.cgColor
         coachViews.bodyView.layer.shadowOffset = CGSize(width: -2, height: 2)
         coachViews.bodyView.layer.shadowOpacity = 1.0
         coachViews.bodyView.layer.shadowRadius = 1.5
-        
+
         switch selectTutorial {
         case .full:
             switch index {
@@ -1216,13 +1206,12 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         case .noImport:
             print("will add")
         }
-        
+
         return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
     }
 
     func numberOfCoachMarks(for _: CoachMarksController) -> Int {
         switch selectTutorial {
-        
         case .full:
             return 9
         case .noAddedClasses:
@@ -1284,7 +1273,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         view.layer.cornerRadius = 15
         view.layer.masksToBounds = true
         self.view.addSubview(containerView)
-        
+
         containerView.addSubview(view)
     }
 
@@ -1534,10 +1523,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         newClassNameAndAssignments = [String: [String]]()
         print("NO ADDED ASSIGNMENTS")
         importButtonText = "Import\nClasses"
-        
+
         selectTutorial = .noAddedClasses
         coachMarksController.start(in: .window(over: self))
-      
+
         assignmentTableView.isUserInteractionEnabled = true
         calendarTableView.isUserInteractionEnabled = true
         toggleView.isUserInteractionEnabled = true
@@ -1604,7 +1593,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     func finishedGettingInfo() {
-        
         print("RELOAD")
         assignmentIndex = 0
         importButtonText = "Import\nClasses"
@@ -1617,7 +1605,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         navigationController?.navigationBar.isUserInteractionEnabled = true
         assignmentTableView.reloadData()
         UserDefaults.standard.set(true, forKey: "hasSignedIn")
-        
+
         if !UserDefaults.standard.bool(forKey: "First Launch") {
             selectTutorial = .full
             coachMarksController.start(in: .window(over: self))
@@ -1683,7 +1671,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func classroomOnlyFetch(assignmentsPerCourse: [String], newAssignmentsPerCourse: [String]) {
         classNameAndAssignments.updateValue(assignmentsPerCourse.arrayWithoutFirstElement(), forKey: assignmentsPerCourse.first ?? "no name")
         newClassNameAndAssignments.updateValue(newAssignmentsPerCourse.arrayWithoutFirstElement(), forKey: newAssignmentsPerCourse.first ?? "no name")
-    } 
+    }
 
     func showInfo() {
         if assignmentsPerCourse.count != 0 {
@@ -1735,6 +1723,5 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             present(alert, animated: true)
         }
-        
     }
 }
