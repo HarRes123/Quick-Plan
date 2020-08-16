@@ -44,7 +44,6 @@ class SettingsViewController: UIViewController, UIScrollViewDelegate {
         navBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "AvenirNext-Regular", size: 18)!]
         navBar.shadowImage = UIImage()
         
-        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "AvenirNext-Regular", size: 17)!], for: .normal)
 
         stackView.setCustomSpacing(35, after: dummyView)
         stackView.setCustomSpacing(12, after: quickPlanLabel)

@@ -1107,8 +1107,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 coachMark.arrowOrientation = .top
             case 7:
                 coachMark.arrowOrientation = .top
-            case 8:
-                coachMark.arrowOrientation = .top
             default:
                 break
             }
@@ -1143,10 +1141,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                 coachMark = coachMarksController.helper.makeCoachMark(for: viewRight)
             case 7:
                 coachMark = coachMarksController.helper.makeCoachMark(for: toggleView)
-            case 8:
-                let leftBarButton = navigationItem.leftBarButtonItem! as UIBarButtonItem
-                let viewLeft = leftBarButton.value(forKey: "view") as! UIView
-                coachMark = coachMarksController.helper.makeCoachMark(for: viewLeft)
             default:
                 break
             }
@@ -1191,13 +1185,11 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             case 6:
                 coachViews.bodyView.hintLabel.text = "If an assignment is not in Google Classroom, you can click here to create it manually"
             case 7:
-                coachViews.bodyView.hintLabel.text = "You can use this toggle to seperate your Classroom assignments from your created assignments"
-            case 8:
-                coachViews.bodyView.hintLabel.text = "Lastly, you can click the arrow to sign out of your account"
+                coachViews.bodyView.hintLabel.text = "Lastly, you can use this toggle to seperate your Classroom assignments from your created assignments"
             default:
                 break
             }
-            if index != 8 {
+            if index != 7 {
                 coachViews.bodyView.nextLabel.text = "Ok"
             } else {
                 coachViews.bodyView.nextLabel.text = "Done"
@@ -1215,7 +1207,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     func numberOfCoachMarks(for _: CoachMarksController) -> Int {
         switch globalVariables.selectTutorial {
         case .full:
-            return 9
+            return 8
         case .noAddedClasses:
             return 1
         case .noImport:
