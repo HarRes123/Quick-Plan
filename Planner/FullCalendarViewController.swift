@@ -117,21 +117,24 @@ class FullCalendarViewController: UIViewController, FSCalendarDataSource, FSCale
         dismiss(animated: true, completion: nil)
     }
 
+
     @IBAction func todayButton(_: Any) {
         calendarView.select(Date())
         dateChanged(date: Date())
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if isBeingDismissed {
+            if !rootIsMainViewContoller {
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "calendarFromManualEntryDismissed"), object: nil)
+            }
+        }
     }
 
     override func viewDidDisappear(_: Bool) {
         if isBeingDismissed {
             if rootIsMainViewContoller, dateSelected {
-                // parentVC is someViewController
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "calendarFromMainDismissed"), object: nil)
-            } else if !rootIsMainViewContoller {
-//                if !dateSelected {
-//                    globalVariables.dueDate = "No Due Date"
-//                }
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "calendarFromManualEntryDismissed"), object: nil)
             }
         }
     }

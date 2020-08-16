@@ -44,8 +44,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "performFetch"), object: nil)
     }
 }
+enum tutorial {
+    case full, noAddedClasses, noImport
+}
 
 struct globalVariables {
     static var daysFromToday = Int()
     static var dueDate = String()
+    static var selectTutorial = tutorial.full
 }

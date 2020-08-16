@@ -91,10 +91,10 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Planner" id="eCj-Fl-F42">
-                        <barButtonItem key="leftBarButtonItem" title="Sign Out" image="logout" id="J6G-PA-1Q2">
+                        <barButtonItem key="leftBarButtonItem" title="Sign Out" image="settings" id="J6G-PA-1Q2">
                             <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
-                                <action selector="signOut:" destination="zcv-In-QdX" id="GOL-7S-W2a"/>
+                                <action selector="showSettings:" destination="zcv-In-QdX" id="Iut-l1-3zg"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="uL9-6Q-7Wv">
@@ -109,7 +109,6 @@
                         <outlet property="calendarTableView" destination="CKD-gs-1pZ" id="acB-3U-zKS"/>
                         <outlet property="manualEntryButton" destination="uL9-6Q-7Wv" id="Tko-ZB-FOo"/>
                         <outlet property="toggleView" destination="TqU-26-kE8" id="7dt-BG-dyq"/>
-                        <segue destination="BA2-jE-DmS" kind="presentation" identifier="logOut" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="0n5-jj-Dax"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oen-GF-wRZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -201,7 +200,7 @@
     </scenes>
     <resources>
         <image name="app_logo.png" width="466" height="466"/>
-        <image name="logout" width="30" height="30"/>
+        <image name="settings" width="30" height="30"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

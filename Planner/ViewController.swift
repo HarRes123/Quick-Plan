@@ -15,9 +15,6 @@ import UIKit
 import UserNotifications
 
 class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate, CoachMarksControllerDataSource, CoachMarksControllerDelegate {
-    enum tutorial {
-        case full, noAddedClasses, noImport
-    }
 
     let coachMarksController = CoachMarksController()
 
@@ -48,8 +45,6 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     var assignmentCellWidth = CGFloat()
 
     var refResponse: DatabaseReference!
-
-    var selectTutorial = tutorial.full
 
     let center = UNUserNotificationCenter.current()
 
@@ -370,6 +365,9 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     @objc func calendarFromMainDismissed() {
         print("CALLED")
         changeDays(sign: 0)
+    }
+    @objc func showTutorial() {
+        coachMarksController.start(in: .window(over: self))
     }
 
     @objc func performFetch() {
@@ -863,9 +861,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
             DispatchQueue.main.async {
                 self.calendarTableView.reloadData()
                 self.assignmentTableView.reloadData()
-                guard let popover: UIPopoverPresentationController = self.calVC.popoverPresentationController else { return }
-                popover.sourceView = self.view
-                popover.sourceRect = CGRect(x: self.view.center.x, y: self.view.center.y, width: 0, height: 0)
+                guard let calPopover: UIPopoverPresentationController = self.calVC.popoverPresentationController else { return }
+                calPopover.sourceView = self.view
+                calPopover.sourceRect = CGRect(x: self.view.center.x, y: self.view.center.y, width: 0, height: 0)
+                
             }
         }
     }
@@ -884,8 +883,10 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         assignmentTableView.isUserInteractionEnabled = true
         calendarTableView.isUserInteractionEnabled = true
         toggleView.isUserInteractionEnabled = true
+        globalVariables.selectTutorial = .noImport
         navigationController?.navigationBar.isUserInteractionEnabled = true
         importButtonText = "Import\nClasses"
+        GIDSignIn.sharedInstance()?.signOut()
         assignmentTableView.reloadData()
         calendarTableView.reloadData()
     }
@@ -970,7 +971,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
                     let no = UIAlertAction(title: "No", style: .cancel) { (_: UIAlertAction) in
                         alert.dismiss(animated: true, completion: nil)
                         self.handleSignInError()
-                        selectTutorial = .noImport
+                        GIDSignIn.sharedInstance()?.signOut()
                         // Add a tutorial shortened view by turning bool into enum
                     }
 
@@ -996,6 +997,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         NotificationCenter.default.addObserver(self, selector: #selector(performFetch), name: Notification.Name("performFetchAuto"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(manualEntryDismissed), name: Notification.Name("manualEntryDismissed"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(calendarFromMainDismissed), name: Notification.Name("calendarFromMainDismissed"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showTutorial), name: Notification.Name("showTutorial"), object: nil)
 
         service.authorizer = myAuth
 
@@ -1086,7 +1088,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     func coachMarksController(_: CoachMarksController, willShow coachMark: inout CoachMark, beforeChanging _: ConfigurationChange, at index: Int) {
-        switch selectTutorial {
+        switch globalVariables.selectTutorial {
         case .full:
             switch index {
             case 0:
@@ -1122,7 +1124,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         let rightBarButton = navigationItem.rightBarButtonItem! as UIBarButtonItem
         let viewRight = rightBarButton.value(forKey: "view") as! UIView
 
-        switch selectTutorial {
+        switch globalVariables.selectTutorial {
         case .full:
             switch index {
             case 0:
@@ -1171,7 +1173,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         coachViews.bodyView.layer.shadowOpacity = 1.0
         coachViews.bodyView.layer.shadowRadius = 1.5
 
-        switch selectTutorial {
+        switch globalVariables.selectTutorial {
         case .full:
             switch index {
             case 0:
@@ -1211,7 +1213,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
     }
 
     func numberOfCoachMarks(for _: CoachMarksController) -> Int {
-        switch selectTutorial {
+        switch globalVariables.selectTutorial {
         case .full:
             return 9
         case .noAddedClasses:
@@ -1524,7 +1526,7 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         print("NO ADDED ASSIGNMENTS")
         importButtonText = "Import\nClasses"
 
-        selectTutorial = .noAddedClasses
+        globalVariables.selectTutorial = .noAddedClasses
         coachMarksController.start(in: .window(over: self))
 
         assignmentTableView.isUserInteractionEnabled = true
@@ -1546,38 +1548,15 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
 
         present(vc, animated: true, completion: nil)
     }
+    
+    @IBAction func showSettings(_ sender: UIBarButtonItem) {
+        
+        let vc = SettingsViewController(nibName: "SettingsViewController", bundle: nil)
+        vc.modalPresentationStyle = .popover
+        let popover: UIPopoverPresentationController = vc.popoverPresentationController!
+        popover.barButtonItem = sender
 
-    @IBAction func signOut(_: Any) {
-        let alert = UIAlertController(title: "Would You Like to Sign Out of Your Account?", message: "", preferredStyle: .alert)
-        let yes = UIAlertAction(title: "Yes", style: .default) { (_: UIAlertAction) in
-
-            self.assignmentsPerCourse = [[String]]()
-            self.assignmentIndex = 0
-            self.classIDAndNameClassroom = [String: String]()
-            self.classNameAndAssignments = [String: [String]]()
-            self.newClassNameAndAssignments = [String: [String]]()
-
-            self.navigationItem.title = "Planner"
-
-            GIDSignIn.sharedInstance().signOut()
-
-            self.center.removeAllPendingNotificationRequests()
-            self.service.authorizer = self.myAuth
-
-            self.assignmentTableView.reloadData()
-            try! Auth.auth().signOut()
-            UserDefaults.standard.set(true, forKey: "isClassroomEnabled")
-            UserDefaults.standard.set(false, forKey: "hasSignedIn")
-            self.performSegue(withIdentifier: "logOut", sender: self)
-        }
-
-        let no = UIAlertAction(title: "No", style: .cancel) { (_: UIAlertAction) in
-            alert.dismiss(animated: true, completion: nil)
-        }
-
-        alert.addAction(yes)
-        alert.addAction(no)
-        present(alert, animated: true)
+        present(vc, animated: true, completion: nil)
     }
 
     func getInfo() {
@@ -1605,9 +1584,8 @@ class ViewController: UIViewController, GIDSignInDelegate, UITableViewDelegate, 
         navigationController?.navigationBar.isUserInteractionEnabled = true
         assignmentTableView.reloadData()
         UserDefaults.standard.set(true, forKey: "hasSignedIn")
-
+        globalVariables.selectTutorial = .full
         if !UserDefaults.standard.bool(forKey: "First Launch") {
-            selectTutorial = .full
             coachMarksController.start(in: .window(over: self))
             UserDefaults.standard.set(true, forKey: "First Launch")
         }

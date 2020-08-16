@@ -81,7 +81,6 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
             print("Selected String: \(selectedText) \n index: \(index)")
         }
 
-        setUpButton(button: saveButton, darkTint: UIColor.black.cgColor)
         scrollView.addSubview(stackView)
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -125,6 +124,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
     }
 
     override func traitCollectionDidChange(_: UITraitCollection?) {
+        setUpButton(button: saveButton, darkTint: UIColor.black.cgColor)
         if traitCollection.userInterfaceStyle == .light {
             view.backgroundColor = .customGray
             dismissButton.tintColor = .darkGray
@@ -140,29 +140,24 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
             dueDateField.attributedPlaceholder = NSAttributedString(string: dueDateField.placeholder!, attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         }
     }
-
-    func checkValidDate(date: String) -> Bool {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "mm/dd/yyyy"
-
-        let splitDate = date.components(separatedBy: "/")
-        if Int(splitDate[0]) ?? 100 <= 12, Int(splitDate[1]) ?? 100 <= 31, dateFormatter.date(from: date) != nil {
-            return true
-        } else {
-            return false
-        }
-    }
-
+    
     override func viewDidLayoutSubviews() {
-        stackView.translatesAutoresizingMaskIntoConstraints = true
+        stackView.translatesAutoresizingMaskIntoConstraints = false
 
         stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
         stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
+        stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         stackView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
         stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+        
+        question1Label.bounds.size.height = 28
+        question2Label.bounds.size.height = 28
+        question3Label.bounds.size.height = 28
+        print(question1Label.frame.height)
 
         stackView.center.x = scrollView.center.x
         stackView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: stackView.frame.height)
+    
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -202,7 +197,7 @@ class ManualEntryViewController: UIViewController, UIScrollViewDelegate, UITextF
         guard let encodedClass = selectedClass.addingPercentEncoding(withAllowedCharacters: .alphanumerics) else { return }
         guard let decodedClass = selectedClass.removingPercentEncoding else { return }
 
-        if encodedClass != "no text", selectedAssignment != "no text", checkValidDate(date: selectedDueDate) || selectedDueDate == "No Due Date" {
+        if classPicker.text != "", assignmentField.text != "", dueDateField.text != "" {
             if selectedDueDate.first == "0" {
                 selectedDueDate = String(selectedDueDate.dropFirst())
             }
