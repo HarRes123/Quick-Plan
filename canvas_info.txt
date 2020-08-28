@@ -1,6 +1,0 @@
-Name: Integrated Student Planner
-Owner Email: hresnickapple@gmail.com
-Icon URL: https://i.imgur.com/a8eAvOG.png
-Scopes: accounts, assignments, courses, OAuth 2
-(Client ID): 10000000000001
-Key (Client Secret): wgR6ZYZUsSkXFizAsPJihZfgEGE5xZSJ1XKsQBasLy11SbdtnQtoAJF7nsQIOs38

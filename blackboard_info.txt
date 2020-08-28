@@ -1,4 +1,0 @@
-Application key: 92311df3-c648-4b87-91cd-c937589d17db
-Secret: EXjELDdALzFYdbkyexvg7gPcpxdKH5v0
-Application ID: 30d4785a-2fb9-4597-8a22-95bbc7337ee2
-Test domain: https://blackboard.coursesites.com
